@@ -1,8 +1,8 @@
-Projektideen
+ï»¿Projektideen
 ============
 
 Marcel:
-- Mapgenerator/-loader: begehbare Flächen, Wände, (Trigger, Türen)
+- Mapgenerator/-loader: begehbare FlÃ¤chen, WÃ¤nde, (Trigger, TÃ¼ren)
 - Spielfigur, die da durch laufen kann.
 - Zeichen als Darstellung der Elemente.
 - Konsole/SDL_TTF

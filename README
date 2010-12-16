@@ -1,21 +1,21 @@
-C-Projekt der Gruppe 37
+ï»¿C-Projekt der Gruppe 37
 =======================
 
 Bitte:
-- Änderungen an den Dokumenten so schnell wies geht hier pushen!
-- Für gewagte Experimente bitte erstmal neue Branches erstellen.
-- Commits einigermaßen beschreiben.
-- Build-paths mit Objektdateien o.ä. in die ".gitignore" eintragen.
+- Ã„nderungen an den Dokumenten so schnell wies geht hier pushen!
+- FÃ¼r gewagte Experimente bitte erstmal neue Branches erstellen.
+- Commits einigermaÃŸen beschreiben.
+- Build-paths mit Objektdateien o.Ã¤. in die ".gitignore" eintragen.
 
 Struktur:
 - /spec : TeX-Projekt zum Spezifikations-PDF
 - /src : Sourcen und Header
 - README : Diese Datei
-- IDEAS : Brainstormblatt für Programmideen
+- IDEAS : Brainstormblatt fÃ¼r Programmideen
 
 TODO:
 - Programmname
 - Spezifikation zu Ende schreiben
-- technische Grundlage auswählen
+- technische Grundlage auswÃ¤hlen
 - Makefiles
 - Tests?
