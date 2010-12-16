@@ -1,7 +1,21 @@
-C-project page of group 37
-==========================
+C-Projekt der Gruppe 37
+=======================
 
-Specs, Source, Makefiles will come soon.
+Bitte:
+- Änderungen an den Dokumenten so schnell wies geht hier pushen!
+- Für gewagte Experimente bitte erstmal neue Branches erstellen.
+- Commits einigermaßen beschreiben.
+- Build-paths mit Objektdateien o.ä. in die ".gitignore" eintragen.
 
-Started: December 9th, 2010
+Struktur:
+- /spec : TeX-Projekt zum Spezifikations-PDF
+- /src : Sourcen und Header
+- README : Diese Datei
+- IDEAS : Brainstormblatt für Programmideen
 
+TODO:
+- Programmname
+- Spezifikation zu Ende schreiben
+- technische Grundlage auswählen
+- Makefiles
+- Tests?
