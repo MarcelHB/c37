@@ -85,7 +85,7 @@ int main (int argc, char* argv[]) {
 			}
 		}
 	}
-	
+	free(glyph_buffer);
 	TTF_CloseFont(font);
 	SDL_Quit();
 	return 0;
