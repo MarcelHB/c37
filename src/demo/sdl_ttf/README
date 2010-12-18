@@ -1,5 +1,5 @@
-Nur eine kleine Demo, die sich SDL_ttf zu Nutze macht. Sieht schon brauchbar aus.
+ï»¿Nur eine kleine Demo, die sich SDL_ttf zu Nutze macht. Sieht schon brauchbar aus.
 
-Für nicht-Windows bitte irgendwie den Fontpath für die TTF managen, sonst funktioniert das nicht.
+FÃ¼r nicht-Windows bitte irgendwie den Fontpath fÃ¼r die TTF managen, sonst funktioniert das nicht.
 
-SDL_ttf: http://www.libsdl.org/projects/SDL_ttf/s
+SDL_ttf: http://www.libsdl.org/projects/SDL_ttf/

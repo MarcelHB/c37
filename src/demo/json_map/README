@@ -1,0 +1,3 @@
+﻿So könnte man die Maps JSON kodiert bauen. Vielleicht bequemer und sicherer als ASCII-Maps/eigene Binärformate/XML.
+
+Der Converter ist nicht gerade schön, ein paar Sachen müsste man final noch etwas besser machen.

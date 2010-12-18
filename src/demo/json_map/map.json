@@ -1,0 +1,170 @@
+{
+	"name": "simple dungeon",
+	"x": 15,
+	"y": 4,
+	"tiles": [
+	/* -------   ----- */
+		[{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{},{},{},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		}],
+	/* |.....|___|...| */
+		[{
+			"type": "wall",
+			"direction": "V"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "wall",
+			"direction": "V"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "H"
+		},{
+			"type": "wall",
+			"direction": "V"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "wall",
+			"direction": "V"
+		}],
+	/* |......___...| */
+		[{
+			"type": "wall",
+			"direction": "V"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "floor"
+		},{
+			"type": "wall",
+			"direction": "V"
+		}],
+	/* |_____|   |___| */
+		[{
+			"type": "wall",
+			"direction": "V"
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "V"
+		},{},{},{},{
+			"type": "wall",
+			"direction": "V"
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "H",
+			"space": true
+		},{
+			"type": "wall",
+			"direction": "V"
+		}]
+	]
+}
