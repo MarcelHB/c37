@@ -1,0 +1,1 @@
+﻿Dasselbe quasi wie SDL_ttf. Dürfte aber erstmal deutlich angenehmer sein, da wir auf SDL_ttf verzichten und keine OS-abhängingen Pfade für Fonts brauchen. Farbe gibts trotzdem.
