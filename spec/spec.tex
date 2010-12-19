@@ -2,6 +2,7 @@
 
 \usepackage[margin=2cm]{geometry}
 \usepackage{lmodern}
+\usepackage{color}
 \usepackage[latin1]{inputenc}
 
 \begin{document}
@@ -19,10 +20,35 @@
 		}
 		\normalsize
 	\end{center}
+	\begin{center}
+		\textcolor{red}{Entwurf!}
+	\end{center}
+	
 	\section*{Spezifikation}
-	...
+		\begin{itemize}
+			\item 2D-Adventure
+			\item ASCII-Zeichen / Farben zur Darstellung (vgl. \textit{Rogue-like})
+			\item Steuerung einer Spielfigur durch Dungeons und Höhlen per Tastatur
+			\item Verschiedene Karten spielbar
+			\item Weitestgehend Platformunabhängig (SDL, SDL\_ttf, ...?)
+			\item ...
+		\end{itemize}
+		
 	\section*{Design}
-	...
+		\begin{itemize}
+			\item Map-Loader (JSON, TXT, XML, BIN, ...?)
+			\item Ausgabe-Wrapper (SDL, Konsole, OpenGL, ...?)
+			\item logische Layer (Map -$>$ Logik -$>$ Ausgabepuffer -$>$ Ausgabe)
+			\item Tastatur-Listener
+			\item ...
+		\end{itemize}
+	
 	\section*{Aufgaben und Zeitplan}
-	...
+
+	\begin{tabular}{ p{3.5cm} | p{4.0cm} | p{5.0cm} | p{2.5cm} }
+		Wer? & Arbeitspaket & Tätigkeiten & Datum \\
+		\hline
+		Marcel & Planung & Demos (SDL\_ttf, JSON) & 18. + 19.12.10
+	\end{tabular}
+
 \end{document}
