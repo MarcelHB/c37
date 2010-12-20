@@ -1,0 +1,39 @@
+﻿Vorschlag (anders als Demo)
+
+Map-Elemente
+============
+
+- NICHTS / ABGRUND:
+  ' ' (keine Glyphe)
+- begeh- und sichtbarer BODEN:
+  . (nicht schwarz)
+- dunkler BODEN:
+  . (schwarz)
+- MAUER:
+  # (weiß/grau)
+- natürliches GESTEIN:
+  # (braun)
+- GEWÄSSER:
+  # (blau)
+- TÜR:
+  | oder -
+- SCHALTER:
+  + (ein oder mehrere Richtungen)
+
+Spawns
+======
+
+- SPIELFIGUR
+  @ (grün bis rot für Zustand)
+- NPCs (menschlich)
+  A-Z
+- NPCs (andere)
+  a-z
+- ITEMS
+  *
+  
+Anderes
+=======
+
+- EFFEKTE
+  § oder ~ (je nach Richtung)
