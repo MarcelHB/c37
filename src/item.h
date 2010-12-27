@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -17,13 +17,13 @@
 	/* Gewicht, Wert */
 	int weight;
 	int value;
-	/* Polymorphismusersatz für den eig. Typ */
+	/* Polymorphismusersatz fÃ¼r den eig. Typ */
 	char* type;
 	/* spez. Eigenschaften des Items */
 	void* properties;
  } Item;
  
- /* Spwan führt die Action eines Items aus (Trank trinken...) */
+ /* Spwan fÃ¼hrt die Action eines Items aus (Trank trinken...) */
  void spawn_uses_item(Spawn*, Item*);
  
  /* Properties fuer Klunker/Waffe/Misc... */

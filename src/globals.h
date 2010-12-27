@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -11,7 +11,7 @@
  
  #include <stdlib.h>
  
- /* Wenn nicht für Ausgabe, dann für Tastatur */
+ /* Wenn nicht fÃ¼r Ausgabe, dann fÃ¼r Tastatur */
  #include "SDL.h"
  
  #include "memory.h"

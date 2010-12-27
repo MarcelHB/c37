@@ -1,4 +1,4 @@
-/**
+Ôªø/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -13,9 +13,9 @@
  void init(); 
  /* gibt den Ausgabepuffer mittels SDL aus */
  void draw();
- /* lˆscht die Ausgabe */
+ /* l√∂scht die Ausgabe */
  void clear();
- /* Ausgabedevices schlieﬂen */
+ /* Ausgabedevices schlie√üen */
  void close();
  
  #endif
