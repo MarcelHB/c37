@@ -3,7 +3,9 @@
 \usepackage[margin=2cm]{geometry}
 \usepackage{lmodern}
 \usepackage{color}
+\usepackage{german}
 \usepackage[latin1]{inputenc}
+\usepackage{listings} \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt} \lstset{language=C}
 
 \begin{document}
 	\begin{center}
@@ -16,7 +18,7 @@
 		Das C-Projekt:
 		\Huge
 		\parbox{1.0\linewidth}{
-			\center{Rogue-like-like?}
+			\center{c37 (bessere Idee?)}
 		}
 		\normalsize
 	\end{center}
@@ -25,24 +27,166 @@
 	\end{center}
 	
 	\section*{Spezifikation}
-		\begin{itemize}
-			\item 2D-Adventure
-			\item ASCII-Zeichen / Farben zur Darstellung (vgl. \textit{Rogue-like})
-			\item Steuerung einer Spielfigur durch Dungeons und Höhlen per Tastatur
-			\item Verschiedene Karten spielbar
-			\item Weitestgehend Platformunabhängig (SDL, SDL\_ttf, ...?)
-			\item ...
-		\end{itemize}
-		
+	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, übernimmt man die Kontrolle über eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und für die angenehmere Betrachtung und Diversifikation der Spielelemente zusätzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezüglich der Interaktion des Spielers mit der Umwelt finden über eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Öffnen einer Tür oder Aufheben eines Gegenstands.
+	\vspace{0.7 cm}
+	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
+	\newpage
 	\section*{Design}
+		\subsection*{Programmarchitektur}
+			\subsubsection*{Programmablauf}
+			\begin{itemize}
+				\item Das Programm erhält als ersten Parameter beim Aufruf den Namen einer Karte, welche sich im Verzeichnis \textit{maps} befindet.
+				\item Fehlermeldungen werden nach \textit{stderr} geschrieben.
+				\item Ist diese nicht aufzufinden, startet das Programm nicht. Andernfalls wird die Kartendatei eingelesen: Die Karte wird im Speicher angelegt, die einzelnen Spielfelder erhalten jeweils die Kartenkomponente (Wände, Böden, Türen, ...), die in der Datei angegeben wurde. Weiterhin wird eine Spielfigur gesetzt und Gegenstände platziert.
+				\item Sollte die Kartendatei nicht richtig ausgelesen werden können, bricht das Programm ab.
+				\item Wenn die Karte komplett konstruiert worden ist, wird sichergesetellt, dass I/O-Operationen wie das Warten auf Tasturevents und die graphische Ausgabe funktionieren. Andernfalls bricht das Programm ab.
+				\item Solange das Programm nicht per ESC-Taste abgebrochen wird, findet ein Loop über  relevante Events statt, die Logik des Spiels wird auf vorhandene Komponenten angewendet und die Ausgabe aktualisiert.
+				\item Mit dem Drücken der ESC-Taste wird der Loop abgebrochen und vom Programm genutzte Ressourcen werden freigegeben.
+			\end{itemize}
+			
+			\subsubsection*{zentrale Komponenten}
+			\begin{itemize}
+				\item Maploader - Das Konstruieren von nutzbaren Karten anhand der Vorgaben in der Kartendatei.
+				\item Logikschleife - Interaktion des Spielers mit der Spielfigur und der Umwelt.
+				\item Ausgabe - Darstellung eines vorgefertigten Feldes mit Zeichen- und Farbinformationen.
+			\end{itemize}
+			
+			\subsubsection*{Ein- und Ausgabe}
+			\begin{itemize}
+				\item Dateisystem (Eingabe) - Das Erstellen einer Karte anhand einer abgelegten Datei, Benutzung eines JSON-Parsers.
+				\item Tastatur (Eingabe) - Steuerung des Programmablaufs sowie der Spielfigur, Benutzung von SDL.
+				\item Bildschirm (Ausgabe) - Ausgabe des Spielgeschehens, Benutzung von SDL.
+				\item Dateisystem/ostream (Ausgabe) - Fehlermeldungen, die in den \textit{stderr}-Stream geschrieben werden.
+			\end{itemize}
+			\newpage
+			\subsection*{Programm-Header}
+			%----------------------------------------------------------------------------
+			\subsubsection*{globals.h}
+			Die Headerdatei \textit{globals.h} übernimmt mehrere Aufgaben. Eine davon ist es, alle nötigen \mbox{System-,} Library- und Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem für die Spiellogik ersetzen. Außerdem werden alle globalen Variablen hier angelegt, sodass diese unabhängig von einer bestimmten Objektdatei nutzbar sind.\\
+	\vspace{1 cm}
+	Dies ist eine Übersicht von verwendeten internen Konfigurationsparametern:\\
+	\vspace{1 cm}
+	\begin{tabular}{ p{5.0cm} | p{2.5cm} | p{8.0cm} }
+		Konstante & Wert & Zweck \\
+		\hline
+		OUTPUT\_IN\_GLYPHS\_X & int & vertikale Anzahl an auszugebenden Zeichen \\
+		OUTPUT\_IN\_GLYPHS\_Y & int & horizontale Anzahl an auszugebenden Zeichen \\
+		MESSAGE\_STREAM\_LIMIT & int & max. Anzahl an gespeicherten Nachrichten
+	\end{tabular}
+	\vspace{1 cm}
+	Eine Übersicht von semantischen Konfigurationsparametern:\\
+	\vspace{1 cm}
+		\begin{tabular}{ p{5.0cm} | p{2.5cm} | p{8.0cm} }
+		Konstante & Wert & Zweck \\
+		\hline
+		VISUAL\_SQUARE & int & Kantenlänge des Quadrats (quasi Sichtweite), das bei der Erkundung von unbekannten Bereichen verwendet wird.
+	\end{tabular}
+	%----------------------------------------------------------------------------
+	\newpage
+	\subsubsection*{memory.h}
+	In dieser Headerdatei werden essentielle Funktionen aus der \textit{stdlib} zur Reservierung von Speicherbereichen gewrappt. Im Falle fehlgeschlagener Speicherallokation wird das Programm beendet!
+	
+	\begin{lstlisting}[caption=ex\_calloc]{}
+void* ex_calloc(size_t num, size_t size);
+	\end{lstlisting}
+	
+	\begin{description}
+		\item[Verwendung:] Reserviert \textit{num} mal Speicher der Größe \textit{size} und setzt alle Bytes auf 0. Schlägt dies fehl, beendet sich das Programm.
+		\item[Parameter:] \hfill
+			\begin{itemize}
+				\item num - Anzahl der Speichereinheiten
+				\item size - Größe der Speichereinheit
+			\end{itemize}
+		\item[Rückgabe:] Zeiger eines unspezifizierten Typs auf den allozierten Speicherbereich.
+	\end{description}
+	
+	\begin{lstlisting}[caption=ex\_malloc]{}
+void* ex_malloc(size_t size);
+	\end{lstlisting}
+	
+	\begin{description}
+		\item[Verwendung:] Reserviert Speicher von der Größe \textit{size}. Schlägt dies fehl, beendet sich das Programm.
+		\item[Parameter:] \hfill
+			\begin{itemize}
+				\item size - Größe des zu reservierenden Speicher in Bytes
+			\end{itemize}
+		\item[Rückgabe:] Zeiger eines unspezifizierten Typs auf den allozierten Speicherbereich.
+	\end{description}
+	
+		\begin{lstlisting}[caption=ex\_realloc]{}
+void* ex_realloc(void* ptr, size_t size);
+		\end{lstlisting}
+	
+	\begin{description}
+		\item[Verwendung:] Vergrößert oder verkleinert den Speicher von \textit{ptr} auf \textit{size} Bytes. Ist \textit{ptr} NULL, verhält sich die Funktion wie \textit{ex\_malloc}. Schlägt dies fehl, beendet sich das Programm.
+		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item Map-Loader (JSON, TXT, XML, BIN, ...?)
-			\item Ausgabe-Wrapper (SDL, Konsole, OpenGL, ...?)
-			\item logische Layer (Map -$>$ Logik -$>$ Ausgabepuffer -$>$ Ausgabe)
-			\item Tastatur-Listener
-			\item ...
+			\item ptr - Adresse des Speichers, dessen Größe verändert wird.
+			\item size - neue Speichergröße in Bytes
+		\end{itemize}
+		\item[Rückgabe:] Zeiger eines unspezifizierten Typs auf den neu- oder reallozierten Speicherbereich.
+	\end{description}
+	
+	%----------------------------------------------------------------------------
+	\newpage
+	\subsubsection*{output\_buffer.h}
+	Diese Header-Datei definiert die Kachel für den Ausgabepuffer. Diese ist quasi eine sehr beschnittene Spielkartenkachel, die nur noch Informationen enthält, die für die Ausgabe wichtig sind und unabhängig von Spiellogik und Ausgabegerät formuliert ist.
+	
+			\begin{lstlisting}[caption=ex\_realloc]{}
+typedef struct BufferTile {
+	char glyph;
+	unsigned long color;
+} BufferTile;
+		\end{lstlisting} \\
+Elemente der Struktur:
+		\begin{itemize}
+			\item glyph - Zeichen, das dargestellt werden soll.
+			\item color - 32-bit Farbinformation im Format R8G8B8A8
 		\end{itemize}
 	
+	%----------------------------------------------------------------------------
+	\newpage
+	\subsubsection*{item.h}
+	Hier wird eine Struktur definiert, die Gegenstände in der Welt darstellen können, die entweder herumliegen oder aufgenommen sind. Dieser Header lädt zusätzlich Item-Property-Structs aus dem Verzeichnis \textit{items}.
+	
+	\begin{lstlisting}[caption=ex\_realloc]{}
+typedef struct Item {
+	char* id;
+	unsigned long color;
+	int weight;
+	int value;
+	char* type;
+	void* properties;
+} Item;
+		\end{lstlisting} \\
+		
+		\end{lstlisting} \\
+Elemente der Struktur:
+		\begin{itemize}
+			\item id - eindeutiger Name jedes Items in der gesamten Spielwelt
+			\item color - 32-bit Farbinformation im Format R8G8B8A8.
+			\item weight - Gewicht des Gegenstands
+			\item value - Wert des Gegenstands
+			\item type - Präzisierung des Typs, den dieses Item darstellt (z.B. Trank oder Waffe).
+			\item properties - Zeiger auf ein \textit{Property}-struct, das abhänging von \textit{type} erstellt wird.
+		\end{itemize}
+		
+		\begin{lstlisting}[caption=ex\_realloc]{}
+void spawn_uses_item(Spawn* spawn, Item* item);
+		\end{lstlisting}
+		
+		\begin{description}
+		\item[Verwendung:] Führt abhänging vom Handelnden \textit{spawn} und dem benutzten Gegenstand \textit{item} einen Effekt aus.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - Benutzer des Items
+			\item size - benutztes Item
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+	%----------------------------------------------------------------------------
+	\newpage
 	\section*{Aufgaben und Zeitplan}
 
 	\begin{tabular}{ p{3.5cm} | p{4.0cm} | p{5.0cm} | p{2.5cm} }
