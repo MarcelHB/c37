@@ -35,6 +35,9 @@
  #include "tiles/wall.h"
  #include "tiles/button.h"
  
+  /* Zuordnungstabellen von type -> defaults */
+ /* "wall" -> "255", grau, "#" ... */
+ 
  /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
  void render_tile(BufferTile*, Tile*);
  /* Wenn ein Spawn auf ein Tile trifft, gucke, was hier passiert (rennt gegen Wand/stirbt/sammelt auf/...) */

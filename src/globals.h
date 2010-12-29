@@ -15,6 +15,7 @@
  #include "SDL.h"
  
  #include "memory.h"
+ #include "game_messages.h"
  #include "output_buffer.h"
  #include "item.h"
  #include "spawn.h"
@@ -30,6 +31,12 @@
  
  /* einige Spielregeln */
  #define VISUAL_SQUARE 5
+ 
+ /* Himmelsrichtungen: 0000NESW */
+ #define NORTH 8
+ #define EAST 4
+ #define SOUTH 2
+ #define WEST 1
  
  /* bis jetzt nur SDL */
  #include "sdl_output.h"

@@ -8,10 +8,12 @@
 
  #ifndef _C37_ITEM_H
  #define _C37_ITEM_H
-
+ 
  typedef struct Item {
 	/* ID */
 	char* id;
+	/* Name */
+	char* name;
 	/* 32-bit Farbe nach RGBA */
 	unsigned long color;
 	/* Gewicht, Wert */
@@ -27,5 +29,8 @@
  void spawn_uses_item(Spawn*, Item*);
  
  /* Properties fuer Klunker/Waffe/Misc... */
+ 
+ /* Zuordnungstabellen von type -> defaults */
+ /* "healthpotion" -> "Health Potition", blau, 3lbs, 5GM ... */
  
  #endif
