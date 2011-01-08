@@ -1,3 +1,4 @@
 spec/**/*.log
 src/demo/**/*.o
 src/demo/**/*.exe
+src/**/*.exe

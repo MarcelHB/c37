@@ -3,9 +3,10 @@
 
 Bitte:
 - Änderungen an den Dokumenten so schnell wies geht hier pushen!
-- Für gewagte Experimente bitte erstmal neue Branches erstellen.
+- Für gewagte Experimente bitte erstmal neue Branches erstellen oder eine Demo bauen.
 - Commits einigermaßen beschreiben.
-- Build-paths mit Objektdateien o.ä. in die ".gitignore" eintragen.
+- Build-paths mit Zwischen-/Logfiles o.ä. in die ".gitignore" eintragen.
+- Ausgenommen die *.o-Dateien, die mit abgegeben werden sollen.
 
 Struktur:
 - /spec : TeX-Projekt zum Spezifikations-PDF
@@ -14,8 +15,8 @@ Struktur:
 - IDEAS : Brainstormblatt für Programmideen
 
 TODO:
-- Programmname
-- Spezifikation zu Ende schreiben
-- technische Grundlage auswählen
+- Programmname => c37?
+- Spezifikation zu Ende schreiben => fertig?
+- technische Grundlage auswählen => SDL, JSON
 - Makefiles
 - Tests?
