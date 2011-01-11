@@ -36,10 +36,10 @@
  } Spawn;
  
  /* Wenn ein Spawn auf einein anderen trifft, gucke, was hier passiert (schubsen/töten/sprechen/...) */
- void spawn_spawn_collision(Spawn*, Spawn*);
+ void spawn_spawn_collision(Spawn*, Spawn*, Map*);
  /* Deckt die unerkundete Gegend um einen Spawn herum auf. */
- void explore_area(Spawn*);
+ void explore_area(Spawn*, Map*);
   /* Der Spawn ist am Zug, etwas zu tun. */
- void spawn_action(Spawn*);
+ void spawn_action(Spawn*, Map*);
  
  #endif

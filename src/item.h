@@ -26,7 +26,7 @@
  } Item;
  
  /* Spwan führt die Action eines Items aus (Trank trinken...) */
- void spawn_uses_item(Spawn*, Item*);
+ void spawn_uses_item(Spawn*, Item*, Map*);
  
  /* Properties fuer Klunker/Waffe/Misc... */
  

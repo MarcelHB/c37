@@ -41,8 +41,8 @@
  /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
  void render_tile(BufferTile*, Tile*);
  /* Wenn ein Spawn auf ein Tile trifft, gucke, was hier passiert (rennt gegen Wand/stirbt/sammelt auf/...) */
- void spawn_tile_collision(Spawn*, Tile*);
+ void spawn_tile_collision(Spawn*, Tile*, Map*, char**, int);
  /* irgendwas wird getoggelt (Tür auf, zu ...) */
- void toggle_tile(Tile*);
+ void toggle_tile(Tile*, Map*);
  
  #endif

@@ -9,15 +9,11 @@
  #ifndef _C37_MAIN_H
  #define _C37_MAIN_H
  
- /* Hält die Ausführung an */
- void pause_game();
- /* Setzt die Ausführung fort */
- void continue_game(); 
  /* Kopiert den sichtbaren Bereich mit kalk. Zeichen- & Farbinfos für Ausgabe */
- void create_output_buffer();
+ void create_output_buffer(Map*, OutputBuffer*, int);
  /* Male die Nachrichtenausgabe darüber */
- void print_message_box();
+ void print_message_box(OutputBuffer*, int, char**, int);
  /* Übermalt Ausgabepuffer mit nil-Werten */
- void flush_output_buffer();
+ void flush_output_buffer(OutputBuffer*, int);
  
  #endif

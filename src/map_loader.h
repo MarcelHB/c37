@@ -10,8 +10,8 @@
  #define _C37_MAP_LOADER_H
  
  /* Lädt die Karte anhand ihres Dateinamens (ohne Endung) und gibt einen Status (success) zurück */
- int load_map(char*);
+ Map* load_map(char*);
  /* Entfernt die Karte aus dem Speicher */
- void flush_map();
+ void flush_map(Map*);
  
  #endif

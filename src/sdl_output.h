@@ -12,7 +12,7 @@
  /* initialisiert Ausgabe */
  void output_init(); 
  /* gibt den Ausgabepuffer mittels SDL aus */
- void output_draw();
+ void output_draw(OutputBuffer*, int);
  /* löscht die Ausgabe */
  void output_clear();
  /* Ausgabedevices schließen */

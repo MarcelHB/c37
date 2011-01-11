@@ -28,7 +28,8 @@
 	
 	\section*{Spezifikation}
 	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, übernimmt man die Kontrolle über eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und für die angenehmere Betrachtung und Diversifikation der Spielelemente zusätzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezüglich der Interaktion des Spielers mit der Umwelt finden über eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Öffnen einer Tür oder Aufheben eines Gegenstands.
-	\vspace{0.7 cm}
+	\\
+	\\
 	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
 	\newpage
 	\section*{Design}
@@ -60,9 +61,10 @@
 			\end{itemize}
 			\newpage
 			\subsection*{Programm-Header}
+			Dieser Abschnitt soll einen Überblick über die verschiedenen Programmteile geben und ihre Funktionsweise dokumentieren. Wir behalten uns Änderungen an den Signaturen und der Anzahl an Definitionen bis zur finalen Version vor.
 			%----------------------------------------------------------------------------
 			\subsubsection*{globals.h}
-			Die Headerdatei \textit{globals.h} übernimmt mehrere Aufgaben. Eine davon ist es, alle nötigen \mbox{System-,} Library- und Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem für die Spiellogik ersetzen. Außerdem werden alle globalen Variablen hier angelegt, sodass diese unabhängig von einer bestimmten Objektdatei nutzbar sind.\\
+			Die Headerdatei \textit{globals.h} übernimmt mehrere Aufgaben. Eine davon ist es, alle nötigen \mbox{System-,} Library- und Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem für die Spiellogik ersetzen. \\
 	\vspace{1 cm}
 	Dies ist eine Übersicht von verwendeten internen Konfigurationsparametern:\\
 	\vspace{1 cm}
@@ -133,34 +135,6 @@ void* ex_realloc(void* ptr, size_t size);
 	
 	%----------------------------------------------------------------------------
 	\newpage
-	\subsubsection*{game\_messages.h}
-	Da das Spiel etwas mehr als eine graphische Ausgabe benötigt, um sinnvoll mit dem Spieler zu interagieren, können verschiedene Vorgänge und Events dem Spieler mehr berichten.
-	
-		\begin{lstlisting}[caption=message]{}
-void message(const char* msg);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Fügt den String \textit{msg} an das vordere Ende des Nachrichtenstreams ein. Sind dadurch mehr Nachrichten enthalten als in \textit{MESSAGE\_STREAM\_LIMIT} zugelassen, werden Nachrichten am hinteren Ende gelöscht.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item msg - Nachricht, die dem Spieler mitgeteilt werden soll.
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=flush\_messages]{}
-void flush_messages();
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Leer den Nachrichtenstream.
-		\item[Parameter:] -
-		\item[Rückgabe:] -
-	\end{description}
-	
-	%----------------------------------------------------------------------------
-	\newpage
 	\subsubsection*{output\_buffer.h}
 	Diese Header-Datei definiert die Kachel für den Ausgabepuffer. Diese ist quasi eine sehr beschnittene Spielkartenkachel, die nur noch Informationen enthält, die für die Ausgabe wichtig sind und unabhängig von Spiellogik und Ausgabegerät formuliert ist.
 	
@@ -204,7 +178,7 @@ Elemente der Struktur:
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=spawn\_uses\_item]{}
-void spawn_uses_item(Spawn* spawn, Item* item);
+void spawn_uses_item(Spawn* spawn, Item* item, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -213,6 +187,7 @@ void spawn_uses_item(Spawn* spawn, Item* item);
 		\begin{itemize}
 			\item spawn - Benutzer des Items
 			\item size - benutztes Item
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
@@ -255,7 +230,8 @@ Elemente der Struktur:
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=spawn\_spawn\_collision]{}
-void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b);
+void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b, Map* map, 
+char** mesgv, int mesgc);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -264,12 +240,15 @@ void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b);
 		\begin{itemize}
 			\item spawn\_a - erster Spawn
 			\item spawn\_b - zweiter Spawn
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item mesgv - Nachrichtenstream
+			\item mesgc - Anzahl der Stream-Elemente
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=explore\_area]{}
-void explore_area(Spawn* spawn);
+void explore_area(Spawn* spawn, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -277,13 +256,14 @@ void explore_area(Spawn* spawn);
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item spawn - Spawn, dessen Sichtbereich erweitert wird.
+			\item map - Karte, auf der der Sichtbereich aufgedeckt wird.
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
 	
 		\begin{lstlisting}[caption=spawn\_action]{}
-void spawn_action(Spawn* spawn);
+void spawn_action(Spawn* spawn, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -291,6 +271,7 @@ void spawn_action(Spawn* spawn);
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item spawn - Spawn, für den eine Aktion gewürfelt wird.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
@@ -343,7 +324,8 @@ void render_tile(BufferTile* bt, Tile* tile);
 	\end{description}
 	
 		\begin{lstlisting}[caption=spawn\_tile\_collision]{}
-void spawn_tile_collision(Spawn* spawn, Tile* tile);
+void spawn_tile_collision(Spawn* spawn, Tile* tile, Map* map, char** mesgv, 
+int mesgc);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -352,12 +334,15 @@ void spawn_tile_collision(Spawn* spawn, Tile* tile);
 		\begin{itemize}
 			\item spawn - handelnder Spawn
 			\item tile - Kachel, die er betreten möchte.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item mesgv - Nachrichtenstream
+			\item mesgc - Anzahl der Stream-Elemente
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=toggle\_tile]{}
-void toggle_tile(Tile* tile);
+void toggle_tile(Tile* tile, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -365,6 +350,7 @@ void toggle_tile(Tile* tile);
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item tile - Kachel, auf der eine Aktion ausgeführt werden soll.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
@@ -393,17 +379,20 @@ Elemente der Struktur:
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=get\_player\_spawn]{}
-Spawn* get_player_spawn();
+Spawn* get_player_spawn(Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Ermittelt die Spielfigur.
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item map - Karte, auf welcher gesucht wird.
+		\end{itemize}
 		\item[Rückgabe:] Rückgabe eines Zeigers auf die Spielfigur.
 	\end{description}
 	
 		\begin{lstlisting}[caption=get\_spawn\_at]{}
-Spawn* get_spawn_at(unsigned int x, unsigned int y);
+Spawn* get_spawn_at(unsigned int x, unsigned int y, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -412,6 +401,7 @@ Spawn* get_spawn_at(unsigned int x, unsigned int y);
 		\begin{itemize}
 			\item x - x-Koordinate
 			\item y - y-Koordinate
+			\item map - Karte, auf welcher gesucht wird.
 		\end{itemize}
 		\item[Rückgabe:] Rückgabe eines Zeigers auf die Figur auf der Kachel bei (\textit{x}, \textit{y}). Oder \textit{NULL}, wenn keine vorhanden oder außerhalb der Kartengrenze.
 	\end{description}
@@ -422,7 +412,7 @@ Spawn* get_spawn_at(unsigned int x, unsigned int y);
 	Der Map-Loader ist die Komponente, die das Parsen der Kartendatei übernimmt und diese im Speicher zusammensetzt.
 	
 		\begin{lstlisting}[caption=load\_map]{}
-int load_map(char* name);
+Map* load_map(char* name);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -431,16 +421,19 @@ int load_map(char* name);
 		\begin{itemize}
 			\item name - Der Kartenname, wie sie ohne Dateiendung auf dem Dateisystem abgelegt ist.
 		\end{itemize}
-		\item[Rückgabe:] Rückgabe eines Status, 1 bedeutet Erfolg, 0 einen Fehler.
+		\item[Rückgabe:] Rückgabe eines Zeigers auf die erstellte Karte oder NULL wenn unmöglich.
 	\end{description}
 	
 		\begin{lstlisting}[caption=flush\_map]{}
-void flush_map();
+void flush_map(Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Löscht die Karte und alle verwendeten Komponenten aus dem Speicher.
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item name - Freizugebende Karte.
+		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
@@ -449,53 +442,48 @@ void flush_map();
 	\subsubsection*{main.h}
 	Diese Header-Datei enthält Funktionen, die dem Programmfluss des Programms und der Übersetzung von Karte zu Ausgabe dienlich sind.
 	
-		\begin{lstlisting}[caption=pause\_game]{}
-void pause_game();
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Hält das Spielgesehen an.
-		\item[Parameter:] -
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=continue\_game]{}
-void continue_game();
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Setzt das Spielgesehen fort.
-		\item[Parameter:] -
-		\item[Rückgabe:] -
-	\end{description}
-	
 		\begin{lstlisting}[caption=create\_output\_buffer]{}
-void create_output_buffer();
+void create_output_buffer(Map* map, BufferTile* buf, int tiles);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Kopiert den Ausschnitt des Spielgeschehens in den Ausgabepuffer.
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item map - Spielkarte, die auszugeben ist.
+			\item buf - zu benutzender Ausgabepuffer
+			\item tiles - Anzahl der Tiles des Puffers.
+		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=print\_message\_box]{}
-void print_message_box();
+void print_message_box(BufferTile* buf, int tiles, char** mesgv, int mesgc);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Kopiert einen Textbereich für die Nachrichten in den Ausgabepuffer (und überschreibt damit ggf. Teile der Karte).
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item buf - Ausgabepuffer, der überschrieben werden soll.
+			\item tiles - Anzahl der Tiles des Puffers.
+			\item mesgv - Nachrichtenstream
+			\item mesgc - Anzahl der Stream-Elemente
+		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=flush\_output\_buffer]{}
-void flush_output_buffer();
+void flush_output_buffer(BufferTile* buf, int tiles);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Setzt alle Kacheln des Ausgabepuffers auf leere Elemente (Leerzeichen-Glyphen).
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item buf - Ausgabepuffer, der überschrieben werden soll.
+			\item tiles - Anzahl der Tiles des Puffers.
+		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
@@ -515,12 +503,16 @@ void output_init();
 	\end{description}
 	
 		\begin{lstlisting}[caption=output\_draw]{}
-void output_draw();
+void output_draw(BufferTile* buf, int tiles);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Weißt das Ausgabegerät an, die im Ausgabepuffer gespeicherten Kacheln zu zeichnen.
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item map - Ausgabepuffer, der gezeichnet werden soll.
+			\item tiles - Anzahl der Tiles des Puffers.
+		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
