@@ -18,13 +18,13 @@
 		Das C-Projekt:
 		\Huge
 		\parbox{1.0\linewidth}{
-			\center{c37 (bessere Idee?)}
+			\center{c37}
 		}
 		\normalsize
 	\end{center}
-	\begin{center}
-		\textcolor{red}{Entwurf!}
-	\end{center}
+%	\begin{center}
+%		\textcolor{red}{Entwurf!}
+%	\end{center}
 	
 	\section*{Spezifikation}
 	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, übernimmt man die Kontrolle über eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und für die angenehmere Betrachtung und Diversifikation der Spielelemente zusätzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezüglich der Interaktion des Spielers mit der Umwelt finden über eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Öffnen einer Tür oder Aufheben eines Gegenstands.
@@ -153,7 +153,7 @@ Elemente der Struktur:
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{item.h}
-	Hier wird eine Struktur definiert, die Gegenstände in der Welt darstellen können, die entweder herumliegen oder aufgenommen sind. Dieser Header lädt zusätzlich Item-Property-Structs aus dem Verzeichnis \textit{items}.
+	Hier wird eine Struktur definiert, die Gegenstände in der Welt darstellt, die entweder herumliegen oder aufgenommen sind. Dieser Header lädt zusätzlich Item-Property-Structs aus dem Verzeichnis \textit{items}.
 	
 	\begin{lstlisting}[caption=Item]{}
 typedef struct Item {
@@ -195,7 +195,7 @@ void spawn_uses_item(Spawn* spawn, Item* item, Map* map);
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{spawn.h}
-	Ein \textit{Spawn} ist die Struktur, die grundsätzlich alle Informationen enthält, die für spielbare und nichtspielbare Figuren benötigt wird.
+	Ein \textit{Spawn} ist eine Struktur, die grundsätzlich alle Informationen enthält, die für spielbare und nichtspielbare Figuren benötigt werden.
 	\begin{lstlisting}[caption=Spawn]{}
 typedef struct Spawn {
 	char* id;
@@ -279,7 +279,7 @@ void spawn_action(Spawn* spawn, Map* map);
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{tile.h}
-Die \textit{Tile}-Struktur beschreibt ein Spielfeld, das aufgrund seiner Beschaffenheit für die Spiellogik wichtig ist. Die Art und der Zustand einer Kachel bestimmt, wie diese in der Ausgabe erscheinen wird.
+Die \textit{Tile}-Struktur beschreibt eine Kachel des Spielfelds, das aufgrund seiner Beschaffenheit für die Spiellogik wichtig ist. Die Art und der Zustand einer Kachel bestimmt, wie diese in der Ausgabe erscheinen wird.
 
 		\begin{lstlisting}[caption=Tile]{}
 typedef struct Tile {
@@ -318,7 +318,7 @@ void render_tile(BufferTile* bt, Tile* tile);
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item bt - Pufferkachel, in die die Anzeigeinformation geschrieben wird
-			\item tile - Kachel, für die die Ausgabeinformationen ermittelt werden
+			\item tile - Kachel, für die die Ausgabeinformationen ermittelt werden.
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
@@ -440,7 +440,7 @@ void flush_map(Map* map);
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{main.h}
-	Diese Header-Datei enthält Funktionen, die dem Programmfluss des Programms und der Übersetzung von Karte zu Ausgabe dienlich sind.
+	Diese Header-Datei enthält Funktionen, die dem Fluss des Programms und der Übersetzung von der Karte zur Ausgabe dienlich sind.
 	
 		\begin{lstlisting}[caption=create\_output\_buffer]{}
 void create_output_buffer(Map* map, BufferTile* buf, int tiles);
