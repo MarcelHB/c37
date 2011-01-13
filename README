@@ -7,16 +7,15 @@ Bitte:
 - Commits einigermaßen beschreiben.
 - Build-paths mit Zwischen-/Logfiles o.ä. in die ".gitignore" eintragen.
 - Ausgenommen die *.o-Dateien, die mit abgegeben werden sollen.
+- Spec up-to-date halten
 
 Struktur:
 - /spec : TeX-Projekt zum Spezifikations-PDF
 - /src : Sourcen und Header
 - README : Diese Datei
-- IDEAS : Brainstormblatt für Programmideen
+- LICENSE: verwendete und anzugebende Lizenzen
 
 TODO:
-- Programmname => c37?
-- Spezifikation zu Ende schreiben => fertig?
-- technische Grundlage auswählen => SDL, JSON
+- Spezifikation ggf. überarbeiten
 - Makefiles
 - Tests?

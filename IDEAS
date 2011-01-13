@@ -1,8 +1,0 @@
-﻿Projektideen
-============
-
-Marcel:
-- Mapgenerator/-loader: begehbare Flächen, Wände, (Trigger, Türen)
-- Spielfigur, die da durch laufen kann.
-- Zeichen als Darstellung der Elemente.
-- Konsole/SDL_TTF

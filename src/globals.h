@@ -9,6 +9,7 @@
  #ifndef _C37_GLOBALS_H
  #define _C37_GLOBALS_H
  
+ #include <stdio.h>
  #include <stdlib.h>
  
  /* Wenn nicht für Ausgabe, dann für Tastatur */
