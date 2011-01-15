@@ -11,6 +11,7 @@
  
  #include <stdio.h>
  #include <stdlib.h>
+ #include <string.h>
  
  /* Wenn nicht für Ausgabe, dann für Tastatur */
  #include "SDL.h"
@@ -38,6 +39,9 @@
  #define EAST 4
  #define SOUTH 2
  #define WEST 1
+ 
+ #define MAP_DIRECOTRY "maps"
+ #define MAP_FILE_EXTENSION ".json"
  
  /* bis jetzt nur SDL */
  #include "sdl_output.h"

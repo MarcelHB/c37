@@ -192,6 +192,19 @@ void spawn_uses_item(Spawn* spawn, Item* item, Map* map);
 		\item[Rückgabe:] -
 	\end{description}
 	
+		\begin{lstlisting}[caption=free\_spawn]{}
+void free_item(Item* item);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Gibt allen Speicher frei, der für Item-Elemente und \textit{item} reserviert wurde.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item item - Item, dessen Speicher freigegeben werden soll.
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{spawn.h}
@@ -276,6 +289,19 @@ void spawn_action(Spawn* spawn, Map* map);
 		\item[Rückgabe:] -
 	\end{description}
 	
+		\begin{lstlisting}[caption=free\_spawn]{}
+void free_spawn(Spawn* spawn);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Gibt allen Speicher frei, der für Spawn-Elemente und \textit{spawn} reserviert wurde.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - Spawn, dessen reservierte Speicher freigegeben werden soll.
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{tile.h}
@@ -355,6 +381,19 @@ void toggle_tile(Tile* tile, Map* map);
 		\item[Rückgabe:] -
 	\end{description}
 	
+		\begin{lstlisting}[caption=free\_tile]{}
+void free_tile(Tile* tile);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Gibt allen Speicher frei, der für Tile-Elemente und \textit{tile} reserviert wurde.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item tile - Tile, dessen Speicher freigegeben werden soll.
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{map.h}
@@ -429,10 +468,10 @@ void flush_map(Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Löscht die Karte und alle verwendeten Komponenten aus dem Speicher.
+		\item[Verwendung:] Gibt den reservierten Speicher für Karten-Elemente und \textit{map} frei.
 		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item name - Freizugebende Karte.
+			\item map - Freizugebende Karte.
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}

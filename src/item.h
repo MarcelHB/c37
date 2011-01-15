@@ -28,6 +28,9 @@
  /* Spwan führt die Action eines Items aus (Trank trinken...) */
  void spawn_uses_item(Spawn*, Item*, Map*);
  
+ /* Gibt reservierten Speicher eines Items frei */
+ void free_item(Item*);
+ 
  /* Properties fuer Klunker/Waffe/Misc... */
  
  /* Zuordnungstabellen von type -> defaults */

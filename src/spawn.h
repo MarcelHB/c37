@@ -42,4 +42,7 @@
   /* Der Spawn ist am Zug, etwas zu tun. */
  void spawn_action(Spawn*, Map*);
  
+ /* Gibt reservierten Speicher eines Spawns frei */
+ void free_spawn(Spawn*);
+ 
  #endif

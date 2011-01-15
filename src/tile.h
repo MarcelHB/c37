@@ -45,4 +45,7 @@
  /* irgendwas wird getoggelt (Tür auf, zu ...) */
  void toggle_tile(Tile*, Map*);
  
+ /* Gibt reservierten Speicher eines Tiles frei */
+ void free_tile(Tile*);
+ 
  #endif
