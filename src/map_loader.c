@@ -21,7 +21,6 @@
  static unsigned int array_depth = 0;
  static unsigned int has_root = 0;
  static int parsed_tiles = -1;
- static int parsed_spawns = -1;
  static unsigned int* node_stack = NULL;
  static unsigned int node_stack_size = 0;
  /*--------------------------------------------------------------------------*/
@@ -114,7 +113,7 @@
 	switch(type) {
 		/* { */
 		case JSON_T_OBJECT_BEGIN:
-			parse_object_begin(value, &intermediate_map, &node_stack, &node_stack_size, &has_root, &parsed_tiles, parsed_spawns, array_depth);
+			parse_object_begin(&intermediate_map, &node_stack, &node_stack_size, &has_root, &parsed_tiles, array_depth);
 			break;
 		/* } */
 		case JSON_T_OBJECT_END:
@@ -128,7 +127,21 @@
 		case JSON_T_ARRAY_END:
 			parse_array_end(&node_stack, &node_stack_size, &array_depth);
 			break;
-		/* TODO! */
+		case JSON_T_KEY:
+			parse_key(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
+			break;
+		case JSON_T_INTEGER:
+			/* TODO */
+			break;
+		case JSON_T_INTEGER:
+			parse_integer(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
+			break;
+		case JSON_T_TRUE:
+			/* TODO */
+			break;
+		case JSON_T_FALSE:
+			/* TODO */
+			break;
 	}
 	
 	return 1;
@@ -136,7 +149,7 @@
  
  /*--------------------------------------------------------------------------*/
  /* Parser-Wert, Karte, Tiefenstack, Größe davon, Root-Marker, Anz. geparster Kacheln, Anz. geparster Spawns, Arraytiefe */
- void parse_object_begin(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, unsigned int* has_root, int* parsed_tiles, int* parsed_spawns, unsigned int array_depth) {
+ void parse_object_begin(Map* map, unsigned int** stack, unsigned int* stack_size, unsigned int* has_root, int* parsed_tiles,  unsigned int array_depth) {
 	if(!(*has_root)) {
 		push_node_stack(NODE_ROOT, &stack, stack_size);
 		*has_root = 1;
@@ -145,15 +158,33 @@
 		int parent = node_stack_at(1, *stack, stack_size);
 		
 		/* Root->Kacheln */
-		if(stack_top != STACK_INVALID_INDEX && parent == STACK_ROOT && stack_top == STACK_ROOT_TILES) {
+		if(parent == STACK_ROOT && stack_top == STACK_TILES) {
 			if(array_depth == 2 && (map->x * map->y) > 0) {
 				(*parsed_tiles)++;
 			}
 		}
 		/* Root->Spawns */
-		if(stack_top != STACK_INVALID_INDEX && parent == STACK_ROOT && stack_top == STACK_ROOT_SPAWNS) {
+		if(parent == STACK_ROOT && stack_top == STACK_SPAWNS) {
 			if(array_depth == 2) {
-				(*parsed_spawns)++;
+				map->spawns = (Spawn*)ex_realloc(map->spawns, sizeof(Spawn) * ++map->number_of_spawns);
+				map->spawns[map->number_of_spawns - 1] = (Spawn){
+						.id = NULL,
+						.name = NULL,
+						.x = 0,
+						.y = 0,
+						.direction = WEST,
+						.glyph = ' ',
+						.color = 0x00000000,
+						.npc = 0,
+						.humanoid = 0,
+						.hp = 0,
+						.max_hp = 1,
+						.type = NULL,
+						.properties = NULL,
+						.inventory = NULL,
+						.inventory_size = 0
+					};
+				calculate_spawn_id(&map->spawns[map->number_of_spawns - 1], map->number_of_spawns);
 			}
 		}
 	}
@@ -171,8 +202,9 @@
  /*--------------------------------------------------------------------------*/
  void parse_array_begin(int* stack, unsigned int stack_size, unsigned int* array_depth) {
 	int stack_top = node_stack_at(0, stack, stack_size);
+	int parent = node_stack_at(1, stack, stack_size);
 	
-	if(stack_top != STACK_INVALID_INDEX && (stack_top == STACK_ROOT_TILES || stack_top == STACK_ROOT_SPAWNS)) {
+	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
 		(*parse_array_depth)++;
 	}
  }
@@ -180,11 +212,162 @@
  /*--------------------------------------------------------------------------*/
  void parse_array_end(unsigned int** stack, unsigned int* stack_size, unsigned int* array_depth) {
 	int stack_top = node_stack_at(0, *stack, stack_size);
+	int parent = node_stack_at(1, *stack, stack_size);
  
-	if(stack_top != STACK_INVALID_INDEX && (stack_top == STACK_ROOT_TILES || stack_top == STACK_ROOT_SPAWNS)) {
+	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
 		(*array_depth)--;
 		if((*array_depth) == 0) {
 			pop_node_stack(stack, stack_size)
+		}
+	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void parse_key(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
+	int stack_top = node_stack_at(0, *stack, stack_size);
+	
+	/* root (Karte) */
+	if(stack_top == STACK_ROOT) {
+		/* root->name (Kartenname) */
+		if(map->name == NULL && strcmp(value->vu.str.value, NODE_NAME) == 0) {
+			push_node_stack(STACK_NAME));
+		}
+		/* root->x (Breite) */
+		else if(strcmp(value->vu.str.value, NODE_X) == 0) {
+			push_node_stack(STACK_X);
+		}
+		/* root->y (Höhe) */
+		else if(strcmp(value->vu.str.value, NODE_Y) == 0) {
+			push_node_stack(STACK_Y);
+		}
+		/* root->tiles (Kacheln) */
+		else if(map->tiles == NULL && strcmp(value->vu.str.value, NODE_TILES) == 0 && (map->x * map->y > 0)) {
+			int i,j;
+			push_node_stack(STACK_TILES);
+			map->tiles = (Tile*)ex_realloc(map->tiles, sizeof(Tile) * map->x * map->y);
+			for(i = 0; i < map->y; ++i) {
+				for(j = 0; j < map->x; ++j) {
+					int current_index = i * map->x + j;
+					map->tiles[current_index] = (Tile){
+						.id = NULL,
+						.x = i,
+						.y = j,
+						.spotted = 0,
+						.glyph = ' ',
+						.color = 0xFFFFFF00,
+						.type = NULL,
+						.properties = NULL,
+						.items = NULL,
+						.number_of_items = 0
+					};
+					calculate_tile_id(&map->tiles[current_index], i, j);
+				}
+			}
+		}
+		/* root->spawns */
+		else if(map->spawns == NULL && strcmp(value->vu.str.value, NODE_SPAWNS) == 0) {
+			push_node_stack(STACK_SPAWNS);
+		}
+	}
+	/* root->tiles->[] */
+	else if(stack_top == STACK_TILES && parse_array_depth == 2) {
+		/* tile->type */
+		if(map->tiles[parsed_tiles].type == NULL && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
+			push_node_stack(STACK_TYPE);
+		}
+		/* tile->id */
+		else if(strcmp(value->vu.str.value, NODE_ID) == 0) {
+			push_node_stack(STACK_ID);
+		}
+		/* tile->items */
+		else if(map->tiles[parsed_tiles].items == NULL && strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
+			push_node_stack(STACK_ITEMS);
+		}
+		/* tile->brightness */
+		else if(strcmp(value->vu.str.value, NODE_BRIGHTNESS) == 0) {
+			push_node_stack(STACK_BRIGHTNESS);
+		}
+		/* tile->property */
+		else {
+			int index = tile_property_identifier(value->vu.str.value);
+			if(index != STACK_INVALID_INDEX) {
+				push_node_stack(index);
+			}
+		}
+	}
+	/* root->spawns->[] */
+	else if(stack_top == STACK_SPAWNS && parse_array_depth == 2) {
+		/* spawn->type */
+		if(map->spawns[map->number_of_spawns - 1].type == NULL && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
+			push_node_stack(STACK_TYPE);
+		}
+		/* spawn->id */
+		else if(strcmp(value->vu.str.value, NODE_ID) == 0) {
+			push_node_stack(STACK_ID);
+		}
+		/* spawn->name */
+		else if(map->spawns[map->number_of_spawns - 1].name == NULL && strcmp(value->vu.str.value, NODE_NAME) == 0) {
+			push_node_stack(STACK_NAME);
+		}
+		/* spawn->direction */
+		else if(strcmp(value->vu.str.value, NODE_DIRECTION) == 0) {
+			push_node_stack(STACK_NAME);
+		}
+		/* spawn->hp */
+		else if(strcmp(value->vu.str.value, NODE_HEALTHPOINTS) == 0) {
+			push_node_stack(STACK_HEALTHPOINTS);
+		}
+		/* spawn->max_hp */
+		else if(strcmp(value->vu.str.value, NODE_MAX_HEALTHPOINTS) == 0) {
+			push_node_stack(STACK_MAX_HEALTHPOINTS);
+		}
+		/* spawn->items */
+		else if(map->spawns[map->number_of_spawns - 1].items == NULL && strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
+			push_node_stack(NODE_ITEMS);
+		}
+		/* spawn->property */
+		else {
+			int index = spawn_property_identifier(value->vu.str.value);
+			if(index != STACK_INVALID_INDEX) {
+				push_node_stack(index);
+			}
+		}
+	}
+	/* TODO: Items */
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void parse_integer(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
+	int stack_top = node_stack_at(0, *stack, stack_size);
+	int parent = node_stack_at(1, *stack, stack_size);
+	
+	/* root */
+	if(parent == STACK_ROOT) {
+		/* root->x */
+		if(stack_top == STACK_X) {
+			map->x = value->vu.integer_value;
+		}
+		/* root->y */
+		else if(stack_top == STACK_Y) {
+			map->y = value->vu.integer_value;
+		}
+	} 
+	/* Tile */
+	else if(parent == STACK_TILES && array_depth == 2) {
+		/* tile->brightness */
+		if(stack_top == NODE_BRIGHTNESS) {
+			map->tiles[parsed_tiles].brightness = value->vu.integer_value;
+		}
+	}
+	/* Spawn */
+	else if(parent == STACK_SPAWNS && array_depth == 2) {
+		/* spawn->hp */
+		if(stack_top == STACK_HEALTHPOINTS) {
+			map->spawns[map->number_of_spawns - 1].hp = value->vu.integer_value;
+		}
+		/* spawn->max_hp */
+		else if(stack_top == STACK_MAX_HEALTHPOINTS) {
+			map->spawns[map->number_of_spawns - 1].max_hp = value->vu.integer_value;
 		}
 	}
  }
@@ -195,7 +378,6 @@
 	if(!stack_size || ((stack_size - index) <= 0)) {
 		return STACK_INVALID_INDEX;
 	}
-	
 	return stack[stack_size - index - 1];
  }
  
@@ -254,7 +436,47 @@
 	array_depth = 0;
     has_root = 0;
     parsed_tiles = -1;
-    parsed_spawns = -1;
     node_stack = NULL;
     node_stack_size = 0;
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void calculate_tile_id(Tile* tile, const int x, const int y) {
+	/* "tile_","_",0, x als String, y als String */
+	int x_length = (int)log10(x) + 1;
+	int y_length = (int)log10(y) + 1;
+	int id_length = 7 + x_length + y_length;
+	char* x_buffer = (char*)ex_calloc(x_length + 1);
+	char* y_buffer = (char*)ex_calloc(y_length + 1);
+	char* id = (char*)ex_calloc(id_length, 1);
+	
+	strcpy(id, "tile_"); strcat(id, itoa(x, x_buffer, 10)); strcat(id, "_"); strcat(id, itoa(y, y_buffer, 10));
+	tile->id = id;
+	free(x_buffer);
+	free(y_buffer);
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void calculate_spawn_id(Spawn* spawn, const int number) {
+	/* "spawn_",0, number als String */
+	int no_length = (int)log10(number) + 1;
+	int id_length = 7 + no_length;
+	char* no_buffer = (char*)ex_calloc(no_length + 1);
+	char* id = (char*)ex_calloc(id_length, 1);
+	
+	strcpy(id, "spawn_"); strcat(id, itoa(number, no_buffer, 10));
+	spawn->id = id;
+	free(no_buffer);
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ int tile_property_identifier(const char*) {
+	/* kommt noch... */
+	return STACK_INVALID_INDEX;
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ int spawn_property_identifier(const char*) {
+	/* bestimmt auch... */
+	return STACK_INVALID_INDEX;
  }

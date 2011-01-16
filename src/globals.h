@@ -12,6 +12,7 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
+ #include <math.h>
  
  /* Wenn nicht für Ausgabe, dann für Tastatur */
  #include "SDL.h"

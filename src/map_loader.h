@@ -24,32 +24,54 @@
  void reset_parse_stats();
  
  static int parse(void*, int, const JSON_value*);
- void parse_object_begin(const JSON_value*, Map*, unsigned int**, unsigned int*, unsigned int*, int*, int*, unsigned int);
+ void parse_object_begin(Map*, unsigned int**, unsigned int*, unsigned int*, int*, unsigned int);
  void parse_object_end(unsigned int**, unsigned int*, unsigned int);
  void parse_array_begin(unsigned int*, unsigned int, unsigned int*);
  void parse_array_end(unsigned int**, unsigned int*, unsigned int*);
+ void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const unsigned int, const int);
  
  unsigned int node_stack_at(unsigned int, unsigned int*, unsigned int);
  void push_node_stack(int, unsigned int**, unsigned int*);
  unsigned int pop_node_stack(int*, unsigned int*);
+ void calculate_tile_id(Tile*, const int, const int);
+ void calculate_spawn_id(Spawn*, const int);
+ 
+ int tile_property_identifier(const char*);
+ int spawn_property_identifier(const char*);
 
  /* Object-Keys beim Parsen */
  
  /* Root (Map)-Keys */
- #define NODE_ROOT "root"
- #define NODE_ROOT_NAME "name"
- #define NODE_ROOT_X "x"
- #define NODE_ROOT_Y "y"
- #define NODE_ROOT_TILES "tiles"
- #define NODE_ROOT_SPAWNS "spawns"
+ #define NODE_ROOT 						"root"
+ #define NODE_NAME 						"name"
+ #define NODE_X 						"x"
+ #define NODE_Y 						"y"
+ #define NODE_TILES 					"tiles"
+ #define NODE_SPAWNS 					"spawns"
+ #define NODE_TYPE	 					"type"
+ #define NODE_ID	 					"id"
+ #define NODE_ITEMS	 					"items"
+ #define NODE_BRIGHTNESS				"brightness"
+ #define NODE_DIRECTION					"direction"
+ #define NODE_HEALTHPOINTS				"hp"
+ #define NODE_MAX_HEALTHPOINTS			"max_hp"
+ #define NODE_ITEMS						"items"
  
  /* Stack-Identifier */
  #define STACK_INVALID_INDEX			0xFFFFFFFF
  #define STACK_ROOT 					0x00000000
- #define STACK_ROOT_NAME 				0x00000001
- #define STACK_ROOT_X 					0x00000002
- #define STACK_ROOT_Y 					0x00000003
- #define STACK_ROOT_TILES 				0x00000004
- #define STACK_ROOT_SPAWNS 				0x00000005
+ #define STACK_NAME 					0x00000001
+ #define STACK_X 						0x00000002
+ #define STACK_Y 						0x00000003
+ #define STACK_TILES 					0x00000004
+ #define STACK_SPAWNS 					0x00000005
+ #define STACK_TYPE 					0x00000006
+ #define STACK_ID						0x00000007
+ #define STACK_ITEMS					0x00000008
+ #define STACK_BRIGHTNESS				0x00000009
+ #define STACK_DIRECTION				0x0000000A
+ #define STACK_HEALTHPOINTS				0x0000000B
+ #define STACK_MAX_HEALTHPOINTS			0x0000000C
+ #define STACK_ITEMS					0x0000000D
  
  #endif
