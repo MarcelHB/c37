@@ -4,7 +4,7 @@
 \usepackage{lmodern}
 \usepackage{color}
 \usepackage{german}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{listings} \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt} \lstset{language=C}
 
 \begin{document}
@@ -27,22 +27,22 @@
 %	\end{center}
 	
 	\section*{Spezifikation}
-	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, übernimmt man die Kontrolle über eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und für die angenehmere Betrachtung und Diversifikation der Spielelemente zusätzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezüglich der Interaktion des Spielers mit der Umwelt finden über eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Öffnen einer Tür oder Aufheben eines Gegenstands.
+	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, Ã¼bernimmt man die Kontrolle Ã¼ber eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und fÃ¼r die angenehmere Betrachtung und Diversifikation der Spielelemente zusÃ¤tzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezÃ¼glich der Interaktion des Spielers mit der Umwelt finden Ã¼ber eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Ã–ffnen einer TÃ¼r oder Aufheben eines Gegenstands.
 	\\
 	\\
-	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
+	\textit{c37} ist grundsÃ¤tzlich nicht auf bestimmte Plattformen beschrÃ¤nkt, verwendet jedoch fÃ¼r Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren VerfÃ¼gbarkeit angewiesen. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfÃ¼gbare Fremdkomponente von \textit{json.org} verwendet. Der Grund fÃ¼r die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder BinÃ¤rformats einen hÃ¶heren Zeitaufwand und grÃ¶ÃŸere Risiken unentdeckter SicherheitslÃ¼cken darstellt.
 	\newpage
 	\section*{Design}
 		\subsection*{Programmarchitektur}
 			\subsubsection*{Programmablauf}
 			\begin{itemize}
-				\item Das Programm erhält als ersten Parameter beim Aufruf den Namen einer Karte, welche sich im Verzeichnis \textit{maps} befindet.
+				\item Das Programm erhÃ¤lt als ersten Parameter beim Aufruf den Namen einer Karte, welche sich im Verzeichnis \textit{maps} befindet.
 				\item Fehlermeldungen werden nach \textit{stderr} geschrieben.
-				\item Ist diese nicht aufzufinden, startet das Programm nicht. Andernfalls wird die Kartendatei eingelesen: Die Karte wird im Speicher angelegt, die einzelnen Spielfelder erhalten jeweils die Kartenkomponente (Wände, Böden, Türen, ...), die in der Datei angegeben wurde. Weiterhin wird eine Spielfigur gesetzt und Gegenstände platziert.
-				\item Sollte die Kartendatei nicht richtig ausgelesen werden können, bricht das Programm ab.
+				\item Ist diese nicht aufzufinden, startet das Programm nicht. Andernfalls wird die Kartendatei eingelesen: Die Karte wird im Speicher angelegt, die einzelnen Spielfelder erhalten jeweils die Kartenkomponente (WÃ¤nde, BÃ¶den, TÃ¼ren, ...), die in der Datei angegeben wurde. Weiterhin wird eine Spielfigur gesetzt und GegenstÃ¤nde platziert.
+				\item Sollte die Kartendatei nicht richtig ausgelesen werden kÃ¶nnen, bricht das Programm ab.
 				\item Wenn die Karte komplett konstruiert worden ist, wird sichergesetellt, dass I/O-Operationen wie das Warten auf Tasturevents und die graphische Ausgabe funktionieren. Andernfalls bricht das Programm ab.
-				\item Solange das Programm nicht per ESC-Taste abgebrochen wird, findet ein Loop über  relevante Events statt, die Logik des Spiels wird auf vorhandene Komponenten angewendet und die Ausgabe aktualisiert.
-				\item Mit dem Drücken der ESC-Taste wird der Loop abgebrochen und vom Programm genutzte Ressourcen werden freigegeben.
+				\item Solange das Programm nicht per ESC-Taste abgebrochen wird, findet ein Loop Ã¼ber  relevante Events statt, die Logik des Spiels wird auf vorhandene Komponenten angewendet und die Ausgabe aktualisiert.
+				\item Mit dem DrÃ¼cken der ESC-Taste wird der Loop abgebrochen und vom Programm genutzte Ressourcen werden freigegeben.
 			\end{itemize}
 			
 			\subsubsection*{zentrale Komponenten}
@@ -61,12 +61,12 @@
 			\end{itemize}
 			\newpage
 			\subsection*{Programm-Header}
-			Dieser Abschnitt soll einen Überblick über die verschiedenen Programmteile geben und ihre Funktionsweise dokumentieren. Wir behalten uns Änderungen an den Signaturen und der Anzahl an Definitionen bis zur finalen Version vor.
+			Dieser Abschnitt soll einen Ãœberblick Ã¼ber die verschiedenen Programmteile geben und ihre Funktionsweise dokumentieren. Wir behalten uns Ã„nderungen an den Signaturen und der Anzahl an Definitionen bis zur finalen Version vor.
 			%----------------------------------------------------------------------------
 			\subsubsection*{globals.h}
-			Die Headerdatei \textit{globals.h} übernimmt mehrere Aufgaben. Eine davon ist es, alle nötigen \mbox{System-,} Library- und Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem für die Spiellogik ersetzen. \\
+			Die Headerdatei \textit{globals.h} Ã¼bernimmt mehrere Aufgaben. Eine davon ist es, alle nÃ¶tigen \mbox{System-,} Library- und Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem fÃ¼r die Spiellogik ersetzen. \\
 	\vspace{1 cm}
-	Dies ist eine Übersicht von verwendeten internen Konfigurationsparametern:\\
+	Dies ist eine Ãœbersicht von verwendeten internen Konfigurationsparametern:\\
 	\vspace{1 cm}
 	\begin{tabular}{ p{5.0cm} | p{2.5cm} | p{8.0cm} }
 		Konstante & Wert & Zweck \\
@@ -76,16 +76,16 @@
 		MESSAGE\_STREAM\_LIMIT & int & max. Anzahl an gespeicherten Nachrichten
 	\end{tabular}
 	\vspace{1 cm}
-	Eine Übersicht von semantischen Konfigurationsparametern:\\
+	Eine Ãœbersicht von semantischen Konfigurationsparametern:\\
 	\vspace{1 cm}
 		\begin{tabular}{ p{5.0cm} | p{2.5cm} | p{8.0cm} }
 		Konstante & Wert & Zweck \\
 		\hline
-		VISUAL\_SQUARE & int & Kantenlänge des Quadrats (quasi Sichtweite), das bei der Erkundung von unbekannten Bereichen verwendet wird. \\
-		NORTH & 2^3 (int) & 4. Bit steht für die Himmelsrichtung Norden \\
-		EAST & 2^2 (int) & 3. Bit steht für die Himmelsrichtung Osten \\
-		SOUTH & 2^1 (int) & 2. Bit steht für die Himmelsrichtung Süden \\
-		WEST & 2^0 (int) & 1. Bit steht für die Himmelsrichtung Westen
+		VISUAL\_SQUARE & int & KantenlÃ¤nge des Quadrats (quasi Sichtweite), das bei der Erkundung von unbekannten Bereichen verwendet wird. \\
+		NORTH & $2^3$ (int) & 4. Bit steht fÃ¼r die Himmelsrichtung Norden \\
+		EAST & $2^2$ (int) & 3. Bit steht fÃ¼r die Himmelsrichtung Osten \\
+		SOUTH & $2^1$ (int) & 2. Bit steht fÃ¼r die Himmelsrichtung SÃ¼den \\
+		WEST & $2^0$ (int) & 1. Bit steht fÃ¼r die Himmelsrichtung Westen
 	\end{tabular}
 	%----------------------------------------------------------------------------
 	\newpage
@@ -97,13 +97,13 @@ void* ex_calloc(size_t num, size_t size);
 	\end{lstlisting}
 	
 	\begin{description}
-		\item[Verwendung:] Reserviert \textit{num} mal Speicher der Größe \textit{size} und setzt alle Bytes auf 0. Schlägt dies fehl, beendet sich das Programm.
+		\item[Verwendung:] Reserviert \textit{num} mal Speicher der GrÃ¶ÃŸe \textit{size} und setzt alle Bytes auf 0. SchlÃ¤gt dies fehl, beendet sich das Programm.
 		\item[Parameter:] \hfill
 			\begin{itemize}
 				\item num - Anzahl der Speichereinheiten
-				\item size - Größe der Speichereinheit
+				\item size - GrÃ¶ÃŸe der Speichereinheit
 			\end{itemize}
-		\item[Rückgabe:] Zeiger eines unspezifizierten Typs auf den allozierten Speicherbereich.
+		\item[RÃ¼ckgabe:] Zeiger eines unspezifizierten Typs auf den allozierten Speicherbereich.
 	\end{description}
 	
 	\begin{lstlisting}[caption=ex\_malloc]{}
@@ -111,12 +111,12 @@ void* ex_malloc(size_t size);
 	\end{lstlisting}
 	
 	\begin{description}
-		\item[Verwendung:] Reserviert Speicher von der Größe \textit{size}. Schlägt dies fehl, beendet sich das Programm.
+		\item[Verwendung:] Reserviert Speicher von der GrÃ¶ÃŸe \textit{size}. SchlÃ¤gt dies fehl, beendet sich das Programm.
 		\item[Parameter:] \hfill
 			\begin{itemize}
-				\item size - Größe des zu reservierenden Speicher in Bytes
+				\item size - GrÃ¶ÃŸe des zu reservierenden Speicher in Bytes
 			\end{itemize}
-		\item[Rückgabe:] Zeiger eines unspezifizierten Typs auf den allozierten Speicherbereich.
+		\item[RÃ¼ckgabe:] Zeiger eines unspezifizierten Typs auf den allozierten Speicherbereich.
 	\end{description}
 	
 		\begin{lstlisting}[caption=ex\_realloc]{}
@@ -124,26 +124,26 @@ void* ex_realloc(void* ptr, size_t size);
 		\end{lstlisting}
 	
 	\begin{description}
-		\item[Verwendung:] Vergrößert oder verkleinert den Speicher von \textit{ptr} auf \textit{size} Bytes. Ist \textit{ptr} NULL, verhält sich die Funktion wie \textit{ex\_malloc}. Schlägt dies fehl, beendet sich das Programm.
+		\item[Verwendung:] VergrÃ¶ÃŸert oder verkleinert den Speicher von \textit{ptr} auf \textit{size} Bytes. Ist \textit{ptr} NULL, verhÃ¤lt sich die Funktion wie \textit{ex\_malloc}. SchlÃ¤gt dies fehl, beendet sich das Programm.
 		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item ptr - Adresse des Speichers, dessen Größe verändert wird.
-			\item size - neue Speichergröße in Bytes
+			\item ptr - Adresse des Speichers, dessen GrÃ¶ÃŸe verÃ¤ndert wird.
+			\item size - neue SpeichergrÃ¶ÃŸe in Bytes
 		\end{itemize}
-		\item[Rückgabe:] Zeiger eines unspezifizierten Typs auf den neu- oder reallozierten Speicherbereich.
+		\item[RÃ¼ckgabe:] Zeiger eines unspezifizierten Typs auf den neu- oder reallozierten Speicherbereich.
 	\end{description}
 	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{output\_buffer.h}
-	Diese Header-Datei definiert die Kachel für den Ausgabepuffer. Diese ist quasi eine sehr beschnittene Spielkartenkachel, die nur noch Informationen enthält, die für die Ausgabe wichtig sind und unabhängig von Spiellogik und Ausgabegerät formuliert ist.
+	Diese Header-Datei definiert die Kachel fÃ¼r den Ausgabepuffer. Diese ist quasi eine sehr beschnittene Spielkartenkachel, die nur noch Informationen enthÃ¤lt, die fÃ¼r die Ausgabe wichtig sind und unabhÃ¤ngig von Spiellogik und AusgabegerÃ¤t formuliert ist.
 	
-			\begin{lstlisting}[caption=BufferTile]{}
+		\begin{lstlisting}[caption=BufferTile]{}
 typedef struct BufferTile {
 	char glyph;
 	unsigned long color;
 } BufferTile;
-		\end{lstlisting} \\
+		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
 		\begin{itemize}
 			\item glyph - Zeichen, das dargestellt werden soll.
@@ -153,7 +153,7 @@ Elemente der Struktur:
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{item.h}
-	Hier wird eine Struktur definiert, die Gegenstände in der Welt darstellt, die entweder herumliegen oder aufgenommen sind. Dieser Header lädt zusätzlich Item-Property-Structs aus dem Verzeichnis \textit{items}.
+	Hier wird eine Struktur definiert, die GegenstÃ¤nde in der Welt darstellt, die entweder herumliegen oder aufgenommen sind. Dieser Header lÃ¤dt zusÃ¤tzlich Item-Property-Structs aus dem Verzeichnis \textit{items}.
 	
 	\begin{lstlisting}[caption=Item]{}
 typedef struct Item {
@@ -165,7 +165,7 @@ typedef struct Item {
 	unsigned int type;
 	void* properties;
 } Item;
-		\end{lstlisting} \\
+		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
 		\begin{itemize}
 			\item id - eindeutiger Name jedes Items in der gesamten Spielwelt
@@ -173,8 +173,8 @@ Elemente der Struktur:
 			\item color - 32-bit Farbinformation im Format R8G8B8A8.
 			\item weight - Gewicht des Gegenstands
 			\item value - Wert des Gegenstands
-			\item type - Präzisierung des Typs, den dieses Item darstellt (z.B. Trank oder Waffe).
-			\item properties - Zeiger auf ein \textit{Property}-struct, das abhänging von \textit{type} erstellt wird.
+			\item type - PrÃ¤zisierung des Typs, den dieses Item darstellt (z.B. Trank oder Waffe).
+			\item properties - Zeiger auf ein \textit{Property}-struct, das abhÃ¤nging von \textit{type} erstellt wird.
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=spawn\_uses\_item]{}
@@ -182,14 +182,14 @@ void spawn_uses_item(Spawn* spawn, Item* item, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Führt abhänging vom Handelnden \textit{spawn} und dem benutzten Gegenstand \textit{item} einen Effekt aus.
+		\item[Verwendung:] FÃ¼hrt abhÃ¤nging vom Handelnden \textit{spawn} und dem benutzten Gegenstand \textit{item} einen Effekt aus.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item spawn - Benutzer des Items
 			\item size - benutztes Item
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item map - zur Verwendung in der AusfÃ¼hrungslogik bereitgestellte Spielkarte
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=free\_spawn]{}
@@ -197,18 +197,18 @@ void free_item(Item* item);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Gibt allen Speicher frei, der für Item-Elemente und \textit{item} reserviert wurde.
+		\item[Verwendung:] Gibt allen Speicher frei, der fÃ¼r Item-Elemente und \textit{item} reserviert wurde.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item item - Item, dessen Speicher freigegeben werden soll.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{spawn.h}
-	Ein \textit{Spawn} ist eine Struktur, die grundsätzlich alle Informationen enthält, die für spielbare und nichtspielbare Figuren benötigt werden.
+	Ein \textit{Spawn} ist eine Struktur, die grundsÃ¤tzlich alle Informationen enthÃ¤lt, die fÃ¼r spielbare und nichtspielbare Figuren benÃ¶tigt werden.
 	\begin{lstlisting}[caption=Spawn]{}
 typedef struct Spawn {
 	char* id;
@@ -224,22 +224,22 @@ typedef struct Spawn {
 	Item* inventory;
 	unsigned int inventory_size;
 } Spawn;
-		\end{lstlisting} \\
+		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
 		\begin{itemize}
 			\item id - eindeutiger Name jedes Spawns in der gesamten Spielwelt
 			\item name - Name des Spawns in der Spielwelt
 			\item x, y - Koordinaten des momentanen Aufenthalts
 			\item direction - Blickrichtung
-			\item glyph - für die Anzeige zu verwendendes ASCII-Zeichen
+			\item glyph - fÃ¼r die Anzeige zu verwendendes ASCII-Zeichen
 			\item npc - Flag, ob dies die Spielfigur des Spielers ist.
 			\item humanoid - Flag, ob die Spielfigur humanoid ist.
 			\item max\_hp - maximale Anzahl an Lebenspunkten
 			\item hp - aktuelle Anzahl an Lebenspunkten
-			\item type - Präzisierung der Gegnerart
-			\item properties - eine von \textit{type} abhängig geladene Struktur für zusätzliche Eigenschaften
-			\item inventory - Ein Array, in dem Besitztümer liegen.
-			\item inventory\_size - die Anzahl der Besitztümer
+			\item type - PrÃ¤zisierung der Gegnerart
+			\item properties - eine von \textit{type} abhÃ¤ngig geladene Struktur fÃ¼r zusÃ¤tzliche Eigenschaften
+			\item inventory - Ein Array, in dem BesitztÃ¼mer liegen.
+			\item inventory\_size - die Anzahl der BesitztÃ¼mer
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=spawn\_spawn\_collision]{}
@@ -248,16 +248,16 @@ char** mesgv, int mesgc);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Würfelt das Geschehen aus, das eintritt, wenn Spawns \textit{spawn\_a} und \textit{spawn\_b} aufeinandertreffen.
+		\item[Verwendung:] WÃ¼rfelt das Geschehen aus, das eintritt, wenn Spawns \textit{spawn\_a} und \textit{spawn\_b} aufeinandertreffen.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item spawn\_a - erster Spawn
 			\item spawn\_b - zweiter Spawn
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item map - zur Verwendung in der AusfÃ¼hrungslogik bereitgestellte Spielkarte
 			\item mesgv - Nachrichtenstream
 			\item mesgc - Anzahl der Stream-Elemente
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=explore\_area]{}
@@ -271,7 +271,7 @@ void explore_area(Spawn* spawn, Map* map);
 			\item spawn - Spawn, dessen Sichtbereich erweitert wird.
 			\item map - Karte, auf der der Sichtbereich aufgedeckt wird.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 	
@@ -280,13 +280,13 @@ void spawn_action(Spawn* spawn, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Würfelt die nächste Aktion aus, die \textit{spawn} tun soll, z.B. Gehen oder Warten.
+		\item[Verwendung:] WÃ¼rfelt die nÃ¤chste Aktion aus, die \textit{spawn} tun soll, z.B. Gehen oder Warten.
 		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item spawn - Spawn, für den eine Aktion gewürfelt wird.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item spawn - Spawn, fÃ¼r den eine Aktion gewÃ¼rfelt wird.
+			\item map - zur Verwendung in der AusfÃ¼hrungslogik bereitgestellte Spielkarte
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=free\_spawn]{}
@@ -294,18 +294,18 @@ void free_spawn(Spawn* spawn);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Gibt allen Speicher frei, der für Spawn-Elemente und \textit{spawn} reserviert wurde.
+		\item[Verwendung:] Gibt allen Speicher frei, der fÃ¼r Spawn-Elemente und \textit{spawn} reserviert wurde.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item spawn - Spawn, dessen reservierte Speicher freigegeben werden soll.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{tile.h}
-Die \textit{Tile}-Struktur beschreibt eine Kachel des Spielfelds, das aufgrund seiner Beschaffenheit für die Spiellogik wichtig ist. Die Art und der Zustand einer Kachel bestimmt, wie diese in der Ausgabe erscheinen wird.
+Die \textit{Tile}-Struktur beschreibt eine Kachel des Spielfelds, das aufgrund seiner Beschaffenheit fÃ¼r die Spiellogik wichtig ist. Die Art und der Zustand einer Kachel bestimmt, wie diese in der Ausgabe erscheinen wird.
 
 		\begin{lstlisting}[caption=Tile]{}
 typedef struct Tile {
@@ -320,17 +320,17 @@ typedef struct Tile {
 	Item* items;
 	unsigned int number_of_items;
 } Tile;
-		\end{lstlisting} \\
+		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
 		\begin{itemize}
 			\item id - eindeutiger Name jedes Spawns in der gesamten Spielwelt
 			\item x, y - Koordinaten des momentanen Aufenthalts
 			\item spotted - Flag, ob die Kachel bereits erkundet wurde.
 			\item brightness - Helligkeit auf dieser Kachel
-			\item glyph - für die Anzeige zu verwendendes ASCII-Zeichen
-			\item color - für die Anzeige zu verwendende Farbe im Format R8G8B8A8
-			\item type - Präzisierung des Tile-Typs
-			\item properties - eine von \textit{type} abhängig geladene Struktur für zusätzliche Eigenschaften
+			\item glyph - fÃ¼r die Anzeige zu verwendendes ASCII-Zeichen
+			\item color - fÃ¼r die Anzeige zu verwendende Farbe im Format R8G8B8A8
+			\item type - PrÃ¤zisierung des Tile-Typs
+			\item properties - eine von \textit{type} abhÃ¤ngig geladene Struktur fÃ¼r zusÃ¤tzliche Eigenschaften
 			\item items - Ein Array, in dem hier abgelegte Items liegen.
 			\item number\_of\_items - die Anzahl der abgelegten Items
 		\end{itemize}
@@ -340,13 +340,13 @@ void render_tile(BufferTile* bt, Tile* tile);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Es wird ermittelt, welche Ausgabeinformationen für \textit{tile} zu verwenden sind (Zeichen, Farbe). Diese werden in die Pufferkachel \textit{bt} geschrieben.
+		\item[Verwendung:] Es wird ermittelt, welche Ausgabeinformationen fÃ¼r \textit{tile} zu verwenden sind (Zeichen, Farbe). Diese werden in die Pufferkachel \textit{bt} geschrieben.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item bt - Pufferkachel, in die die Anzeigeinformation geschrieben wird
-			\item tile - Kachel, für die die Ausgabeinformationen ermittelt werden.
+			\item tile - Kachel, fÃ¼r die die Ausgabeinformationen ermittelt werden.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=spawn\_tile\_collision]{}
@@ -355,16 +355,16 @@ int mesgc);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Es wird die Aktion ausgeführt, die eintritt, wenn \textit{spawn} die Kachel \texit{it} betreten möchte. Beispielsweise, ob er diese überhaupt betreten darf.
+		\item[Verwendung:] Es wird die Aktion ausgefÃ¼hrt, die eintritt, wenn \textit{spawn} die Kachel \textit{it} betreten mÃ¶chte. Beispielsweise, ob er diese Ã¼berhaupt betreten darf.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item spawn - handelnder Spawn
-			\item tile - Kachel, die er betreten möchte.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item tile - Kachel, die er betreten mÃ¶chte.
+			\item map - zur Verwendung in der AusfÃ¼hrungslogik bereitgestellte Spielkarte
 			\item mesgv - Nachrichtenstream
 			\item mesgc - Anzahl der Stream-Elemente
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=toggle\_tile]{}
@@ -372,13 +372,13 @@ void toggle_tile(Tile* tile, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Ändert einen binären Zustand der Kachel \textit{tile}, z.B. Tür auf/zu.
+		\item[Verwendung:] Ã„ndert einen binÃ¤ren Zustand der Kachel \textit{tile}, z.B. TÃ¼r auf/zu.
 		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item tile - Kachel, auf der eine Aktion ausgeführt werden soll.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item tile - Kachel, auf der eine Aktion ausgefÃ¼hrt werden soll.
+			\item map - zur Verwendung in der AusfÃ¼hrungslogik bereitgestellte Spielkarte
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=free\_tile]{}
@@ -386,12 +386,12 @@ void free_tile(Tile* tile);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Gibt allen Speicher frei, der für Tile-Elemente und \textit{tile} reserviert wurde.
+		\item[Verwendung:] Gibt allen Speicher frei, der fÃ¼r Tile-Elemente und \textit{tile} reserviert wurde.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item tile - Tile, dessen Speicher freigegeben werden soll.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 	%----------------------------------------------------------------------------
@@ -407,13 +407,13 @@ typedef struct Map {
 	Spawn* spawns;
 	unsigned int number_of_spawns;
 } Map;
-		\end{lstlisting} \\
+		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
 		\begin{itemize}
-			\item x, y - Maße der Karte
+			\item x, y - MaÃŸe der Karte
 			\item name - Name der Karte
-			\item tiles - Eindimensionales Array, das die Spielkacheln enthält.
-			\item spawns - Array, das die Spawns enthält.
+			\item tiles - Eindimensionales Array, das die Spielkacheln enthÃ¤lt.
+			\item spawns - Array, das die Spawns enthÃ¤lt.
 			\item number\_of\_spawns - Anzahl der Spawns auf der Karte
 		\end{itemize}
 		
@@ -427,7 +427,7 @@ Spawn* get_player_spawn(Map* map);
 		\begin{itemize}
 			\item map - Karte, auf welcher gesucht wird.
 		\end{itemize}
-		\item[Rückgabe:] Rückgabe eines Zeigers auf die Spielfigur.
+		\item[RÃ¼ckgabe:] RÃ¼ckgabe eines Zeigers auf die Spielfigur.
 	\end{description}
 	
 		\begin{lstlisting}[caption=get\_spawn\_at]{}
@@ -435,32 +435,32 @@ Spawn* get_spawn_at(unsigned int x, unsigned int y, Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Liefert, wenn vorhanden, die Spielfigur auf einer Kachel an der gegebenen Position zurück.
+		\item[Verwendung:] Liefert, wenn vorhanden, die Spielfigur auf einer Kachel an der gegebenen Position zurÃ¼ck.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item x - x-Koordinate
 			\item y - y-Koordinate
 			\item map - Karte, auf welcher gesucht wird.
 		\end{itemize}
-		\item[Rückgabe:] Rückgabe eines Zeigers auf die Figur auf der Kachel bei (\textit{x}, \textit{y}). Oder \textit{NULL}, wenn keine vorhanden oder außerhalb der Kartengrenze.
+		\item[RÃ¼ckgabe:] RÃ¼ckgabe eines Zeigers auf die Figur auf der Kachel bei (\textit{x}, \textit{y}). Oder \textit{NULL}, wenn keine vorhanden oder auÃŸerhalb der Kartengrenze.
 	\end{description}
 	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{map\_loader.h}
-	Der Map-Loader ist die Komponente, die das Parsen der Kartendatei übernimmt und diese im Speicher zusammensetzt.
+	Der Map-Loader ist die Komponente, die das Parsen der Kartendatei Ã¼bernimmt und diese im Speicher zusammensetzt.
 	
 		\begin{lstlisting}[caption=load\_map]{}
 Map* load_map(char* name);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Öffnet die Datei passend zu \textit{name} im \textit{maps}-Verzeichnis, parst diese und baut die Karte für das Spiel auf.
+		\item[Verwendung:] Ã–ffnet die Datei passend zu \textit{name} im \textit{maps}-Verzeichnis, parst diese und baut die Karte fÃ¼r das Spiel auf.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item name - Der Kartenname, wie sie ohne Dateiendung auf dem Dateisystem abgelegt ist.
 		\end{itemize}
-		\item[Rückgabe:] Rückgabe eines Zeigers auf die erstellte Karte oder NULL wenn unmöglich.
+		\item[RÃ¼ckgabe:] RÃ¼ckgabe eines Zeigers auf die erstellte Karte oder NULL wenn unmÃ¶glich.
 	\end{description}
 	
 		\begin{lstlisting}[caption=flush\_map]{}
@@ -468,18 +468,18 @@ void flush_map(Map* map);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Gibt den reservierten Speicher für Karten-Elemente und \textit{map} frei.
+		\item[Verwendung:] Gibt den reservierten Speicher fÃ¼r Karten-Elemente und \textit{map} frei.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item map - Freizugebende Karte.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{main.h}
-	Diese Header-Datei enthält Funktionen, die dem Fluss des Programms und der Übersetzung von der Karte zur Ausgabe dienlich sind.
+	Diese Header-Datei enthÃ¤lt Funktionen, die dem Fluss des Programms und der Ãœbersetzung von der Karte zur Ausgabe dienlich sind.
 	
 		\begin{lstlisting}[caption=create\_output\_buffer]{}
 void create_output_buffer(Map* map, BufferTile* buf, int tiles);
@@ -493,7 +493,7 @@ void create_output_buffer(Map* map, BufferTile* buf, int tiles);
 			\item buf - zu benutzender Ausgabepuffer
 			\item tiles - Anzahl der Tiles des Puffers.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=print\_message\_box]{}
@@ -501,15 +501,15 @@ void print_message_box(BufferTile* buf, int tiles, char** mesgv, int mesgc);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Kopiert einen Textbereich für die Nachrichten in den Ausgabepuffer (und überschreibt damit ggf. Teile der Karte).
+		\item[Verwendung:] Kopiert einen Textbereich fÃ¼r die Nachrichten in den Ausgabepuffer (und Ã¼berschreibt damit ggf. Teile der Karte).
 		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item buf - Ausgabepuffer, der überschrieben werden soll.
+			\item buf - Ausgabepuffer, der Ã¼berschrieben werden soll.
 			\item tiles - Anzahl der Tiles des Puffers.
 			\item mesgv - Nachrichtenstream
 			\item mesgc - Anzahl der Stream-Elemente
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=flush\_output\_buffer]{}
@@ -520,29 +520,29 @@ void flush_output_buffer(BufferTile* buf, int tiles);
 		\item[Verwendung:] Setzt alle Kacheln des Ausgabepuffers auf leere Elemente (Leerzeichen-Glyphen).
 		\item[Parameter:] \hfill
 		\begin{itemize}
-			\item buf - Ausgabepuffer, der überschrieben werden soll.
+			\item buf - Ausgabepuffer, der Ã¼berschrieben werden soll.
 			\item tiles - Anzahl der Tiles des Puffers.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{sdl\_output.h}
-	Dieser Header stellt Funktionen bereit, die die Ausgaberoutinen von \textit{SDL} wrappen. Er ist prinzipiell so aufgebaut, dass die Ausgabe unabhängig vom graphischen Backend geregelt werden kann.
+	Dieser Header stellt Funktionen bereit, die die Ausgaberoutinen von \textit{SDL} wrappen. Er ist prinzipiell so aufgebaut, dass die Ausgabe unabhÃ¤ngig vom graphischen Backend geregelt werden kann.
 	
 		\begin{lstlisting}[caption=output\_init]{}
 void output_init(int width, int height);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Weißt das Ausgabegerät an, nötige Ressourcen für die Ausgabe zu reservieren.
+		\item[Verwendung:] WeiÃŸt das AusgabegerÃ¤t an, nÃ¶tige Ressourcen fÃ¼r die Ausgabe zu reservieren.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item width - Breite der Map in Zeichen
-			\item height - Höhe der Map in Zeichen
+			\item height - HÃ¶he der Map in Zeichen
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=output\_draw]{}
@@ -550,13 +550,13 @@ void output_draw(BufferTile* buf, int tiles);
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Weißt das Ausgabegerät an, die im Ausgabepuffer gespeicherten Kacheln zu zeichnen.
+		\item[Verwendung:] WeiÃŸt das AusgabegerÃ¤t an, die im Ausgabepuffer gespeicherten Kacheln zu zeichnen.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item map - Ausgabepuffer, der gezeichnet werden soll.
 			\item tiles - Anzahl der Tiles des Puffers.
 		\end{itemize}
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=output\_clear]{}
@@ -566,7 +566,7 @@ void output_clear();
 	\begin{description}
 		\item[Verwendung:] Mit diesem Befehl soll die Ausgabe blank gezeichnet werden.
 		\item[Parameter:] -
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 	
 		\begin{lstlisting}[caption=output\_close]{}
@@ -574,9 +574,9 @@ void output_close();
 		\end{lstlisting}
 		
 	\begin{description}
-		\item[Verwendung:] Weißt das Ausgabegerät an, gebrauchte Ressourcen für die Ausgabe freizugeben, da die Ausgabe beendet ist.
+		\item[Verwendung:] WeiÃŸt das AusgabegerÃ¤t an, gebrauchte Ressourcen fÃ¼r die Ausgabe freizugeben, da die Ausgabe beendet ist.
 		\item[Parameter:] -
-		\item[Rückgabe:] -
+		\item[RÃ¼ckgabe:] -
 	\end{description}
 
 	%----------------------------------------------------------------------------
@@ -588,16 +588,16 @@ void output_close();
 	\newpage
 	\section*{Bewertungskriterien}
 	\begin{enumerate}
-	  \item Karten liegen auf dem Dateisystem und sind veränderbar.
-		\item Karten für dieses Spiel sind über Parameter wählbar.
-		\item Die Ausgabe unterstüzt bei der Verwendung von SDL farbige Symbole.
-		\item Es existiert eine Textausgabe, die Informationen über die Interaktionen liefert.
+	  \item Karten liegen auf dem Dateisystem und sind verÃ¤nderbar.
+		\item Karten fÃ¼r dieses Spiel sind Ã¼ber Parameter wÃ¤hlbar.
+		\item Die Ausgabe unterstÃ¼zt bei der Verwendung von SDL farbige Symbole.
+		\item Es existiert eine Textausgabe, die Informationen Ã¼ber die Interaktionen liefert.
 		\item Durch Bewegung der Spielfigur werden unbekannte Teile der Karte aufgedeckt.
 		\item Teile der Karte sind unbeleuchtet und nicht einsehbar.
-		\item Auf der Karte sind Items platziert, die aufgenommen werden können.
+		\item Auf der Karte sind Items platziert, die aufgenommen werden kÃ¶nnen.
 		\item Der Gesundheitszustand der Figur ist variabel bis zum Tod.
-		\item Die Spielfigur kann Türen öffnen.
-		\item Schalter können Zustände von Wänden oder Türen verändern.
+		\item Die Spielfigur kann TÃ¼ren Ã¶ffnen.
+		\item Schalter kÃ¶nnen ZustÃ¤nde von WÃ¤nden oder TÃ¼ren verÃ¤ndern.
 	\end{enumerate}
 	
 	%----------------------------------------------------------------------------
@@ -605,7 +605,7 @@ void output_close();
 	\section*{Aufgaben und Zeitplan}
 
 	\begin{tabular}{ p{3.5cm} | p{3.5cm} | p{5.0cm} | p{3.0cm} }
-		Wer? & Arbeitspaket & Tätigkeiten & Datum \\
+		Wer? & Arbeitspaket & TÃ¤tigkeiten & Datum \\
 		\hline
 		Florian & Logik + KI & Interaktionen, Gegner & 13.01. - 27.01.11 \\
 		Marc & Technik & Darstellung, Steuerung & 13.01. - 27.01.11 \\
