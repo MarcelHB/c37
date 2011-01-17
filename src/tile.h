@@ -34,6 +34,7 @@
  /* Mapbestandteile */
  #include "tiles/wall.h"
  #include "tiles/button.h"
+ #include "tiles/door.h"
  
   /* verwendete Tile-type identifier */
  #define TILE_TYPE_INVALID				0xFFFFFFFF
@@ -54,7 +55,7 @@
 	{TILE_TYPE_WALL, 0xFFFFFF00, '#'},
 	{TILE_TYPE_FLOOR, 0xFFFFFF00, '.'},
 	{TILE_TYPE_BUTTON, 0xFFFFFF00, '+'},
-	{TILE_TYPE_DOOR, 0xCCCCCC00, '|'},
+	{TILE_TYPE_DOOR, 0xCCCCCC00, '|'}
  };
  
  /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
@@ -63,8 +64,11 @@
  void spawn_tile_collision(Spawn*, Tile*, Map*, char**, int);
  /* irgendwas wird getoggelt (Tür auf, zu ...) */
  void toggle_tile(Tile*, Map*);
- 
- /* Gibt reservierten Speicher eines Tiles frei */
+  /* Gibt reservierten Speicher eines Tiles frei */
  void free_tile(Tile*);
+ 
+ /* Helper */
+ void apply_tile_defaults(Tile* tile);
+ void create_tile_properties(Tile* tile);
  
  #endif
