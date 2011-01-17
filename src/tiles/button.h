@@ -15,6 +15,8 @@
 	char* toggle_id;
 	/* nur einmal drückbar? */
 	char once;
+	/* aktiviert? */
+	char active;
 	/* von wo aus bedienbar? 0000NESW */;
 	char directions;
  } ButtonProperties;

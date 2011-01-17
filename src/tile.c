@@ -38,6 +38,7 @@
 			tile->properties = malloc(sizeof(ButtonProperties));
 			*(ButtonProperties*)tile->properties = (ButtonProperties) {
 				.toggle_id = NULL,
+				.active = 1,
 				.once = 0,
 				.directions = NORTH | WEST | EAST | SOUTH
 			};
@@ -48,6 +49,7 @@
 			*(DoorProperties*)tile->properties = (DoorProperties) {
 				.horizontal = 0,
 				.open = 0,
+				.locked = 0,
 				.external_button = 0,
 				.breakable = 0,
 				.broken = 0

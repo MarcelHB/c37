@@ -26,8 +26,5 @@
  Spawn* get_player_spawn(Map*);
  /* Spawn an Position oder NULL */
  Spawn* get_spawn_at(unsigned int, unsigned int, Map*); 
-  
- /* sämtliche create-Funktionen */
- /* ... */
  
  #endif

@@ -36,7 +36,7 @@
  #include "tiles/button.h"
  #include "tiles/door.h"
  
-  /* verwendete Tile-type identifier */
+ /* verwendete Tile-type identifier */
  #define TILE_TYPE_INVALID				0xFFFFFFFF
  #define TILE_TYPE_WALL					0x00000000
  #define TILE_TYPE_FLOOR				0x00000001
@@ -68,7 +68,7 @@
  void free_tile(Tile*);
  
  /* Helper */
- void apply_tile_defaults(Tile* tile);
- void create_tile_properties(Tile* tile);
+ void apply_tile_defaults(Tile*);
+ void create_tile_properties(Tile*);
  
  #endif

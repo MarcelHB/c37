@@ -15,6 +15,8 @@
 	char horizontal;
 	/* Zustand */
 	char open;
+	/* zugeschlossen */
+	char locked;
 	/* wird woanders aufgemacht? */
 	char external_button;
 	/* eintretbar? */

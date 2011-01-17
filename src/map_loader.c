@@ -130,19 +130,19 @@
 			parse_array_end(&node_stack, &node_stack_size, &array_depth);
 			break;
 		case JSON_T_KEY:
-			parse_key(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
+			parse_key(value, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
 		case JSON_T_STRING:
-			parse_string(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
+			parse_string(value, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
 		case JSON_T_INTEGER:
-			parse_integer(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
+			parse_integer(value, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
 		case JSON_T_TRUE:
-			/* TODO */
+			parse_bool(1, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
 		case JSON_T_FALSE:
-			/* TODO */
+			parse_bool(0, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
 	}
 	
@@ -182,7 +182,7 @@
 						.humanoid = 0,
 						.hp = 0,
 						.max_hp = 1,
-						.type = 0xFFFFFFFF, // SPAWN_TYPE_INVALID
+						.type = SPAWN_TYPE_INVALID,
 						.properties = NULL,
 						.inventory = NULL,
 						.inventory_size = 0
@@ -227,7 +227,7 @@
  
  /*--------------------------------------------------------------------------*/
  void parse_key(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
-	int stack_top = node_stack_at(0, *stack, stack_size);
+	int stack_top = node_stack_at(0, *stack, *stack_size);
 	
 	/* root (Karte) */
 	if(stack_top == STACK_ROOT) {
@@ -273,7 +273,7 @@
 		}
 	}
 	/* root->tiles->[] */
-	else if(stack_top == STACK_TILES && parse_array_depth == 2) {
+	else if(stack_top == STACK_TILES && array_depth == 2) {
 		/* tile->type */
 		if(map->tiles[parsed_tiles].type == NULL && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE);
@@ -299,7 +299,7 @@
 		}
 	}
 	/* root->spawns->[] */
-	else if(stack_top == STACK_SPAWNS && parse_array_depth == 1) {
+	else if(stack_top == STACK_SPAWNS && array_depth == 1) {
 		/* spawn->type */
 		if(map->spawns[map->number_of_spawns - 1].type == NULL && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE);
@@ -328,21 +328,14 @@
 		else if(map->spawns[map->number_of_spawns - 1].items == NULL && strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
 			push_node_stack(NODE_ITEMS);
 		}
-		/* spawn->property */
-		else {
-			int index = spawn_property_identifier(value->vu.str.value);
-			if(index != STACK_INVALID_INDEX) {
-				push_node_stack(index);
-			}
-		}
 	}
 	/* TODO: Items */
  }
  
   /*--------------------------------------------------------------------------*/
  void parse_string(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
-	int stack_top = node_stack_at(0, *stack, stack_size);
-	int parent = node_stack_at(1, *stack, stack_size);
+	int stack_top = node_stack_at(0, *stack, *stack_size);
+	int parent = node_stack_at(1, *stack, *stack_size);
 	
 	/* root */
 	if(parent == STACK_ROOT) {
@@ -351,12 +344,14 @@
 			map->name = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
 			strcpy(map->name, value->vu.str.value);
 		}
-	} else if(parent == STACK_TILES) {
+	} 
+	/* tile */
+	else if(parent == STACK_TILES) {
 		/* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
 		if(parsed_tiles >= (map->x) * (map->y)) {
 			return;
 		}
-		
+		/* tile->type */
 		if(stack_top == STACK_TYPE && map->tiles[parsed_tiles].type == TILE_TYPE_INVALID) {
 			int type;
 			if((type = tile_type_id(value->vu.str.value)) != TILE_TYPE_INVALID) {
@@ -365,17 +360,38 @@
 				create_tile_properties(&map->tiles[parsed_tiles]);
 			}
 		}
-	} else if(parent == STACK_SPAWNS) {
-		if(stack_top == STACK_TYPE) {
-			/* TODO */
+		/* tile->id */
+		else if(stack_top == STACK_ID) {
+			/* überschreibt Standard-ID - checkt diese aber nicht auf Kollisionen! */
+			if(map->tiles[parsed_tiles].id != NULL) {
+				free(map->tiles[parsed_tiles].id);
+			}
+			map->tiles[parsed_tiles].id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+			strcpy(map->tiles[parsed_tiles].id, value->vu.str.value);
+		}
+		/* tile->property */
+		else {
+			parse_string_property(value, map, parent, stack_top, parsed_tiles);
+		}
+	} 
+	/* spawn */
+	else if(parent == STACK_SPAWNS) {
+		/* spawn->type */
+		if(stack_top == STACK_TYPE && map->spawns[map->number_of_spawns-1]->type == SPAWN_TYPE_INVALID) {
+			int type;
+			if((type = spawn_type_id(value->vu.str.value)) != SPAWN_TYPE_INVALID) {
+				map->spawns[map->number_of_spawns-1]->type = type;
+				apply_spawn_defaults(map->spawns[map->number_of_spawns-1]);
+			}
 		}
 	}
+	pop_node_stack(stack, stack_size);
  }
  
  /*--------------------------------------------------------------------------*/
  void parse_integer(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
-	int stack_top = node_stack_at(0, *stack, stack_size);
-	int parent = node_stack_at(1, *stack, stack_size);
+	int stack_top = node_stack_at(0, *stack, *stack_size);
+	int parent = node_stack_at(1, *stack, *stack_size);
 	
 	/* root */
 	if(parent == STACK_ROOT) {
@@ -390,23 +406,138 @@
 	} 
 	/* Tile */
 	else if(parent == STACK_TILES && array_depth == 2) {
+		/* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
+		if(parsed_tiles >= (map->x) * (map->y)) {
+			return;
+		}
 		/* tile->brightness */
 		if(stack_top == NODE_BRIGHTNESS) {
 			map->tiles[parsed_tiles].brightness = value->vu.integer_value;
+		}
+		/* tile->property */
+		else {
+			parse_integer_property(value, map, parent, stack_top, parsed_tiles);
 		}
 	}
 	/* Spawn */
 	else if(parent == STACK_SPAWNS && array_depth == 1) {
 		/* spawn->hp */
 		if(stack_top == STACK_HEALTHPOINTS) {
-			map->spawns[map->number_of_spawns - 1].hp = value->vu.integer_value;
+			map->spawns[map->number_of_spawns - 1]->hp = value->vu.integer_value;
 		}
 		/* spawn->max_hp */
 		else if(stack_top == STACK_MAX_HEALTHPOINTS) {
-			map->spawns[map->number_of_spawns - 1].max_hp = value->vu.integer_value;
+			map->spawns[map->number_of_spawns - 1]->max_hp = value->vu.integer_value;
+		}
+	}
+	pop_node_stack(stack, stack_size);
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void parse_bool(const unsigned int value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
+	int stack_top = node_stack_at(0, *stack, *stack_size);
+	int parent = node_stack_at(1, *stack, *stack_size);
+	
+	if(parent == STACK_TILES && array_depth == 2) {
+		/* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
+		if(parsed_tiles >= (map->x) * (map->y)) {
+			return;
+		}
+		/* bisher nur boolesche Properties */
+		parse_bool_property(value, map, parent, stack_top, parsed_tiles);
+	}
+	
+	pop_node_stack(stack, stack_size);
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void parse_string_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
+	
+	/* tile */
+	if(parent == STACK_TILES) {
+		int type = map->tiles[parsed_tiles]->type;
+		if(type == TILE_TYPE_INVALID) {
+			return;
+		}
+		/* Button */
+		if(type == TILE_TYPE_BUTTON) {
+			ButtonProperties* btn_props = (ButtonProperties*)map->tiles[parsed_tiles]->properties;
+			/* Button->toggle_id */
+			if(key == STACK_TOGGLE_ID && btn_props->toggle_id == NULL) {
+				btn_props->toggle_id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+				strcpy(btn_props->toggle_id, value->vu.str.value);
+			}
 		}
 	}
  }
+ 
+ /*--------------------------------------------------------------------------*/
+ void parse_integer_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
+	/* tile */
+	if(parent == STACK_TILES) {
+		int type = map->tiles[parsed_tiles]->type;
+		/* Button */
+		if(type == TILE_TYPE_BUTTON) {
+			ButtonProperties* btn_props = (ButtonProperties*)map->tiles[parsed_tiles]->properties;
+			/* Button->Bedienrichtungen */
+			if(key == STACK_DIRECTIONS) {
+				btn_props->directions = (char)value->vu.integer_value;
+			}
+		}
+	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void parse_bool_property(const unsigned int value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
+	/* tile */
+	if(parent == STACK_TILES) {
+		int type = map->tiles[parsed_tiles]->type;
+		/* Button */
+		if(type == TILE_TYPE_BUTTON) {
+			ButtonProperties* btn_props = (ButtonProperties*)map->tiles[parsed_tiles]->properties;
+			/* Button->once */
+			if(key == STACK_ONCE) {
+				btn_props->once = value;
+			}
+			/* Button->active */
+			else if(key == STACK_ACTIVE) {
+				btn_props->active = value;
+			}
+		}
+		/* Wand */
+		else if(type == TILE_TYPE_WALL) {
+			WallProperties* wall_props = (WallProperties*)map->tiles[parsed_tiles]->properties;
+			/* Wand->begehbar */
+			if(key == STACK_SPACE) {
+				wall_props->space = value;
+			}
+		}
+		/* Tür */
+		else if(type == TILE_TYPE_DOOR) {
+			DoorProperties* door_props = (DoorProperties*)map->tiles[parsed_tiles]->properties;
+			/* Tür->horizontal */
+			if(key == STACK_HORIZONTAL) {
+				door_props->horizontal = value;
+			}
+			/* Tür->offen? */
+			else if(key == STACK_OPEN) {
+				door_props->open = value;
+			}
+			/* Tür->zugeschlossen? */
+			else if(key == STACK_LOCKED) {
+				door_props->locked = value;
+			}
+			/* Tür->entfernter Öffner */
+			else if(key == STACK_EXTERNAL) {
+				door_props->external_button = value;
+			}
+			/* Tür->eintretbar */
+			else if(key == STACK_BREAKABLE) {
+				door_props->breakable = value;
+			}
+		}
+	}
+}
  
  /*--------------------------------------------------------------------------*/
  unsigned int node_stack_at(unsigned int index, int* stack, unsigned int stack_size) {
@@ -507,16 +638,49 @@
  
  /*--------------------------------------------------------------------------*/
  int tile_property_identifier(const char* name) {
-	/* kommt noch... */
+	/* Button->once */
+	if(strcmp(name, NODE_ONCE) == 0) {
+		return STACK_ONCE;
+	}
+	/* Button->active */
+	else if(strcmp(name, NODE_ACTIVE) == 0) {
+		return STACK_ACTIVE;
+	}
+	/* Button->toggle_id */
+	else if(strcmp(name, NODE_TOGGLE_ID) == 0) {
+		return STACK_TOGGLE_ID;
+	}
+	/* Button->directions */
+	else if(strcmp(name, NODE_DIRECTIONS) == 0) {
+		return STACK_DIRECTIONS;
+	}
+	/* Wand->imaginär */
+	else if (strcmp(name, NODE_SPACE) == 0) {
+		return STACK_SPACE;
+	}
+	/* Tür->horizontal */
+	else if (strcmp(name, NODE_HORIZONTAL) == 0) {
+		return STACK_HORIZONTAL;
+	}
+	/* Tür->open */
+	else if (strcmp(name, NODE_OPEN) == 0) {
+		return STACK_OPEN;
+	}
+	/* Tür->locked */
+	else if (strcmp(name, NODE_LOCKED) == 0) {
+		return STACK_LOCKED;
+	}
+	/* Tür->externer Button */
+	else if (strcmp(name, NODE_EXTERNAL) == 0) {
+		return STACK_EXTERNAL;
+	}
+	/* Tür->kaputtbar */
+	else if (strcmp(name, NODE_BREAKABLE) == 0) {
+		return STACK_BREAKABLE;
+	}
 	return STACK_INVALID_INDEX;
  }
- 
- /*--------------------------------------------------------------------------*/
- int spawn_property_identifier(const char* name) {
-	/* bestimmt auch... */
-	return STACK_INVALID_INDEX;
- }
- 
+  
  /*--------------------------------------------------------------------------*/
  unsigned int tile_type_id(const char* name) {
 	/* Wand */
@@ -536,6 +700,15 @@
 		return TILE_TYPE_DOOR;
 	}
 	return TILE_TYPE_INVALID;
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ unsigned int spawn_type_id(const char* name) {
+	/* Player */
+	if(strcmp(name, SPAWN_NAME_PLAYER) == 0) {
+		return SPAWN_TYPE_PLAYER;
+	}
+	return SPAWN_TYPE_INVALID;
  }
  
  

@@ -28,9 +28,14 @@
  void parse_object_end(unsigned int**, unsigned int*, unsigned int);
  void parse_array_begin(unsigned int*, unsigned int, unsigned int*);
  void parse_array_end(unsigned int**, unsigned int*, unsigned int*);
- void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const unsigned int, const int);
+ void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
  void parse_string(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
  void parse_integer(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
+ void parse_bool(const unsigned int, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
+ 
+ void parse_string_property(const JSON_value*, Map*, const unsigned int, const unsigned int, const unsigned int);
+ void parse_integer_property(const JSON_value*, Map*, const unsigned int, const unsigned int, const unsigned int);
+ void parse_bool_property(const unsigned int, Map*, const unsigned int, const unsigned int, const unsigned int);
  
  unsigned int node_stack_at(unsigned int, unsigned int*, unsigned int);
  void push_node_stack(int, unsigned int**, unsigned int*);
@@ -39,8 +44,8 @@
  void calculate_spawn_id(Spawn*, const int);
  
  int tile_property_identifier(const char*);
- int spawn_property_identifier(const char*);
  unsigned int tile_type_id(const char*);
+ unsigned int spawn_type_id(const char*);
 
  /* Object-Keys beim Parsen */
  
@@ -51,14 +56,27 @@
  #define NODE_Y 						"y"
  #define NODE_TILES 					"tiles"
  #define NODE_SPAWNS 					"spawns"
+ 
  #define NODE_TYPE	 					"type"
  #define NODE_ID	 					"id"
  #define NODE_ITEMS	 					"items"
  #define NODE_BRIGHTNESS				"brightness"
+ 
  #define NODE_DIRECTION					"direction"
  #define NODE_HEALTHPOINTS				"hp"
  #define NODE_MAX_HEALTHPOINTS			"max_hp"
  #define NODE_ITEMS						"items"
+ 
+ #define NODE_SPACE						"space"
+ #define NODE_ONCE						"once"
+ #define NODE_TOGGLE_ID					"tid"
+ #define NODE_DIRECTIONS				"directions"
+ #define NODE_ACTIVE					"active"
+ #define NODE_HORIZONTAL				"horizontal"
+ #define NODE_OPEN						"open"
+ #define NODE_EXTERNAL					"ext"
+ #define NODE_LOCKED					"locked"
+ #define NODE_BREAKALBE					"breaks"
  
  /* Stack-Identifier */
  #define STACK_INVALID_INDEX			0xFFFFFFFF
@@ -76,11 +94,24 @@
  #define STACK_HEALTHPOINTS				0x0000000B
  #define STACK_MAX_HEALTHPOINTS			0x0000000C
  #define STACK_ITEMS					0x0000000D
+ #define STACK_SPACE					0x0000000E
+ #define STACK_ONCE						0x0000000F
+ #define STACK_TOGGLE_ID				0x00000010
+ #define STACK_DIRECTIONS				0x00000011
+ #define STACK_ACTIVE					0x00000012
+ #define STACK_HORIZONTAL				0x00000013
+ #define STACK_OPEN						0x00000014
+ #define STACK_EXTERNAL					0x00000015
+ #define STACK_LOCKED					0x00000016
+ #define STACK_BREAKABLE				0x00000017
 
  /* lesbare Tile-Type Namen */
  #define TILE_NAME_WALL					"w"
  #define TILE_NAME_FLOOR				"f"
  #define TILE_NAME_BUTTON				"btn"
  #define TILE_NAME_DOOR					"door"
+ 
+ /* lesbare Spawn-Type Namen */
+ #define SPAWN_NAME_PLAYER				"player"
  
  #endif
