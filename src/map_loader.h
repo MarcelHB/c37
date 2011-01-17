@@ -78,9 +78,9 @@
  #define STACK_ITEMS					0x0000000D
 
  /* lesbare Tile-Type Namen */
- #define TILE_NAME_WALL					0x00000000
- #define TILE_NAME_FLOOR				0x00000001
- #define TILE_NAME_BUTTON				0x00000002
- #define TILE_NAME_DOOR					0x00000003
+ #define TILE_NAME_WALL					"w"
+ #define TILE_NAME_FLOOR				"f"
+ #define TILE_NAME_BUTTON				"btn"
+ #define TILE_NAME_DOOR					"door"
  
  #endif

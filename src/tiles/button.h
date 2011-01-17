@@ -11,8 +11,6 @@
  
  /* Wand */
  typedef struct ButtonProperties {
-	/* ID */;
-	char* id;
 	/* ID des toggle (ein Tile) */;
 	char* toggle_id;
 	/* nur einmal drückbar? */

@@ -23,6 +23,7 @@
  static int parsed_tiles = -1;
  static unsigned int* node_stack = NULL;
  static unsigned int node_stack_size = 0;
+ 
  /*--------------------------------------------------------------------------*/
  
  Map* load_map(char* name) {
@@ -88,11 +89,13 @@
 	for(i = 0; i < map->x * map->y; ++i) {
 		free_tile(&(map->tiles[i]));
 	}
+	map->tiles = NULL;
 	
 	/* Spawns */
 	for(i = 0; i < map->number_of_spawns; ++i) {
 		free_spawn(&(map->spawns[i]));
 	}
+	map->spawns = NULL;
 	
 	free(map);
  }
@@ -177,7 +180,7 @@
 						.humanoid = 0,
 						.hp = 0,
 						.max_hp = 1,
-						.type = NULL,
+						.type = 0xFFFFFFFF, // SPAWN_TYPE_INVALID
 						.properties = NULL,
 						.inventory = NULL,
 						.inventory_size = 0
@@ -253,7 +256,7 @@
 						.spotted = 0,
 						.glyph = ' ',
 						.color = 0xFFFFFF00,
-						.type = NULL,
+						.type = TILE_TYPE_INVALID,
 						.properties = NULL,
 						.items = NULL,
 						.number_of_items = 0
@@ -352,10 +355,12 @@
 			return;
 		}
 		
-		if(stack_top == STACK_TYPE) {
-			int i, type;
+		if(stack_top == STACK_TYPE && map->tiles[parsed_tiles].type == TILE_TYPE_INVALID) {
+			int type;
 			if((type = tile_type_id(value->vu.str.value)) != TILE_TYPE_INVALID) {
-				/* TODO */
+				map->tiles[parsed_tiles].type = type;
+				apply_tile_defaults(&map->tiles[parsed_tiles]);
+				create_tile_properties(&map->tiles[parsed_tiles]);
 			}
 		}
 	}
@@ -526,3 +531,5 @@
 	}
 	return TILE_TYPE_INVALID;
  }
+ 
+ 
