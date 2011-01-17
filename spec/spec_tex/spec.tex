@@ -532,12 +532,16 @@ void flush_output_buffer(BufferTile* buf, int tiles);
 	Dieser Header stellt Funktionen bereit, die die Ausgaberoutinen von \textit{SDL} wrappen. Er ist prinzipiell so aufgebaut, dass die Ausgabe unabhängig vom graphischen Backend geregelt werden kann.
 	
 		\begin{lstlisting}[caption=output\_init]{}
-void output_init();
+void output_init(int width, int height);
 		\end{lstlisting}
 		
 	\begin{description}
 		\item[Verwendung:] Weißt das Ausgabegerät an, nötige Ressourcen für die Ausgabe zu reservieren.
-		\item[Parameter:] -
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item width - Breite der Map in Zeichen
+			\item height - Höhe der Map in Zeichen
+		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
 	
@@ -574,7 +578,12 @@ void output_close();
 		\item[Parameter:] -
 		\item[Rückgabe:] -
 	\end{description}
-	
+
+	%----------------------------------------------------------------------------
+	\subsubsection*{text\_output.h}
+	Dieser Header stellt die selben Funktionen bereit wie sdl\_output.h, benutzt allerdings nicht SDL, sondern gibt die Karte einfach als Text auf der Konsole aus. Farben werden dabei ignoriert.
+
+
 	%----------------------------------------------------------------------------
 	\newpage
 	\section*{Bewertungskriterien}
