@@ -221,7 +221,7 @@ typedef struct Spawn {
 	unsigned int max_hp, hp;
 	unsigned int type;
 	void* properties;
-	Item* inventory;
+	Item** inventory;
 	unsigned int inventory_size;
 } Spawn;
 		\end{lstlisting} \hspace*{\fill} \\
@@ -238,7 +238,7 @@ Elemente der Struktur:
 			\item hp - aktuelle Anzahl an Lebenspunkten
 			\item type - Präzisierung der Gegnerart
 			\item properties - eine von \textit{type} abhängig geladene Struktur für zusätzliche Eigenschaften
-			\item inventory - Ein Array, in dem Besitztümer liegen.
+			\item inventory - Ein Array, dessen Adressen auf die Besitztümer zeigen.
 			\item inventory\_size - die Anzahl der Besitztümer
 		\end{itemize}
 		
@@ -317,7 +317,7 @@ typedef struct Tile {
 	unsigned long color;
 	unsigned int type;
 	void* properties;
-	Item* items;
+	Item** items;
 	unsigned int number_of_items;
 } Tile;
 		\end{lstlisting} \hspace*{\fill} \\
@@ -331,7 +331,7 @@ Elemente der Struktur:
 			\item color - für die Anzeige zu verwendende Farbe im Format R8G8B8A8
 			\item type - Präzisierung des Tile-Typs
 			\item properties - eine von \textit{type} abhängig geladene Struktur für zusätzliche Eigenschaften
-			\item items - Ein Array, in dem hier abgelegte Items liegen.
+			\item items - Ein Array, dessen Adressen auf platzierte Items zeigen.
 			\item number\_of\_items - die Anzahl der abgelegten Items
 		\end{itemize}
 		
@@ -404,7 +404,7 @@ typedef struct Map {
 	unsigned int x, y;
 	char* name;
 	Tile* tiles;
-	Spawn* spawns;
+	Spawn** spawns;
 	unsigned int number_of_spawns;
 } Map;
 		\end{lstlisting} \hspace*{\fill} \\
@@ -413,7 +413,7 @@ Elemente der Struktur:
 			\item x, y - Maße der Karte
 			\item name - Name der Karte
 			\item tiles - Eindimensionales Array, das die Spielkacheln enthält.
-			\item spawns - Array, das die Spawns enthält.
+			\item spawns - Array, dessen Adressen auf die Spawns zeigen.
 			\item number\_of\_spawns - Anzahl der Spawns auf der Karte
 		\end{itemize}
 		

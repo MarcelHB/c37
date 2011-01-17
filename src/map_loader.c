@@ -93,8 +93,9 @@
 	
 	/* Spawns */
 	for(i = 0; i < map->number_of_spawns; ++i) {
-		free_spawn(&(map->spawns[i]));
+		free_spawn(map->spawns[i]);
 	}
+	free(map->spawns);
 	map->spawns = NULL;
 	
 	free(map);
@@ -166,9 +167,10 @@
 		}
 		/* Root->Spawns */
 		if(parent == STACK_ROOT && stack_top == STACK_SPAWNS) {
-			if(array_depth == 2) {
-				map->spawns = (Spawn*)ex_realloc(map->spawns, sizeof(Spawn) * ++map->number_of_spawns);
-				map->spawns[map->number_of_spawns - 1] = (Spawn){
+			if(array_depth == 1) {
+				map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
+				map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
+				*(map->spawns[map->number_of_spawns - 1]) = (Spawn){
 						.id = NULL,
 						.name = NULL,
 						.x = 0,
@@ -185,7 +187,7 @@
 						.inventory = NULL,
 						.inventory_size = 0
 					};
-				calculate_spawn_id(&map->spawns[map->number_of_spawns - 1], map->number_of_spawns);
+				calculate_spawn_id(map->spawns[map->number_of_spawns - 1], map->number_of_spawns);
 			}
 		}
 	}
@@ -297,7 +299,7 @@
 		}
 	}
 	/* root->spawns->[] */
-	else if(stack_top == STACK_SPAWNS && parse_array_depth == 2) {
+	else if(stack_top == STACK_SPAWNS && parse_array_depth == 1) {
 		/* spawn->type */
 		if(map->spawns[map->number_of_spawns - 1].type == NULL && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE);
@@ -363,6 +365,10 @@
 				create_tile_properties(&map->tiles[parsed_tiles]);
 			}
 		}
+	} else if(parent == STACK_SPAWNS) {
+		if(stack_top == STACK_TYPE) {
+			/* TODO */
+		}
 	}
  }
  
@@ -390,7 +396,7 @@
 		}
 	}
 	/* Spawn */
-	else if(parent == STACK_SPAWNS && array_depth == 2) {
+	else if(parent == STACK_SPAWNS && array_depth == 1) {
 		/* spawn->hp */
 		if(stack_top == STACK_HEALTHPOINTS) {
 			map->spawns[map->number_of_spawns - 1].hp = value->vu.integer_value;

@@ -31,7 +31,7 @@
 	/* spez. Eigenschaften des Spawns */
 	void* properties;
 	/* Besitztümer */
-	Item* inventory;
+	Item** inventory;
 	unsigned int inventory_size;
  } Spawn;
  

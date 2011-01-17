@@ -27,7 +27,7 @@
 	/* spez. Eigenschaften des Kacheltyps */
 	void* properties;
 	/* Items, die hier liegen */
-	Item* items;
+	Item** items;
 	unsigned int number_of_items;
  } Tile;
  

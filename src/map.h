@@ -18,7 +18,7 @@
 	/* Bestandteile */
 	Tile* tiles;
 	/* Actors */
-	Spawn* spawns;
+	Spawn** spawns;
 	unsigned int number_of_spawns;
  } Map;
  
