@@ -88,13 +88,11 @@
 	for(i = 0; i < map->x * map->y; ++i) {
 		free_tile(&(map->tiles[i]));
 	}
-	free(map->tiles);
 	
 	/* Spawns */
 	for(i = 0; i < map->number_of_spawns; ++i) {
 		free_spawn(&(map->spawns[i]));
 	}
-	free(map->spawns);
 	
 	free(map);
  }
@@ -130,8 +128,8 @@
 		case JSON_T_KEY:
 			parse_key(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
 			break;
-		case JSON_T_INTEGER:
-			/* TODO */
+		case JSON_T_STRING:
+			parse_string(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
 			break;
 		case JSON_T_INTEGER:
 			parse_integer(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
@@ -336,6 +334,33 @@
 	/* TODO: Items */
  }
  
+  /*--------------------------------------------------------------------------*/
+ void parse_string(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
+	int stack_top = node_stack_at(0, *stack, stack_size);
+	int parent = node_stack_at(1, *stack, stack_size);
+	
+	/* root */
+	if(parent == STACK_ROOT) {
+		/* root->name (Kartenname) */
+		if(stack_top == STACK_NAME) {
+			map->name = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+			strcpy(map->name, value->vu.str.value);
+		}
+	} else if(parent == STACK_TILES) {
+		/* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
+		if(parsed_tiles >= (map->x) * (map->y)) {
+			return;
+		}
+		
+		if(stack_top == STACK_TYPE) {
+			int i, type;
+			if((type = tile_type_id(value->vu.str.value)) != TILE_TYPE_INVALID) {
+				/* TODO */
+			}
+		}
+	}
+ }
+ 
  /*--------------------------------------------------------------------------*/
  void parse_integer(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, stack_size);
@@ -470,13 +495,34 @@
  }
  
  /*--------------------------------------------------------------------------*/
- int tile_property_identifier(const char*) {
+ int tile_property_identifier(const char* name) {
 	/* kommt noch... */
 	return STACK_INVALID_INDEX;
  }
  
  /*--------------------------------------------------------------------------*/
- int spawn_property_identifier(const char*) {
+ int spawn_property_identifier(const char* name) {
 	/* bestimmt auch... */
 	return STACK_INVALID_INDEX;
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ unsigned int tile_type_id(const char* name) {
+	/* Wand */
+	if(strcmp(name, TILE_NAME_WALL) == 0) {
+		return TILE_TYPE_WALL;
+	}
+	/* Boden */
+	else if(strcmp(name, TILE_NAME_FLOOR) == 0) {
+		return TILE_TYPE_FLOOR;
+	}
+	/* Button */
+	else if(strcmp(name, TILE_NAME_BUTTON) == 0) {
+		return TILE_TYPE_BUTTON;
+	}
+	/* Tür */
+	else if(strcmp(name, TILE_NAME_DOOR) == 0) {
+		return TILE_TYPE_DOOR;
+	}
+	return TILE_TYPE_INVALID;
  }

@@ -20,7 +20,7 @@
 	int weight;
 	int value;
 	/* Polymorphismusersatz für den eig. Typ */
-	char* type;
+	unsigned int type;
 	/* spez. Eigenschaften des Items */
 	void* properties;
  } Item;

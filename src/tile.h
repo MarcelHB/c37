@@ -23,7 +23,7 @@
 	/* 32-bit Farbe nach RGBA */
 	unsigned long color;
 	/* Polymorphismusersatz für den eig. Typ */
-	char* type;
+	unsigned int type;
 	/* spez. Eigenschaften des Kacheltyps */
 	void* properties;
 	/* Items, die hier liegen */
@@ -35,8 +35,27 @@
  #include "tiles/wall.h"
  #include "tiles/button.h"
  
-  /* Zuordnungstabellen von type -> defaults */
- /* "wall" -> "255", grau, "#" ... */
+  /* verwendete Tile-type identifier */
+ #define TILE_TYPE_INVALID				0xFFFFFFFF
+ #define TILE_TYPE_WALL					0x00000000
+ #define TILE_TYPE_FLOOR				0x00000001
+ #define TILE_TYPE_BUTTON				0x00000002
+ #define TILE_TYPE_DOOR					0x00000003
+ 
+ /* Zuordnungstabellen von type -> defaults */
+ struct TileDefault {
+	unsigned int type;
+	unsigned long color;
+	char glyph;
+ };
+ 
+ /* lediglich Intialisierungswerte */
+ const struct TileDefault tile_defaults[4] = {
+	{TILE_TYPE_WALL, 0xFFFFFF00, '#'},
+	{TILE_TYPE_FLOOR, 0xFFFFFF00, '.'},
+	{TILE_TYPE_BUTTON, 0xFFFFFF00, '+'},
+	{TILE_TYPE_DOOR, 0xCCCCCC00, '|'},
+ };
  
  /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
  void render_tile(BufferTile*, Tile*);

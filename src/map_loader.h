@@ -29,6 +29,8 @@
  void parse_array_begin(unsigned int*, unsigned int, unsigned int*);
  void parse_array_end(unsigned int**, unsigned int*, unsigned int*);
  void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const unsigned int, const int);
+ void parse_string(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
+ void parse_integer(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
  
  unsigned int node_stack_at(unsigned int, unsigned int*, unsigned int);
  void push_node_stack(int, unsigned int**, unsigned int*);
@@ -38,6 +40,7 @@
  
  int tile_property_identifier(const char*);
  int spawn_property_identifier(const char*);
+ unsigned int tile_type_id(const char*);
 
  /* Object-Keys beim Parsen */
  
@@ -73,5 +76,11 @@
  #define STACK_HEALTHPOINTS				0x0000000B
  #define STACK_MAX_HEALTHPOINTS			0x0000000C
  #define STACK_ITEMS					0x0000000D
+
+ /* lesbare Tile-Type Namen */
+ #define TILE_NAME_WALL					0x00000000
+ #define TILE_NAME_FLOOR				0x00000001
+ #define TILE_NAME_BUTTON				0x00000002
+ #define TILE_NAME_DOOR					0x00000003
  
  #endif

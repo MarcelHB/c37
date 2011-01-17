@@ -162,7 +162,7 @@ typedef struct Item {
 	unsigned long color;
 	int weight;
 	int value;
-	char* type;
+	unsigned int type;
 	void* properties;
 } Item;
 		\end{lstlisting} \\
@@ -219,7 +219,7 @@ typedef struct Spawn {
 	char npc;
 	char humanoid;
 	unsigned int max_hp, hp;
-	char* type;
+	unsigned int type;
 	void* properties;
 	Item* inventory;
 	unsigned int inventory_size;
@@ -315,7 +315,7 @@ typedef struct Tile {
 	unsigned int brightness;
 	char glyph;
 	unsigned long color;
-	char* type;
+	unsigned int type;
 	void* properties;
 	Item* items;
 	unsigned int number_of_items;

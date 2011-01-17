@@ -27,7 +27,7 @@
 	/* (max) HPs */;
 	unsigned int max_hp, hp;
 	/* Polymorphismusersatz für den eig. Typ */
-	char* type;
+	unsigned int type;
 	/* spez. Eigenschaften des Spawns */
 	void* properties;
 	/* Besitztümer */
@@ -44,5 +44,8 @@
  
  /* Gibt reservierten Speicher eines Spawns frei */
  void free_spawn(Spawn*);
+ 
+ /* Zuordnungstabellen von type -> defaults */
+ /* ... */
  
  #endif
