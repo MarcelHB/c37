@@ -9,7 +9,9 @@
  #include "globals.h"
  
  /*--------------------------------------------------------------------------*/
- /* JSON_Parser benötigt einen Funktionszeiger als Callback, deshalb nicht über Parameter lösbar */
+ /* JSON_Parser benötigt einen Funktionszeiger als Callback, deshalb nicht über 
+  * Parameter lösbar .
+  */
  static Map intermediate_map = {
 	.x = 0, 
 	.y = 0,
@@ -25,7 +27,9 @@
  static unsigned int node_stack_size = 0;
  
  /*--------------------------------------------------------------------------*/
- 
+ /* Lädt die Karte mit dem Namen name in den Speicher und gibt einen Zeiger 
+  * darauf zurück. 
+  */
  Map* load_map(char* name) {
 	FILE* in = NULL;
 	Map* map = NULL;
@@ -38,10 +42,12 @@
 	strcpy(path_and_name, MAP_DIRECTORY); strcat(path_and_name, "/"); strcat(path_and_name, name); strcat(path_and_name, MAP_FILE_EXTENSION);
 	
 	in = fopen(path_and_name, "r");
+	/* nix, wenn die Datei fehlt/gesperrt ist */
 	if(in == NULL) {
 		return NULL;
 	}
 	
+	/* modul-statische Variablen zurücksetzen */
 	reset_parse_stats();
 	
 	init_JSON_config(&config);	
@@ -80,6 +86,9 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Nimmt eine existierende Karte *map und löscht deeply alle benutzten Ressourcen
+  * und die für den Pointer.
+  */
  void flush_map(Map* map) {
 	int i;
 	/* Name */
@@ -102,6 +111,9 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Wenn das Parsen beendet/fehlgeschlagen ist, unlocke die Datei und lösche
+  * Parser und Kartennamen.
+  */
  void clean_up_parsing(JSON_parser_struct* parser, char* name, FILE* map_file) {
 	delete_JSON_parser(parser);
 	free(name);
@@ -109,10 +121,11 @@
  }
  
  /*--------------------------------------------------------------------------*/
- /* Callback-Funktion für JSON_parser */
+ /* Callback-Funktion für JSON_parser, liefert den aktuellen semantischen Token 
+  * zurück. 
+  */
  static int parse(void* cfg, int type, const JSON_value* value) {
- 
-	switch(type) {
+ 	switch(type) {
 		/* { */
 		case JSON_T_OBJECT_BEGIN:
 			parse_object_begin(&intermediate_map, &node_stack, &node_stack_size, &has_root, &parsed_tiles, array_depth);
@@ -129,6 +142,7 @@
 		case JSON_T_ARRAY_END:
 			parse_array_end(&node_stack, &node_stack_size, &array_depth);
 			break;
+		/* "...": */
 		case JSON_T_KEY:
 			parse_key(value, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
@@ -138,9 +152,11 @@
 		case JSON_T_INTEGER:
 			parse_integer(value, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
+		/* true */
 		case JSON_T_TRUE:
 			parse_bool(1, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
+		/* false */
 		case JSON_T_FALSE:
 			parse_bool(0, &intermediate_map, node_stack, node_stack_size, parsed_tiles, array_depth);
 			break;
@@ -150,8 +166,10 @@
  }
  
  /*--------------------------------------------------------------------------*/
- /* Parser-Wert, Karte, Tiefenstack, Größe davon, Root-Marker, Anz. geparster Kacheln, Anz. geparster Spawns, Arraytiefe */
+ /* Guckt nach, welches Objekt hier beginnt und macht je nach dem ein bisschen mehr.
+  */
  void parse_object_begin(Map* map, unsigned int** stack, unsigned int* stack_size, unsigned int* has_root, int* parsed_tiles,  unsigned int array_depth) {
+	/* erstes Objekt muss die Karte sein */
 	if(!(*has_root)) {
 		push_node_stack(NODE_ROOT, &stack, stack_size);
 		*has_root = 1;
@@ -166,10 +184,12 @@
 			}
 		}
 		/* Root->Spawns */
+		/* Spawns werden on the fly angelegt, da ihre Anzahl nicht in direkter Abhängigkeit mit der Kartengröße steht. */
 		if(parent == STACK_ROOT && stack_top == STACK_SPAWNS) {
 			if(array_depth == 1) {
 				map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
 				map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
+				/* Fallbackwerte */
 				*(map->spawns[map->number_of_spawns - 1]) = (Spawn){
 						.id = NULL,
 						.name = NULL,
@@ -187,6 +207,7 @@
 						.inventory = NULL,
 						.inventory_size = 0
 					};
+				/* ID abhängig von der Anzahl an Spawns */
 				calculate_spawn_id(map->spawns[map->number_of_spawns - 1], map->number_of_spawns);
 			}
 		}
@@ -194,6 +215,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Objekte, die nicht in einem Array gekapselt sind, werden vom Stack geholt. */
  void parse_object_end(unsigned int** stack, unsigned int* stack_size, unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, stack_size);
 	
@@ -203,6 +225,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Bei Array-Beginn wird die aktuelle Array-Tiefe hochgesetzt. */
  void parse_array_begin(int* stack, unsigned int stack_size, unsigned int* array_depth) {
 	int stack_top = node_stack_at(0, stack, stack_size);
 	int parent = node_stack_at(1, stack, stack_size);
@@ -213,6 +236,9 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* ... und sonst dekrementiert. Manche Arrays stellen Objektblöcke dar, diese werden
+  * dann vom Stack gepustet, wenn zu Ende.
+  */
  void parse_array_end(unsigned int** stack, unsigned int* stack_size, unsigned int* array_depth) {
 	int stack_top = node_stack_at(0, *stack, stack_size);
 	int parent = node_stack_at(1, *stack, stack_size);
@@ -226,6 +252,9 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Abhängig von übergeordneten Objekten werden alle Strings links vom Doppelpunkt 
+  * in JSON hier geprüft und zugeordnet.
+  */
  void parse_key(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, *stack_size);
 	
@@ -244,6 +273,7 @@
 			push_node_stack(STACK_Y);
 		}
 		/* root->tiles (Kacheln) */
+		/* Kacheln werden (untypisiert) geladen, wenn sich jemand die Mühe gemacht hat, sie überhaupt zu definieren. */
 		else if(map->tiles == NULL && strcmp(value->vu.str.value, NODE_TILES) == 0 && (map->x * map->y > 0)) {
 			int i,j;
 			push_node_stack(STACK_TILES);
@@ -263,6 +293,7 @@
 						.items = NULL,
 						.number_of_items = 0
 					};
+					/* Anz. abhängige Kachel-ID */
 					calculate_tile_id(&map->tiles[current_index], i, j);
 				}
 			}
@@ -292,8 +323,10 @@
 		}
 		/* tile->property */
 		else {
+			/* Die Erkennung, ob es wirklich irgendein Typ-Property ist, ist ausgelagert. */
 			int index = tile_property_identifier(value->vu.str.value);
 			if(index != STACK_INVALID_INDEX) {
+				/* wenn erkannt, Identifier auf den Stack */
 				push_node_stack(index);
 			}
 		}
@@ -333,6 +366,7 @@
  }
  
   /*--------------------------------------------------------------------------*/
+  /* Wenn auf den Key ein String folgt, gehe entsprechend damit um (wenn vorgesehen) */
  void parse_string(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, *stack_size);
 	int parent = node_stack_at(1, *stack, *stack_size);
@@ -356,7 +390,9 @@
 			int type;
 			if((type = tile_type_id(value->vu.str.value)) != TILE_TYPE_INVALID) {
 				map->tiles[parsed_tiles].type = type;
+				/* Initialisieren mit Standartwerten */
 				apply_tile_defaults(&map->tiles[parsed_tiles]);
+				/* TypProperty-Zeiger anhängen */
 				create_tile_properties(&map->tiles[parsed_tiles]);
 			}
 		}
@@ -371,6 +407,7 @@
 		}
 		/* tile->property */
 		else {
+			/* irgenwas typspezifisches vielleicht */
 			parse_string_property(value, map, parent, stack_top, parsed_tiles);
 		}
 	} 
@@ -395,10 +432,12 @@
 			strcpy(spawn->id, value->vu.str.value);
 		}
 	}
+	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
  }
  
  /*--------------------------------------------------------------------------*/
+ /* für ein paar Integerwerte dasselbe */
  void parse_integer(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, *stack_size);
 	int parent = node_stack_at(1, *stack, *stack_size);
@@ -440,10 +479,12 @@
 			map->spawns[map->number_of_spawns - 1]->max_hp = value->vu.integer_value;
 		}
 	}
+	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
  }
  
  /*--------------------------------------------------------------------------*/
+ /* JSON unterstüzt true/false, hier meistens in chars übersetzt mit 1/0. */
  void parse_bool(const unsigned int value, Map* map, unsigned int** stack, unsigned int* stack_size, const int parsed_tiles, const unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, *stack_size);
 	int parent = node_stack_at(1, *stack, *stack_size);
@@ -456,11 +497,12 @@
 		/* bisher nur boolesche Properties */
 		parse_bool_property(value, map, parent, stack_top, parsed_tiles);
 	}
-	
+	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Guckt, ob irgendein String-Property sich vom key angesprochen fühlt. */
  void parse_string_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
 	
 	/* tile */
@@ -482,6 +524,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Für Integer. */
  void parse_integer_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
 	/* tile */
 	if(parent == STACK_TILES) {
@@ -498,6 +541,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Für irgendwelche booleschen Eigenschaften. */
  void parse_bool_property(const unsigned int value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
 	/* tile */
 	if(parent == STACK_TILES) {
@@ -550,6 +594,8 @@
 }
  
  /*--------------------------------------------------------------------------*/
+ /* liefert den internen Identifier vom Stack zurück, 0 ist der Stack-Top, alles größere
+  * ist das, was entsprechend weiter zurück liegt */
  unsigned int node_stack_at(unsigned int index, int* stack, unsigned int stack_size) {
 	/* Stack leer oder index außerhalb der Größe */
 	if(!stack_size || ((stack_size - index) <= 0)) {
@@ -559,6 +605,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Packt einen Identifier auf den Stack. */
  void push_node_stack(int node, unsigned int** stack, unsigned int* stack_size) {
 	/* Counter hoch */
 	int new_stack_size = ++(*stack_size);
@@ -569,6 +616,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Oder holt ihn wieder da runter. */
  unsigned int pop_node_stack(unsigned int** stack, unsigned int* stack_size) {
 	int tmp;
 	int elements = *stack_size;
@@ -587,6 +635,10 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Die Karte, die in diesem Objectmodul in einer statischen Variable liegt, 
+  * wird nun für den Gebrauch einmal kopiert (nur erste Ebene), der Rest wird
+  * beim nächsten Parsen eh vergessen.
+  */
  Map* finalize_map(Map* map) {
 	size_t map_size = sizeof(Map);
 	map = (Map*)ex_alloc(map_size);
@@ -597,8 +649,10 @@
  }
  
  /*--------------------------------------------------------------------------*/
- /* nur benutzen, wenn der reservierte Speicher für Name, Tiles usw. irgendwo 
-	anders noch referenziert wird! */
+ /* Genauergesagt hier wirds vergessen. Nur benutzen, wenn der reservierte Speicher 
+  * für Name, Tiles usw. irgendwo 
+  * anders noch referenziert wird! 
+  */
  void reset_intermediate_map() {
 	intermediate_map.x = 0;
 	intermediate_map.y = 0;
@@ -609,6 +663,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* Setzt ein paar interne globale Variablen zurück, die nur beim Parsen wichtig sind */
  void reset_parse_stats() {
 	array_depth = 0;
     has_root = 0;
@@ -618,6 +673,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* baut aus x und y-Wert eine Standardd-ID für ein Tile */
  void calculate_tile_id(Tile* tile, const int x, const int y) {
 	/* "tile_","_",0, x als String, y als String */
 	int x_length = (int)log10(x) + 1;
@@ -627,6 +683,7 @@
 	char* y_buffer = (char*)ex_calloc(y_length + 1);
 	char* id = (char*)ex_calloc(id_length, 1);
 	
+	/* z.B. "tile_32_54" */
 	strcpy(id, "tile_"); strcat(id, itoa(x, x_buffer, 10)); strcat(id, "_"); strcat(id, itoa(y, y_buffer, 10));
 	tile->id = id;
 	free(x_buffer);
@@ -634,6 +691,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* eine Standardd-ID für einen Spawn, dieses Mal die Nummer */
  void calculate_spawn_id(Spawn* spawn, const int number) {
 	/* "spawn_",0, number als String */
 	int no_length = (int)log10(number) + 1;
@@ -641,12 +699,14 @@
 	char* no_buffer = (char*)ex_calloc(no_length + 1);
 	char* id = (char*)ex_calloc(id_length, 1);
 	
+	/* z.B. "spawn_27" */
 	strcpy(id, "spawn_"); strcat(id, itoa(number, no_buffer, 10));
 	spawn->id = id;
 	free(no_buffer);
  }
  
  /*--------------------------------------------------------------------------*/
+ /* guck nach, ob ein Key zu einem Tile-Property gehört */
  int tile_property_identifier(const char* name) {
 	/* Button->once */
 	if(strcmp(name, NODE_ONCE) == 0) {
@@ -692,6 +752,7 @@
  }
   
  /*--------------------------------------------------------------------------*/
+ /* ordnet einem Tile-Typenamen aus dem JSON einen internen Identifier zu */
  unsigned int tile_type_id(const char* name) {
 	/* Wand */
 	if(strcmp(name, TILE_NAME_WALL) == 0) {
@@ -713,6 +774,7 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* ordnet einem Spawn-Typenamen aus dem JSON einen internen Identifier zu */
  unsigned int spawn_type_id(const char* name) {
 	/* Player */
 	if(strcmp(name, SPAWN_NAME_PLAYER) == 0) {
@@ -720,5 +782,4 @@
 	}
 	return SPAWN_TYPE_INVALID;
  }
- 
  
