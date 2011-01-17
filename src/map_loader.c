@@ -376,13 +376,23 @@
 	} 
 	/* spawn */
 	else if(parent == STACK_SPAWNS) {
+		Spawn* spawn = map->spawns[map->number_of_spawns-1];
 		/* spawn->type */
-		if(stack_top == STACK_TYPE && map->spawns[map->number_of_spawns-1]->type == SPAWN_TYPE_INVALID) {
+		if(stack_top == STACK_TYPE && spawn->type == SPAWN_TYPE_INVALID) {
 			int type;
 			if((type = spawn_type_id(value->vu.str.value)) != SPAWN_TYPE_INVALID) {
-				map->spawns[map->number_of_spawns-1]->type = type;
-				apply_spawn_defaults(map->spawns[map->number_of_spawns-1]);
+				spawn->type = type;
+				apply_spawn_defaults(spawn);
 			}
+		}
+		/* spawn->id */
+		else if(stack_top == STACK_ID) {
+			/* überschreibt Standard-ID - checkt diese aber nicht auf Kollisionen! */
+			if(spawn->id != NULL) {
+				free(spawn->id);
+			}
+			spawn->id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+			strcpy(spawn->id, value->vu.str.value);
 		}
 	}
 	pop_node_stack(stack, stack_size);
