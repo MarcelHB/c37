@@ -304,23 +304,28 @@
 		/* root->name (Kartenname) */
 		if(strcmp(value->vu.str.value, NODE_NAME) == 0) {
 			push_node_stack(STACK_NAME, stack, stack_size);
+			return;
 		}
 		/* root->x (Breite) */
 		else if(strcmp(value->vu.str.value, NODE_X) == 0) {
 			push_node_stack(STACK_X, stack, stack_size);
+			return;
 		}
 		/* root->y (Höhe) */
 		else if(strcmp(value->vu.str.value, NODE_Y) == 0) {
 			push_node_stack(STACK_Y, stack, stack_size);
+			return;
 		}
 		/* root->tiles (Kacheln) */
 		/* Kacheln werden (untypisiert) geladen, wenn sich jemand die Mühe gemacht hat, sie überhaupt zu definieren. */
 		else if(strcmp(value->vu.str.value, NODE_TILES) == 0) {
 			push_node_stack(STACK_TILES, stack, stack_size);
+			return;
 		}
 		/* root->spawns */
 		else if(strcmp(value->vu.str.value, NODE_SPAWNS) == 0) {
 			push_node_stack(STACK_SPAWNS, stack, stack_size);
+			return;
 		}
 	}
 	/* root->tiles->[] */
@@ -328,24 +333,29 @@
 		/* tile->type */
 		if(strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE, stack, stack_size);
+			return;
 		}
 		/* tile->id */
 		else if(strcmp(value->vu.str.value, NODE_ID) == 0) {
 			push_node_stack(STACK_ID, stack, stack_size);
+			return;
 		}
 		/* tile->items */
 		else if(strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
 			push_node_stack(STACK_ITEMS, stack, stack_size);
+			return;
 		}
 		/* tile->brightness */
 		else if(strcmp(value->vu.str.value, NODE_BRIGHTNESS) == 0) {
 			push_node_stack(STACK_BRIGHTNESS, stack, stack_size);
+			return;
 		}
 		/* tile->property */
 		else {
 			/* Die Erkennung, ob es wirklich irgendein Typ-Property ist, ist ausgelagert. */
 			unsigned int index = tile_property_identifier(value->vu.str.value);
 			push_node_stack(index, stack, stack_size);
+			return;
 		}
 	}
 	/* root->spawns->[] */
@@ -353,41 +363,51 @@
 		/* spawn->type */
 		if(strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE, stack, stack_size);
+			return;
 		}
 		/* spawn->id */
 		else if(strcmp(value->vu.str.value, NODE_ID) == 0) {
 			push_node_stack(STACK_ID, stack, stack_size);
+			return;
 		}
 		/* spawn->name */
 		else if(strcmp(value->vu.str.value, NODE_NAME) == 0) {
 			push_node_stack(STACK_NAME, stack, stack_size);
+			return;
 		}
 		/* spawn->x */
 		else if(strcmp(value->vu.str.value, NODE_X) == 0) {
 			push_node_stack(STACK_X, stack, stack_size);
+			return;
 		}
 		/* spawn->x */
 		else if(strcmp(value->vu.str.value, NODE_Y) == 0) {
 			push_node_stack(STACK_Y, stack, stack_size);
+			return;
 		}
 		/* spawn->direction */
 		else if(strcmp(value->vu.str.value, NODE_DIRECTION) == 0) {
 			push_node_stack(STACK_NAME, stack, stack_size);
+			return;
 		}
 		/* spawn->hp */
 		else if(strcmp(value->vu.str.value, NODE_HEALTHPOINTS) == 0) {
 			push_node_stack(STACK_HEALTHPOINTS, stack, stack_size);
+			return;
 		}
 		/* spawn->max_hp */
 		else if(strcmp(value->vu.str.value, NODE_MAX_HEALTHPOINTS) == 0) {
 			push_node_stack(STACK_MAX_HEALTHPOINTS, stack, stack_size);
+			return;
 		}
 		/* spawn->items */
 		else if(strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
 			push_node_stack(STACK_ITEMS, stack, stack_size);
+			return;
 		}
 	}
 	/* TODO: Items */
+	push_node_stack(STACK_INVALID_INDEX, stack, stack_size);
  }
  
   /*--------------------------------------------------------------------------*/
