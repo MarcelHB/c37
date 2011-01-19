@@ -7,6 +7,7 @@
  */
  
  #include "globals.h"
+ #include "tile.h"
  
  /*--------------------------------------------------------------------------*/
  void apply_tile_defaults(Tile* tile) {
@@ -56,4 +57,17 @@
 			};
 		}
 	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void free_tile(Tile* tile) {
+	free(tile->id);
+	/* Button */
+	if(tile->type == TILE_TYPE_BUTTON) {
+		/* Button->toggle_id */
+		ButtonProperties* btn_props = (ButtonProperties*)tile->properties;
+		free(btn_props->toggle_id);
+	}
+	free(tile->properties);
+	free(tile);
  }

@@ -9,6 +9,11 @@
  #ifndef _C37_MAP_LOADER_H
  #define _C37_MAP_LOADER_H
  
+ #include "globals.h"
+ #include "item.h"
+ #include "spawn.h"
+ #include "tile.h"
+ #include "map.h"
  #include "JSON_parser.h"
  
  /* lädt die Karte anhand ihres Dateinamens (ohne Endung) und gibt einen Status (success) zurück */
@@ -17,7 +22,7 @@
  void flush_map(Map*);
  
  /* internals, Helper */
- void clean_up_parsing(JSON_parser_struct*, char*, FILE*);
+ void clean_up_parsing(JSON_parser, char*, FILE*);
  Map* finalize_map(Map*);
  
  void reset_intermediate_map();
@@ -28,7 +33,7 @@
  void parse_object_end(unsigned int**, unsigned int*, unsigned int);
  void parse_array_begin(unsigned int*, unsigned int, unsigned int*);
  void parse_array_end(unsigned int**, unsigned int*, unsigned int*);
- void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
+ void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int, char*);
  void parse_string(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
  void parse_integer(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
  void parse_bool(const unsigned int, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
@@ -38,8 +43,8 @@
  void parse_bool_property(const unsigned int, Map*, const unsigned int, const unsigned int, const unsigned int);
  
  unsigned int node_stack_at(unsigned int, unsigned int*, unsigned int);
- void push_node_stack(int, unsigned int**, unsigned int*);
- unsigned int pop_node_stack(int*, unsigned int*);
+ void push_node_stack(unsigned int, unsigned int**, unsigned int*);
+ unsigned int pop_node_stack(unsigned int**, unsigned int*);
  void calculate_tile_id(Tile*, const int, const int);
  void calculate_spawn_id(Spawn*, const int);
  
@@ -76,7 +81,7 @@
  #define NODE_OPEN						"open"
  #define NODE_EXTERNAL					"ext"
  #define NODE_LOCKED					"locked"
- #define NODE_BREAKALBE					"breaks"
+ #define NODE_BREAKABLE					"breaks"
  
  /* Stack-Identifier */
  #define STACK_INVALID_INDEX			0xFFFFFFFF
@@ -93,7 +98,7 @@
  #define STACK_DIRECTION				0x0000000A
  #define STACK_HEALTHPOINTS				0x0000000B
  #define STACK_MAX_HEALTHPOINTS			0x0000000C
- #define STACK_ITEMS					0x0000000D
+ /*#define dropped						0x0000000D */
  #define STACK_SPACE					0x0000000E
  #define STACK_ONCE						0x0000000F
  #define STACK_TOGGLE_ID				0x00000010

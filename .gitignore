@@ -3,4 +3,6 @@ spec/**/*.aux
 src/demo/**/*.o
 src/demo/**/*.exe
 src/**/*.exe
+tests/*.o
+tests/*.exe
 *.swp
