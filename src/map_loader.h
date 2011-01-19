@@ -46,7 +46,7 @@
  unsigned int pop_node_stack(unsigned int**, unsigned int*);
  void calculate_tile_id(Tile*, const unsigned int, const unsigned int);
  void calculate_spawn_id(Spawn*, const unsigned int);
- void calculate_item_id(Item*, const char const*, const unsigned int);
+ void calculate_item_id(Item*, const char*, const unsigned int);
  
  unsigned int tile_property_identifier(const char*);
  unsigned int item_property_identifier(const char*);

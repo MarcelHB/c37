@@ -245,11 +245,11 @@
 					*(spawn->inventory[spawn->inventory_size - 1]) = item;
 					calculate_item_id(spawn->inventory[spawn->inventory_size - 1], spawn->id, spawn->inventory_size);
 				} else {
-					Tile* tile = map->tiles[parsed_tiles - 1];
+					Tile* tile = &map->tiles[*parsed_tiles - 1];
 					tile->items = (Item**)ex_realloc(tile->items, sizeof(Item*) * ++tile->number_of_items);
 					tile->items[tile->number_of_items - 1] = (Item*)ex_malloc(sizeof(Item));
 					*(tile->items[tile->number_of_items - 1]) = item;
-					calculate_item_id(tile->items[tile->number_of_items - 1], tile->id, tile->number_of_items));
+					calculate_item_id(tile->items[tile->number_of_items - 1], tile->id, tile->number_of_items);
 				}
 			}
 		}
@@ -571,9 +571,9 @@
 		/* Je nach Zugehörigkeit Item injecten */
 		if(owner == STACK_SPAWNS) {
 			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
-			item = spawn->items[spawn->inventory_size - 1];
+			item = spawn->inventory[spawn->inventory_size - 1];
 		} else {
-			Tile* tile = map->tiles[parsed_tiles - 1];
+			Tile* tile = &map->tiles[parsed_tiles - 1];
 			item = tile->items[tile->number_of_items - 1];
 		}
 		/* item->type */
@@ -682,9 +682,9 @@
 		/* Je nach Zugehörigkeit Item injecten */
 		if(owner == STACK_SPAWNS) {
 			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
-			item = spawn->items[spawn->inventory_size - 1];
+			item = spawn->inventory[spawn->inventory_size - 1];
 		} else {
-			Tile* tile = map->tiles[parsed_tiles - 1];
+			Tile* tile = &map->tiles[parsed_tiles - 1];
 			item = tile->items[tile->number_of_items - 1];
 		}
 		/* item->value */
@@ -721,7 +721,7 @@
  /*--------------------------------------------------------------------------*/
  /* Guckt, ob irgendein String-Property sich vom key angesprochen fühlt. */
  void parse_string_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key,  unsigned int owner, const unsigned int parsed_tiles) {
-	
+	(void)owner;
 	/* tile */
 	if(parent == STACK_TILES) {
 		unsigned int type = map->tiles[parsed_tiles-1].type;
@@ -760,9 +760,9 @@
 		/* Je nach Zugehörigkeit Item injecten */
 		if(owner == STACK_SPAWNS) {
 			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
-			item = spawn->items[spawn->inventory_size - 1];
+			item = spawn->inventory[spawn->inventory_size - 1];
 		} else {
-			Tile* tile = map->tiles[parsed_tiles - 1];
+			Tile* tile = &map->tiles[parsed_tiles - 1];
 			item = tile->items[tile->number_of_items - 1];
 		}
 	}
@@ -771,6 +771,7 @@
  /*--------------------------------------------------------------------------*/
  /* Für irgendwelche booleschen Eigenschaften. */
  void parse_bool_property(const unsigned int value, Map* map, const unsigned int parent, const unsigned int key, unsigned int owner, const unsigned int parsed_tiles) {
+	(void)owner;
 	/* tile */
 	if(parent == STACK_TILES) {
 		int type = map->tiles[parsed_tiles-1].type;
@@ -951,7 +952,7 @@
  
  /*--------------------------------------------------------------------------*/
  /* eine Standardd-ID für ein Item, abhängig von der ID des Parents und dessen Nummer */
- void calculate_item_id(Item* item, const char const* parent_id, const unsigned int number) {
+ void calculate_item_id(Item* item, const char* parent_id, const unsigned int number) {
 	int no_length = (int)log10(number + 1) + 1;
 	int id_length = strlen(parent_id) + no_length + 7;
 	char* no_buffer = (char*)ex_calloc(no_length + 1, 1);

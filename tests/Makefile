@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c89 -pedantic -Wall -Wextra -O2 -g
 SRC = ../src/
-TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_Parser.o memory.o spawn.o tile.o map_loader.o
+TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_Parser.o memory.o spawn.o tile.o map_loader.o item.o
 .SUFFIXES: .c
 
 test_map_loader_win: $(TEST_MAP_LOADER_OBJECTS)
@@ -21,5 +21,7 @@ tile.o: $(SRC)tile.c
 	$(CC) $(CFLAGS) -c $(SRC)tile.c
 map_loader.o: $(SRC)map_loader.c
 	$(CC) $(CFLAGS) -c $(SRC)map_loader.c
+item.o: $(SRC)item.c
+	$(CC) $(CFLAGS) -c $(SRC)item.c
 
 	

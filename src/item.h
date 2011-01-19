@@ -26,6 +26,7 @@
  } Item;
  
  /* Properties fuer Klunker/Waffe/Misc... */
+ #include "items/health_potion.h"
  
  /* verwendete Tile-type identifier */
  #define ITEM_TYPE_INVALID				0xFFFFFFFF
@@ -42,7 +43,7 @@
  };
  
  /* lediglich Intialisierungswerte */
- static const struct ItemDefault tile_defaults[1] = {
+ static const struct ItemDefault item_defaults[1] = {
 	{ITEM_TYPE_HEALTH_POTION, "Heiltrank", 0xFF000000, 1, 10}
  };
  
