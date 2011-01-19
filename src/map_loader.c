@@ -745,7 +745,7 @@
  void reset_parse_stats() {
 	array_depth = 0;
     has_root = 0;
-    parsed_tiles = -1;
+    parsed_tiles = 0;
     node_stack = NULL;
     node_stack_size = 0;
 	dimension_seal = 0;
