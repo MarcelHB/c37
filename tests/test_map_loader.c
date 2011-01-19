@@ -1,13 +1,15 @@
 #include "../src/globals.h"
+#include "../src/memory.h"
 #include "../src/map.h"
 #include "../src/map_loader.h"
 
-#define MAP_DIMENSION 10
-#define MAP_NAME "A lonely map"
-#define MAP_SPAWNS 1
-#define MAP_PLAYER_X 3
-#define MAP_PLAYER_Y 6
-#define MAP_PLAYER_HP 1000
+#define MAP_DIMENSION 			10
+#define MAP_NAME 				"A lonely map"
+#define MAP_SPAWNS 				1
+#define MAP_PLAYER_ID 			"spawn_1"
+#define MAP_PLAYER_X 			3
+#define MAP_PLAYER_Y 			6
+#define MAP_PLAYER_HP 			1000
 
 const char glyph_reference[MAP_DIMENSION][MAP_DIMENSION] = {
 	{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -26,6 +28,11 @@ int main() {
 	Map* map = NULL;
 	
 	map = load_map("lonely");
+	
+	if(map == NULL) {
+		printf("ERROR! Unable to load file!");
+		return 1;
+	}
 	
 	/* Karte->Name */
 	printf("checking map name...");
@@ -61,6 +68,29 @@ int main() {
 			printf("correct!\n");
 		}
 	}
+	/* Karte->tiles[]->id (Types) */
+	printf("checking diagonal ids...");
+	{
+		int i;
+		char* id_buffer;
+		char id_error = 0;
+		
+		for(i = 0; i < MAP_DIMENSION; ++i) {
+			id_buffer = (char*)ex_calloc(9, 1);
+			sprintf(id_buffer, "tile_%d_%d", i+1, i+1);
+			if(strcmp(id_buffer, map->tiles[i * map->x + i].id) != 0) {
+				id_error = 1;
+				break;
+			}
+			free(id_buffer);
+		}
+		
+		if(id_error) {
+			printf("\n-> ERROR! ids do not match at %dx%d!\n", i, i);
+		} else {
+			printf("correct!\n");
+		}
+	}
 	
 	/* Karte->Spawnanzahl */
 	printf("checking spawn counter...");
@@ -71,22 +101,28 @@ int main() {
 	printf("checking vanilla player...\n");
 	{
 		Spawn* spawn = map->spawns[0];
+		/* player->id */
+		printf("=> id...");
+		if(strcmp(MAP_PLAYER_ID, spawn->id) != 0) {
+			printf("\n-> ERROR! expected %s but player is %s!\n", MAP_PLAYER_ID, spawn->id);
+		} else { printf("correct! (%s)\n", spawn->id); }
+		
 		/* player->type */
 		printf("=> type...");
 		if(spawn->type != SPAWN_TYPE_PLAYER) {
-			printf("\n-> ERROR! spawn at 0 is not a player type!");
+			printf("\n-> ERROR! spawn at 0 is not a player type!\n");
 		} else { printf("correct! (SPAWN_TYPE_PLAYER)\n"); }
 		
 		/* player->position */
 		printf("=> position...");
 		if(spawn->x != MAP_PLAYER_X || spawn->y != MAP_PLAYER_Y) {
-			printf("\n-> ERROR! expected %dx%d, but spawn is %dx%d\n!", MAP_PLAYER_X, MAP_PLAYER_Y, spawn->x, spawn->y);
+			printf("\n-> ERROR! expected %dx%d, but spawn is %dx%d!\n", MAP_PLAYER_X, MAP_PLAYER_Y, spawn->x, spawn->y);
 		} else { printf("correct! (%dx%d)\n", spawn->x, spawn->y); }
 		
 		/* player->hp */
 		printf("=> health points...");
 		if(spawn->hp != MAP_PLAYER_HP) {
-			printf("\n-> ERROR! expected %dx%d, but spawn has %dx%d\n!", MAP_PLAYER_HP, spawn->hp);
+			printf("\n-> ERROR! expected %dx%d, but spawn has %dx%d!\n", MAP_PLAYER_HP, spawn->hp);
 		} else { printf("correct! (%d)\n", spawn->hp); }
 	}
 	

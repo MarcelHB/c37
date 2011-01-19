@@ -46,7 +46,7 @@
 	char* path_and_name = (char*)ex_calloc(strlen(MAP_DIRECTORY) + strlen(name) + strlen(MAP_FILE_EXTENSION) + 2, 1);
 	
 	/* "maps/[name].json" */
-	strcpy(path_and_name, MAP_DIRECTORY); strcat(path_and_name, "/"); strcat(path_and_name, name); strcat(path_and_name, MAP_FILE_EXTENSION);
+	sprintf(path_and_name, "%s/%s%s", MAP_DIRECTORY, name, MAP_FILE_EXTENSION);
 	
 	map_file = fopen(path_and_name, "r");
 	/* nix, wenn die Datei fehlt/gesperrt ist */
@@ -915,21 +915,11 @@
 	int x_length = (int)log10(x + 1) + 1;
 	int y_length = (int)log10(y + 1) + 1;
 	int id_length = 7 + x_length + y_length;
-	char* x_buffer = (char*)ex_calloc(x_length + 1, 1);
-	char* y_buffer = (char*)ex_calloc(y_length + 1, 1);
-	char* id = (char*)ex_calloc(id_length, 1);
+	char* id_buffer = (char*)ex_calloc(id_length, 1);
 	
 	/* z.B. "tile_32_54" */
-	strcpy(id, "tile_"); 
-	sprintf(x_buffer, "%d", x + 1);
-	strcat(id, x_buffer); 
-	strcat(id, "_"); 
-	sprintf(y_buffer, "%d", y + 1);
-	strcat(id, y_buffer);
-	
-	tile->id = id;
-	free(x_buffer);
-	free(y_buffer);
+	sprintf(id_buffer, "tile_%d_%d", x + 1, y + 1);
+	tile->id = id_buffer;
  }
  
  /*--------------------------------------------------------------------------*/
@@ -938,16 +928,11 @@
 	/* "spawn_",0, number als String */
 	int no_length = (int)log10(number + 1) + 1;
 	int id_length = 7 + no_length;
-	char* no_buffer = (char*)ex_calloc(no_length + 1, 1);
-	char* id = (char*)ex_calloc(id_length, 1);
+	char* id_buffer = (char*)ex_calloc(id_length, 1);
 	
 	/* z.B. "spawn_27" */
-	strcpy(id, "spawn_"); 
-	sprintf(no_buffer, "%d", number);
-	strcat(id, no_buffer);
-	
-	spawn->id = id;
-	free(no_buffer);
+	sprintf(id_buffer, "spawn_%d", number);
+	spawn->id = id_buffer;
  }
  
  /*--------------------------------------------------------------------------*/
@@ -955,17 +940,11 @@
  void calculate_item_id(Item* item, const char* parent_id, const unsigned int number) {
 	int no_length = (int)log10(number + 1) + 1;
 	int id_length = strlen(parent_id) + no_length + 7;
-	char* no_buffer = (char*)ex_calloc(no_length + 1, 1);
 	char* id_buffer = (char*)ex_calloc(id_length, 1);
 	
 	/* z.B. "spawn_27_item_3" */
-	strcpy(id_buffer, parent_id);
-	strcat(id_buffer, "_item_");
-	sprintf(no_buffer, "%d", number);
-	strcat(id_buffer, no_buffer);
-	
+	sprintf(id_buffer, "%s_item_%d", parent_id, number);
 	item->id = id_buffer;
-	free(no_buffer);
  }
  
  /*--------------------------------------------------------------------------*/
