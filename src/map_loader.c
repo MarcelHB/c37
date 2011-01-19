@@ -224,6 +224,35 @@
 				}
 			}
 		}
+		/* Tile, Spawn */
+		else if(parent == STACK_TILES || parent == STACK_SPAWNS) {
+			/* (.)->items */
+			if(stack_top == STACK_ITEMS && (parent == STACK_SPAWNS && parent == STACK_TILES)) {
+				Item item = {
+					/*.id = */NULL,
+					/*.name = */NULL,
+					/*.color = */0xFFFFFF00,
+					/*.weight = */1,
+					/*.value = */1,
+					/*.type = */ITEM_TYPE_INVALID,
+					/*.properties = */NULL
+				};
+				/* Je nach Owner packe das Item in den entsprechenden Korb */
+				if(parent == STACK_SPAWNS) {
+					Spawn* spawn = map->spawns[map->number_of_spawns - 1];
+					spawn->inventory = (Item**)ex_realloc(spawn->inventory, sizeof(Item*) * ++spawn->inventory_size);
+					spawn->inventory[spawn->inventory_size - 1] = (Item*)ex_malloc(sizeof(Item));
+					*(spawn->inventory[spawn->inventory_size - 1]) = item;
+					calculate_item_id(spawn->inventory[spawn->inventory_size - 1], spawn->id, spawn->inventory_size);
+				} else {
+					Tile* tile = map->tiles[parsed_tiles - 1];
+					tile->items = (Item**)ex_realloc(tile->items, sizeof(Item*) * ++tile->number_of_items);
+					tile->items[tile->number_of_items - 1] = (Item*)ex_malloc(sizeof(Item));
+					*(tile->items[tile->number_of_items - 1]) = item;
+					calculate_item_id(tile->items[tile->number_of_items - 1], tile->id, tile->number_of_items));
+				}
+			}
+		}
 	}
  }
  
@@ -274,6 +303,14 @@
 			}
 		}
 	}
+	/* Tile */
+	else if(parent == STACK_TILES && stack_top == STACK_ITEMS) {
+		(*array_depth)++;
+	}
+	/* Spawn */
+	else if(parent == STACK_SPAWNS && stack_top == STACK_ITEMS) {
+		(*array_depth)++;
+	}
  }
  
  /*--------------------------------------------------------------------------*/
@@ -284,11 +321,16 @@
 	int stack_top = node_stack_at(0, *stack, *stack_size);
 	int parent = node_stack_at(1, *stack, *stack_size);
  
+	/* root->tiles/spawns-Array */
 	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
 		(*array_depth)--;
 		if((*array_depth) == 0) {
 			pop_node_stack(stack, stack_size);
 		}
+	}
+	/* tiles/spawns->items-Array */
+	else if((parent == STACK_TILES || parent == STACK_SPAWNS) && stack_top == STACK_ITEMS) {
+		(*array_depth)--;
 	}
  }
  
@@ -298,6 +340,7 @@
   */
  void parse_key(const JSON_value* value, unsigned int** stack, unsigned int* stack_size, const unsigned int array_depth) {
 	int stack_top = node_stack_at(0, *stack, *stack_size);
+	int parent = node_stack_at(1, *stack, *stack_size);
 	
 	/* root (Karte) */
 	if(stack_top == STACK_ROOT) {
@@ -406,7 +449,42 @@
 			return;
 		}
 	}
-	/* TODO: Items */
+	/* tile->items->[] */
+	else if((stack_top == STACK_ITEMS && parent == STACK_TILES && array_depth == 3) ||
+			(stack_top == STACK_ITEMS && parent == STACK_SPAWNS && array_depth == 2)) {
+		/* item->type */
+		if(strcmp(value->vu.str.value, NODE_TYPE) == 0) {
+			push_node_stack(STACK_TYPE, stack, stack_size);
+			return;
+		}
+		/* item->id */
+		else if(strcmp(value->vu.str.value, NODE_ID) == 0) {
+			push_node_stack(STACK_ID, stack, stack_size);
+			return;
+		}
+		/* item->name */
+		else if(strcmp(value->vu.str.value, NODE_NAME) == 0) {
+			push_node_stack(STACK_NAME, stack, stack_size);
+			return;
+		}
+		/* item->weight */
+		else if(strcmp(value->vu.str.value, NODE_WEIGHT) == 0) {
+			push_node_stack(STACK_WEIGHT, stack, stack_size);
+			return;
+		}
+		/* item->value */
+		else if(strcmp(value->vu.str.value, NODE_VALUE) == 0) {
+			push_node_stack(STACK_VALUE, stack, stack_size);
+			return;
+		}
+		/* item->property */
+		else {
+			/* Die Erkennung, ob es wirklich irgendein Typ-Property ist, ist ausgelagert. */
+			unsigned int index = item_property_identifier(value->vu.str.value);
+			push_node_stack(index, stack, stack_size);
+			return;
+		}
+	}
 	push_node_stack(STACK_INVALID_INDEX, stack, stack_size);
  }
  
@@ -454,7 +532,7 @@
 		/* tile->property */
 		else {
 			/* irgenwas typspezifisches vielleicht */
-			parse_string_property(value, map, parent, stack_top, parsed_tiles);
+			parse_string_property(value, map, parent, stack_top, STACK_INVALID_INDEX, parsed_tiles);
 		}
 	} 
 	/* spawn */
@@ -484,6 +562,52 @@
 			}
 			spawn->name = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
 			strcpy(spawn->name, value->vu.str.value);
+		}
+	}
+	/* item */
+	else if(parent == STACK_ITEMS) {
+		unsigned int owner = node_stack_at(2, *stack, *stack_size);
+		Item* item = NULL;
+		/* Je nach Zugehörigkeit Item injecten */
+		if(owner == STACK_SPAWNS) {
+			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
+			item = spawn->items[spawn->inventory_size - 1];
+		} else {
+			Tile* tile = map->tiles[parsed_tiles - 1];
+			item = tile->items[tile->number_of_items - 1];
+		}
+		/* item->type */
+		if(stack_top == STACK_TYPE && item->type == ITEM_TYPE_INVALID) {
+			unsigned int type;
+			if((type = item_type_id(value->vu.str.value)) != ITEM_TYPE_INVALID) {
+				item->type = type;
+				/* Initialisieren mit Standartwerten */
+				apply_item_defaults(item);
+				/* ItemProperty-Zeiger anhängen */
+				create_item_properties(item);
+			}
+		}
+		/* item->id */
+		else if(stack_top == STACK_ID) {
+			/* überschreibt Standard-ID - checkt diese aber nicht auf Kollisionen! */
+			if(item->id != NULL) {
+				free(item->id);
+			}
+			item->id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+			strcpy(item->id, value->vu.str.value);
+		}
+		/* item->name */
+		else if(stack_top == STACK_NAME) {
+			if(item->name != NULL) {
+				free(item->name);
+			}
+			item->name = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+			strcpy(item->name, value->vu.str.value);
+		}
+		/* item->property */
+		else {
+			/* irgenwas typspezifisches vielleicht */
+			parse_string_property(value, map, parent, stack_top, owner, parsed_tiles);
 		}
 	}
 	/* fertig mit Auswertung, springe zurück */
@@ -521,7 +645,7 @@
 		}
 		/* tile->property */
 		else {
-			parse_integer_property(value, map, parent, stack_top, parsed_tiles);
+			parse_integer_property(value, map, parent, stack_top, STACK_INVALID_INDEX, parsed_tiles);
 		}
 	}
 	/* Spawn */
@@ -551,6 +675,27 @@
 			map->spawns[map->number_of_spawns - 1]->y = y;
 		}
 	}
+	/* item */
+	else if(parent == STACK_ITEMS) {
+		unsigned int owner = node_stack_at(2, *stack, *stack_size);
+		Item* item = NULL;
+		/* Je nach Zugehörigkeit Item injecten */
+		if(owner == STACK_SPAWNS) {
+			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
+			item = spawn->items[spawn->inventory_size - 1];
+		} else {
+			Tile* tile = map->tiles[parsed_tiles - 1];
+			item = tile->items[tile->number_of_items - 1];
+		}
+		/* item->value */
+		if(stack_top == STACK_VALUE) {
+			item->value = value->vu.integer_value;
+		}
+		/* item->weight */
+		else if(stack_top == STACK_WEIGHT) {
+			item->weight = value->vu.integer_value;
+		}
+	}
 	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
  }
@@ -567,7 +712,7 @@
 			return;
 		}
 		/* bisher nur boolesche Properties */
-		parse_bool_property(value, map, parent, stack_top, parsed_tiles);
+		parse_bool_property(value, map, parent, stack_top, STACK_INVALID_INDEX, parsed_tiles);
 	}
 	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
@@ -575,7 +720,7 @@
  
  /*--------------------------------------------------------------------------*/
  /* Guckt, ob irgendein String-Property sich vom key angesprochen fühlt. */
- void parse_string_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
+ void parse_string_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key,  unsigned int owner, const unsigned int parsed_tiles) {
 	
 	/* tile */
 	if(parent == STACK_TILES) {
@@ -597,7 +742,7 @@
  
  /*--------------------------------------------------------------------------*/
  /* Für Integer. */
- void parse_integer_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
+ void parse_integer_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, unsigned int owner, const unsigned int parsed_tiles) {
 	/* tile */
 	if(parent == STACK_TILES) {
 		int type = map->tiles[parsed_tiles-1].type;
@@ -610,11 +755,22 @@
 			}
 		}
 	}
+	else if(parent == STACK_ITEMS) {
+		Item* item = NULL;
+		/* Je nach Zugehörigkeit Item injecten */
+		if(owner == STACK_SPAWNS) {
+			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
+			item = spawn->items[spawn->inventory_size - 1];
+		} else {
+			Tile* tile = map->tiles[parsed_tiles - 1];
+			item = tile->items[tile->number_of_items - 1];
+		}
+	}
  }
  
  /*--------------------------------------------------------------------------*/
  /* Für irgendwelche booleschen Eigenschaften. */
- void parse_bool_property(const unsigned int value, Map* map, const unsigned int parent, const unsigned int key, const unsigned int parsed_tiles) {
+ void parse_bool_property(const unsigned int value, Map* map, const unsigned int parent, const unsigned int key, unsigned int owner, const unsigned int parsed_tiles) {
 	/* tile */
 	if(parent == STACK_TILES) {
 		int type = map->tiles[parsed_tiles-1].type;
@@ -753,7 +909,7 @@
  
  /*--------------------------------------------------------------------------*/
  /* baut aus x und y-Wert eine Standardd-ID für ein Tile */
- void calculate_tile_id(Tile* tile, const int x, const int y) {
+ void calculate_tile_id(Tile* tile, const unsigned int x, const unsigned int y) {
 	/* "tile_","_",0, x als String, y als String */
 	int x_length = (int)log10(x + 1) + 1;
 	int y_length = (int)log10(y + 1) + 1;
@@ -777,7 +933,7 @@
  
  /*--------------------------------------------------------------------------*/
  /* eine Standardd-ID für einen Spawn, dieses Mal die Nummer */
- void calculate_spawn_id(Spawn* spawn, const int number) {
+ void calculate_spawn_id(Spawn* spawn, const unsigned int number) {
 	/* "spawn_",0, number als String */
 	int no_length = (int)log10(number + 1) + 1;
 	int id_length = 7 + no_length;
@@ -794,8 +950,26 @@
  }
  
  /*--------------------------------------------------------------------------*/
+ /* eine Standardd-ID für ein Item, abhängig von der ID des Parents und dessen Nummer */
+ void calculate_item_id(Item* item, const char const* parent_id, const unsigned int number) {
+	int no_length = (int)log10(number + 1) + 1;
+	int id_length = strlen(parent_id) + no_length + 7;
+	char* no_buffer = (char*)ex_calloc(no_length + 1, 1);
+	char* id_buffer = (char*)ex_calloc(id_length, 1);
+	
+	/* z.B. "spawn_27_item_3" */
+	strcpy(id_buffer, parent_id);
+	strcat(id_buffer, "_item_");
+	sprintf(no_buffer, "%d", number);
+	strcat(id_buffer, no_buffer);
+	
+	item->id = id_buffer;
+	free(no_buffer);
+ }
+ 
+ /*--------------------------------------------------------------------------*/
  /* guck nach, ob ein Key zu einem Tile-Property gehört */
- int tile_property_identifier(const char* name) {
+ unsigned int tile_property_identifier(const char* name) {
 	/* Button->once */
 	if(strcmp(name, NODE_ONCE) == 0) {
 		return STACK_ONCE;
@@ -838,6 +1012,16 @@
 	}
 	return STACK_INVALID_INDEX;
  }
+ 
+ /*--------------------------------------------------------------------------*/
+ /* guck nach, ob ein Key zu einem Item-Property gehört */
+ unsigned int item_property_identifier(const char* name) {
+	/* Heiltrank->HPs */
+	if(strcmp(name, NODE_CAPACITY) == 0) {
+		return STACK_CAPACITY;
+	}
+	return STACK_INVALID_INDEX;
+ }
   
  /*--------------------------------------------------------------------------*/
  /* ordnet einem Tile-Typenamen aus dem JSON einen internen Identifier zu */
@@ -869,5 +1053,15 @@
 		return SPAWN_TYPE_PLAYER;
 	}
 	return SPAWN_TYPE_INVALID;
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ /* ordnet einem Item-Typenamen aus dem JSON einen internen Identifier zu */
+ unsigned int item_type_id(const char* name) {
+	/* Heiltrank */
+	if(strcmp(name, ITEM_NAME_HEALTH_POTION) == 0) {
+		return ITEM_TYPE_HEALTH_POTION;
+	}
+	return ITEM_TYPE_INVALID;
  }
  

@@ -25,12 +25,32 @@
 	void* properties;
  } Item;
  
- /* Gibt reservierten Speicher eines Items frei */
- void free_item(Item*);
- 
  /* Properties fuer Klunker/Waffe/Misc... */
+ 
+ /* verwendete Tile-type identifier */
+ #define ITEM_TYPE_INVALID				0xFFFFFFFF
+ #define ITEM_TYPE_HEALTH_POTION		0x00000001
  
  /* Zuordnungstabellen von type -> defaults */
  /* "healthpotion" -> "Health Potition", blau, 3lbs, 5GM ... */
+ struct ItemDefault {
+	unsigned int type;
+	char* name;
+	unsigned long color;
+	int weight;
+	int value;
+ };
+ 
+ /* lediglich Intialisierungswerte */
+ static const struct ItemDefault tile_defaults[1] = {
+	{ITEM_TYPE_HEALTH_POTION, "Heiltrank", 0xFF000000, 1, 10}
+ };
+ 
+ /* Gibt reservierten Speicher eines Items frei */
+ void free_item(Item*);
+ 
+ /* Helper */
+ void apply_item_defaults(Item*);
+ void create_item_properties(Item*);
  
  #endif
