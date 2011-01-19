@@ -10,9 +10,11 @@
 #include <stdlib.h>
 #include "globals.h"
 
-#ifdef __unix__ || __linux__
+#include "map.h"
+
+#if defined(__unix__) || defined(__linux__)
 	#define CLRSCR() printf("\x1B[2J")
-#elif __WIN32__ || _MSC_VER
+#elif defined(__WIN32__) || defined(_MSC_VER)
 	#define CLRSCR() system("cls")
 #else
 	/*dann bleibt das halt da stehen*/
