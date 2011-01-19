@@ -80,6 +80,7 @@ int main() {
 			sprintf(id_buffer, "tile_%d_%d", i+1, i+1);
 			if(strcmp(id_buffer, map->tiles[i * map->x + i].id) != 0) {
 				id_error = 1;
+				free(id_buffer);
 				break;
 			}
 			free(id_buffer);
