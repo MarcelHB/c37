@@ -58,7 +58,7 @@
 	reset_parse_stats();
 	
 	init_JSON_config(&config);	
-	config.depth                  = 5;
+	config.depth                  = 6;
     config.callback               = &parse;
     config.allow_comments         = 1;
     config.handle_floats_manually = 0;
@@ -70,10 +70,10 @@
         if (next_char == EOF) {
             break;
         }
-		/* Syntaxfehler, unerwartetes Zeichen */
+		/* Syntaxfehler, unerwartetes Zeichen, Nesting,... */
         if (!JSON_parser_char(jc, next_char)) {
-			fprintf(stderr, "JSON_parser_char: syntax error, byte %d\n", i);
-			clean_up_parsing(jc, path_and_name, map_file);
+			fprintf(stderr, "JSON_parser_char: syntax error, byte %d, char '%c', error %d\n", i, next_char, JSON_parser_get_last_error(jc));
+			clean_up_parsing(jc, path_and_name, map_file, node_stack);
             return NULL;
         }
     }
@@ -81,14 +81,14 @@
 	/* JSON z.B. nicht abgeschlossen */
 	if (!JSON_parser_done(jc)) {
 		fprintf(stderr, "JSON_parser_end: syntax error\n");
-		clean_up_parsing(jc, path_and_name, map_file);
+		clean_up_parsing(jc, path_and_name, map_file, node_stack);
 		return NULL;
     }
 	
 	/* kopiert die Zwischenkarte in diesem Scope in einen eigenen Speicherbereich */
 	map = finalize_map(map);
 	
-	clean_up_parsing(jc, path_and_name, map_file);
+	clean_up_parsing(jc, path_and_name, map_file, node_stack);
 	return map;	
  }
  
@@ -121,8 +121,9 @@
  /* Wenn das Parsen beendet/fehlgeschlagen ist, unlocke die Datei und lösche
   * Parser und Kartennamen.
   */
- void clean_up_parsing(JSON_parser parser, char* name, FILE* map_file) {
+ void clean_up_parsing(JSON_parser parser, char* name, FILE* map_file, unsigned int* stack) {
 	delete_JSON_parser(parser);
+	free(stack);
 	free(name);
 	fclose(map_file);
  }
@@ -227,7 +228,7 @@
 		/* Tile, Spawn */
 		else if(parent == STACK_TILES || parent == STACK_SPAWNS) {
 			/* (.)->items */
-			if(stack_top == STACK_ITEMS && (parent == STACK_SPAWNS && parent == STACK_TILES)) {
+			if(stack_top == STACK_ITEMS && (parent == STACK_SPAWNS || parent == STACK_TILES)) {
 				Item item = {
 					/*.id = */NULL,
 					/*.name = */NULL,
@@ -324,13 +325,19 @@
 	/* root->tiles/spawns-Array */
 	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
 		(*array_depth)--;
-		if((*array_depth) == 0) {
+		if(stack_top == STACK_SPAWNS) {
 			pop_node_stack(stack, stack_size);
+		}
+		else {
+			if((*array_depth) == 0) {
+				pop_node_stack(stack, stack_size);
+			}
 		}
 	}
 	/* tiles/spawns->items-Array */
 	else if((parent == STACK_TILES || parent == STACK_SPAWNS) && stack_top == STACK_ITEMS) {
 		(*array_depth)--;
+		pop_node_stack(stack, stack_size);
 	}
  }
  
@@ -695,6 +702,10 @@
 		else if(stack_top == STACK_WEIGHT) {
 			item->weight = value->vu.integer_value;
 		}
+		/* item->property */
+		else {
+			parse_integer_property(value, map, parent, stack_top, owner, parsed_tiles);
+		}
 	}
 	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
@@ -745,7 +756,7 @@
  void parse_integer_property(const JSON_value* value, Map* map, const unsigned int parent, const unsigned int key, unsigned int owner, const unsigned int parsed_tiles) {
 	/* tile */
 	if(parent == STACK_TILES) {
-		int type = map->tiles[parsed_tiles-1].type;
+		unsigned int type = map->tiles[parsed_tiles-1].type;
 		/* Button */
 		if(type == TILE_TYPE_BUTTON) {
 			ButtonProperties* btn_props = (ButtonProperties*)map->tiles[parsed_tiles-1].properties;
@@ -757,6 +768,7 @@
 	}
 	else if(parent == STACK_ITEMS) {
 		Item* item = NULL;
+		unsigned int type;
 		/* Je nach Zugehörigkeit Item injecten */
 		if(owner == STACK_SPAWNS) {
 			Spawn* spawn = map->spawns[map->number_of_spawns - 1];
@@ -764,6 +776,15 @@
 		} else {
 			Tile* tile = &map->tiles[parsed_tiles - 1];
 			item = tile->items[tile->number_of_items - 1];
+		}
+		/* Heiltrank */
+		type = item->type;
+		if(type == ITEM_TYPE_HEALTH_POTION) {
+			HealthPotionProperties* hp_props = (HealthPotionProperties*)item->properties;
+			/* Heilungskraft */
+			if(key == STACK_CAPACITY) {
+				hp_props->capacity = (char)value->vu.integer_value;
+			}
 		}
 	}
  }
@@ -857,7 +878,6 @@
 	tmp = (*stack)[elements - 1];
 	/* POP */
 	elements = --(*stack_size);
-	
 	if(!(*stack_size)) {
 		free(*stack);
 		*stack = NULL;

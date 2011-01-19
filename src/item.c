@@ -41,3 +41,10 @@
 		}
 	}
  }
+ 
+ /*--------------------------------------------------------------------------*/
+ void free_item(Item* item) {
+	free(item->id);
+	free(item->properties);
+	free(item);
+ }

@@ -64,6 +64,7 @@
  
  /*--------------------------------------------------------------------------*/
  void free_tile(Tile* tile) {
+	unsigned int i;
 	free(tile->id);
 	/* Button */
 	if(tile->type == TILE_TYPE_BUTTON) {
@@ -71,6 +72,10 @@
 		ButtonProperties* btn_props = (ButtonProperties*)tile->properties;
 		free(btn_props->toggle_id);
 	}
+	for(i = 0; i < tile->number_of_items; ++i) {
+		free_item(tile->items[i]);
+	}
+	free(tile->items);
 	free(tile->properties);
 	free(tile);
  }

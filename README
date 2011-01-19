@@ -10,12 +10,14 @@ Bitte:
 - Spec up-to-date halten
 
 Struktur:
+- /fonts : Font-Bitmaps für Schriften
+- /maps : Karten für das Hauptspiel
 - /spec : TeX-Projekt zum Spezifikations-PDF
 - /src : Sourcen und Header
+- /tests : Testumgebung
 - README : Diese Datei
 - LICENSE: verwendete und anzugebende Lizenzen
 
 TODO:
 - Spezifikation ggf. überarbeiten
 - Makefiles
-- Tests?

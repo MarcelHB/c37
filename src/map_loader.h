@@ -22,7 +22,7 @@
  void flush_map(Map*);
  
  /* internals, Helper */
- void clean_up_parsing(JSON_parser, char*, FILE*);
+ void clean_up_parsing(JSON_parser, char*, FILE*, unsigned int*);
  Map* finalize_map(Map*);
  
  void reset_intermediate_map();

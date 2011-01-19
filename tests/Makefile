@@ -8,6 +8,8 @@ test_map_loader_win: $(TEST_MAP_LOADER_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader.exe 
 test_map_loader: $(TEST_MAP_LOADER_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader
+clean:
+	rm -f *.o
 
 test_map_loader.o: test_map_loader.c
 	$(CC) $(CFLAGS) -c test_map_loader.c

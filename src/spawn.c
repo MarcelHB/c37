@@ -32,12 +32,12 @@
  
  /*--------------------------------------------------------------------------*/
  void free_spawn(Spawn* spawn) {
-	/*int i;*/
+	unsigned int i;
 	free(spawn->name);
 	free(spawn->id);
-	/*for(i = 0; i < spawn->inventory_size; ++i) {
-		free_item(spawn->items[i]);
+	for(i = 0; i < spawn->inventory_size; ++i) {
+		free_item(spawn->inventory[i]);
 	}
-	free_item(spawn->items);*/
+	free(spawn->inventory);
 	free(spawn);
  }
