@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2 -g
+CFLAGS = -std=c89 -pedantic -Wall -Wextra -O2 -g
 SRC = ../src/
 TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_Parser.o memory.o spawn.o tile.o map_loader.o
 .SUFFIXES: .c

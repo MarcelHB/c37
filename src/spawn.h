@@ -26,7 +26,7 @@
 	char npc;
 	/* humanoid? */
 	char humanoid;
-	/* (max) HPs */;
+	/* (max) HPs */
 	unsigned int max_hp, hp;
 	/* Polymorphismusersatz für den eig. Typ */
 	unsigned int type;

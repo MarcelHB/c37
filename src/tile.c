@@ -29,32 +29,35 @@
 	if(tile->properties == NULL) {
 		/* Wand */
 		if(tile->type == TILE_TYPE_WALL) {
-			tile->properties = malloc(sizeof(WallProperties));
-			*(WallProperties*)tile->properties = (WallProperties) {
-				.space = 0
+			WallProperties wall_props = {
+				/*.space = */0
 			};
+			tile->properties = malloc(sizeof(WallProperties));
+			*(WallProperties*)tile->properties = wall_props;
 		}
 		/* Button */
 		else if(tile->type == TILE_TYPE_BUTTON) {
-			tile->properties = malloc(sizeof(ButtonProperties));
-			*(ButtonProperties*)tile->properties = (ButtonProperties) {
-				.toggle_id = NULL,
-				.active = 1,
-				.once = 0,
-				.directions = NORTH | WEST | EAST | SOUTH
+			ButtonProperties btn_props = {
+				/*.toggle_id = */NULL,
+				/*.active = */1,
+				/*.once = */0,
+				/*.directions = */NORTH | WEST | EAST | SOUTH
 			};
+			tile->properties = malloc(sizeof(ButtonProperties));
+			*(ButtonProperties*)tile->properties = btn_props;
 		}
 		/* Tür */
 		else if(tile->type == TILE_TYPE_DOOR) {
-			tile->properties = malloc(sizeof(DoorProperties));
-			*(DoorProperties*)tile->properties = (DoorProperties) {
-				.horizontal = 0,
-				.open = 0,
-				.locked = 0,
-				.external_button = 0,
-				.breakable = 0,
-				.broken = 0
+			DoorProperties door_props = {
+				/*.horizontal = */0,
+				/*.open = */0,
+				/*.locked = */0,
+				/*.external_button = */0,
+				/*.breakable = */0,
+				/*.broken = */0
 			};
+			tile->properties = malloc(sizeof(DoorProperties));
+			*(DoorProperties*)tile->properties = door_props;
 		}
 	}
  }

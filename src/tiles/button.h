@@ -11,13 +11,13 @@
  
  /* Wand */
  typedef struct ButtonProperties {
-	/* ID des toggle (ein Tile) */;
+	/* ID des toggle (ein Tile) */
 	char* toggle_id;
 	/* nur einmal drückbar? */
 	char once;
 	/* aktiviert? */
 	char active;
-	/* von wo aus bedienbar? 0000NESW */;
+	/* von wo aus bedienbar? 0000NESW */
 	char directions;
  } ButtonProperties;
  

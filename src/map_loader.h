@@ -29,14 +29,14 @@
  void reset_parse_stats();
  
  static int parse(void*, int, const JSON_value*);
- void parse_object_begin(Map*, unsigned int**, unsigned int*, unsigned int*, int*, unsigned int);
+ void parse_object_begin(Map*, unsigned int**, unsigned int*, unsigned int*, unsigned int*, unsigned int);
  void parse_object_end(unsigned int**, unsigned int*, unsigned int);
  void parse_array_begin(unsigned int*, unsigned int, unsigned int*);
  void parse_array_end(unsigned int**, unsigned int*, unsigned int*);
- void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int, char*);
- void parse_string(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
- void parse_integer(const JSON_value*, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
- void parse_bool(const unsigned int, Map*, unsigned int**, unsigned int*, const int, const unsigned int);
+ void parse_key(const JSON_value*, Map*, unsigned int**, unsigned int*, const unsigned int, const unsigned int, char*);
+ void parse_string(const JSON_value*, Map*, unsigned int**, unsigned int*, const unsigned int, const unsigned int);
+ void parse_integer(const JSON_value*, Map*, unsigned int**, unsigned int*, const unsigned int, const unsigned int);
+ void parse_bool(const unsigned int, Map*, unsigned int**, unsigned int*, const unsigned int, const unsigned int);
  
  void parse_string_property(const JSON_value*, Map*, const unsigned int, const unsigned int, const unsigned int);
  void parse_integer_property(const JSON_value*, Map*, const unsigned int, const unsigned int, const unsigned int);

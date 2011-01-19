@@ -31,6 +31,6 @@
  #define MAP_DIRECTORY "maps"
  #define MAP_FILE_EXTENSION ".json"
  
- // #define _C37_MEMORY_LOG
+ /* #define _C37_MEMORY_LOG */
  
  #endif

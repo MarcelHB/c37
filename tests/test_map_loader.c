@@ -17,7 +17,7 @@ const char reference_string[MAP_DIMENSION][MAP_DIMENSION] = {
 	{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
 };
 
-int main(int argc, char** argv) {
+int main() {
 	Map* map = NULL;
 	
 	map = load_map("lonely");
