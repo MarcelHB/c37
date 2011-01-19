@@ -8,6 +8,8 @@
 
  #ifndef _C37_SPAWN_H
  #define _C37_SPAWN_H
+ 
+ #include "item.h"
 
  typedef struct Spawn {
 	/* ID */
@@ -51,17 +53,11 @@
  };
  
  /* lediglich Intialisierungswerte */
- const struct SpawnDefault spawn_defaults[1] = {
+ static const struct SpawnDefault spawn_defaults[1] = {
 	{SPAWN_TYPE_PLAYER, "Spieler", '@', 0, 1, 100, 100}
  };
  
- /* Wenn ein Spawn auf einein anderen trifft, gucke, was hier passiert (schubsen/töten/sprechen/...) */
- void spawn_spawn_collision(Spawn*, Spawn*, Map*);
- /* Deckt die unerkundete Gegend um einen Spawn herum auf. */
- void explore_area(Spawn*, Map*);
-  /* Der Spawn ist am Zug, etwas zu tun. */
- void spawn_action(Spawn*, Map*);
-  /* Gibt reservierten Speicher eines Spawns frei */
+ /* Gibt reservierten Speicher eines Spawns frei */
  void free_spawn(Spawn*);
  
  /* Helper */

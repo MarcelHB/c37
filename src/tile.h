@@ -8,6 +8,9 @@
 
  #ifndef _C37_TILE_H
  #define _C37_TILE_H
+ 
+ #include "output_buffer.h"
+ #include "item.h"
 
  typedef struct Tile {
 	/* ID */
@@ -51,7 +54,7 @@
  };
  
  /* lediglich Intialisierungswerte */
- const struct TileDefault tile_defaults[4] = {
+ static const struct TileDefault tile_defaults[4] = {
 	{TILE_TYPE_WALL, 0xFFFFFF00, '#'},
 	{TILE_TYPE_FLOOR, 0xFFFFFF00, '.'},
 	{TILE_TYPE_BUTTON, 0xFFFFFF00, '+'},
@@ -60,11 +63,7 @@
  
  /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
  void render_tile(BufferTile*, Tile*);
- /* Wenn ein Spawn auf ein Tile trifft, gucke, was hier passiert (rennt gegen Wand/stirbt/sammelt auf/...) */
- void spawn_tile_collision(Spawn*, Tile*, Map*, char**, int);
- /* irgendwas wird getoggelt (Tür auf, zu ...) */
- void toggle_tile(Tile*, Map*);
-  /* Gibt reservierten Speicher eines Tiles frei */
+ /* Gibt reservierten Speicher eines Tiles frei */
  void free_tile(Tile*);
  
  /* Helper */

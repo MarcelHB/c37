@@ -9,11 +9,15 @@
  #ifndef _C37_MAIN_H
  #define _C37_MAIN_H
  
+ #include "output_buffer.h"
+ #include "map.h"
+ #include "map_loader.h"
+ 
  /* Kopiert den sichtbaren Bereich mit kalk. Zeichen- & Farbinfos für Ausgabe */
- void create_output_buffer(Map*, OutputBuffer*, int);
+ void create_output_buffer(Map*, BufferTile*, int);
  /* Male die Nachrichtenausgabe darüber */
- void print_message_box(OutputBuffer*, int, char**, int);
+ void print_message_box(BufferTile*, int, char**, int);
  /* Übermalt Ausgabepuffer mit nil-Werten */
- void flush_output_buffer(OutputBuffer*, int);
+ void flush_output_buffer(BufferTile*, int);
  
  #endif

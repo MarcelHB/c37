@@ -7,6 +7,8 @@
  */
 
  #include "globals.h"
+ #include "memory.h"
+ #include "spawn.h"
  
  /*--------------------------------------------------------------------------*/
  void apply_spawn_defaults(Spawn* spawn) {
@@ -26,4 +28,16 @@
 			break;
 		}
 	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void free_spawn(Spawn* spawn) {
+	int i;
+	free(spawn->name);
+	free(spawn->id);
+	/*for(i = 0; i < spawn->inventory_size; ++i) {
+		free_item(spawn->items[i]);
+	}
+	free_item(spawn->items);*/
+	free(spawn);
  }

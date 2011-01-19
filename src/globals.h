@@ -14,19 +14,6 @@
  #include <string.h>
  #include <math.h>
  
- /* Wenn nicht für Ausgabe, dann für Tastatur */
- #include "SDL.h"
- 
- #include "memory.h"
- #include "game_messages.h"
- #include "output_buffer.h"
- #include "item.h"
- #include "spawn.h"
- #include "tile.h"
- #include "map.h"
- #include "map_loader.h"
- #include "main.h"
- 
  /* interne Settings */
  #define OUTPUT_IN_GLYPHS_X 80
  #define OUTPUT_IN_GLYPHS_Y 25
@@ -41,10 +28,9 @@
  #define SOUTH 2
  #define WEST 1
  
- #define MAP_DIRECOTRY "maps"
+ #define MAP_DIRECTORY "maps"
  #define MAP_FILE_EXTENSION ".json"
  
- /* bis jetzt nur SDL */
- #include "sdl_output.h"
+ // #define _C37_MEMORY_LOG
  
  #endif
