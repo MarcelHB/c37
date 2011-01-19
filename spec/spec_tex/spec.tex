@@ -64,7 +64,7 @@
 			Dieser Abschnitt soll einen Überblick über die verschiedenen Programmteile geben und ihre Funktionsweise dokumentieren. Wir behalten uns Änderungen an den Signaturen und der Anzahl an Definitionen bis zur finalen Version vor.
 			%----------------------------------------------------------------------------
 			\subsubsection*{globals.h}
-			Die Headerdatei \textit{globals.h} übernimmt mehrere Aufgaben. Eine davon ist es, alle nötigen \mbox{System-,} Library- und Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem für die Spiellogik ersetzen. \\
+			Die Headerdatei \textit{globals.h} übernimmt mehrere Aufgaben. Eine davon ist es, alle nötigen \mbox{System-,} Library- und einige Programm-Header zu laden. Andererseits werden hier interne Konstanten gesetzt, die technische Angelegenheiten betreffen als auch solche, die ein aufwendigeres, externes Konfigurationssystem für die Spiellogik ersetzen. \\
 	\vspace{1 cm}
 	Dies ist eine Übersicht von verwendeten internen Konfigurationsparametern:\\
 	\vspace{1 cm}
@@ -242,53 +242,6 @@ Elemente der Struktur:
 			\item inventory\_size - die Anzahl der Besitztümer
 		\end{itemize}
 		
-		\begin{lstlisting}[caption=spawn\_spawn\_collision]{}
-void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b, Map* map, 
-char** mesgv, int mesgc);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Würfelt das Geschehen aus, das eintritt, wenn Spawns \textit{spawn\_a} und \textit{spawn\_b} aufeinandertreffen.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn\_a - erster Spawn
-			\item spawn\_b - zweiter Spawn
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-			\item mesgv - Nachrichtenstream
-			\item mesgc - Anzahl der Stream-Elemente
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=explore\_area]{}
-void explore_area(Spawn* spawn, Map* map);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Aktualisiert den Sichtbereich um \textit{spawn} herum, wenn dieser Neuland betritt.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn - Spawn, dessen Sichtbereich erweitert wird.
-			\item map - Karte, auf der der Sichtbereich aufgedeckt wird.
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-	
-		\begin{lstlisting}[caption=spawn\_action]{}
-void spawn_action(Spawn* spawn, Map* map);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Würfelt die nächste Aktion aus, die \textit{spawn} tun soll, z.B. Gehen oder Warten.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn - Spawn, für den eine Aktion gewürfelt wird.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
 		\begin{lstlisting}[caption=free\_spawn]{}
 void free_spawn(Spawn* spawn);
 		\end{lstlisting}
@@ -345,38 +298,6 @@ void render_tile(BufferTile* bt, Tile* tile);
 		\begin{itemize}
 			\item bt - Pufferkachel, in die die Anzeigeinformation geschrieben wird
 			\item tile - Kachel, für die die Ausgabeinformationen ermittelt werden.
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=spawn\_tile\_collision]{}
-void spawn_tile_collision(Spawn* spawn, Tile* tile, Map* map, char** mesgv, 
-int mesgc);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Es wird die Aktion ausgeführt, die eintritt, wenn \textit{spawn} die Kachel \textit{it} betreten möchte. Beispielsweise, ob er diese überhaupt betreten darf.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn - handelnder Spawn
-			\item tile - Kachel, die er betreten möchte.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-			\item mesgv - Nachrichtenstream
-			\item mesgc - Anzahl der Stream-Elemente
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=toggle\_tile]{}
-void toggle_tile(Tile* tile, Map* map);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Ändert einen binären Zustand der Kachel \textit{tile}, z.B. Tür auf/zu.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item tile - Kachel, auf der eine Aktion ausgeführt werden soll.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
@@ -443,6 +364,85 @@ Spawn* get_spawn_at(unsigned int x, unsigned int y, Map* map);
 			\item map - Karte, auf welcher gesucht wird.
 		\end{itemize}
 		\item[Rückgabe:] Rückgabe eines Zeigers auf die Figur auf der Kachel bei (\textit{x}, \textit{y}). Oder \textit{NULL}, wenn keine vorhanden oder außerhalb der Kartengrenze.
+	\end{description}
+	
+	\begin{lstlisting}[caption=spawn\_spawn\_collision]{}
+void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b, Map* map, 
+char** mesgv, int mesgc);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Würfelt das Geschehen aus, das eintritt, wenn Spawns \textit{spawn\_a} und \textit{spawn\_b} aufeinandertreffen.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn\_a - erster Spawn
+			\item spawn\_b - zweiter Spawn
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item mesgv - Nachrichtenstream
+			\item mesgc - Anzahl der Stream-Elemente
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+		\begin{lstlisting}[caption=explore\_area]{}
+void explore_area(Spawn* spawn, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Aktualisiert den Sichtbereich um \textit{spawn} herum, wenn dieser Neuland betritt.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - Spawn, dessen Sichtbereich erweitert wird.
+			\item map - Karte, auf der der Sichtbereich aufgedeckt wird.
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+	
+		\begin{lstlisting}[caption=spawn\_action]{}
+void spawn_action(Spawn* spawn, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Würfelt die nächste Aktion aus, die \textit{spawn} tun soll, z.B. Gehen oder Warten.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - Spawn, für den eine Aktion gewürfelt wird.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+	\begin{lstlisting}[caption=spawn\_tile\_collision]{}
+void spawn_tile_collision(Spawn* spawn, Tile* tile, Map* map, char** mesgv, 
+int mesgc);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Es wird die Aktion ausgeführt, die eintritt, wenn \textit{spawn} die Kachel \textit{it} betreten möchte. Beispielsweise, ob er diese überhaupt betreten darf.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - handelnder Spawn
+			\item tile - Kachel, die er betreten möchte.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+			\item mesgv - Nachrichtenstream
+			\item mesgc - Anzahl der Stream-Elemente
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+		\begin{lstlisting}[caption=toggle\_tile]{}
+void toggle_tile(Tile* tile, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Ändert einen binären Zustand der Kachel \textit{tile}, z.B. Tür auf/zu.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item tile - Kachel, auf der eine Aktion ausgeführt werden soll.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+		\end{itemize}
+		\item[Rückgabe:] -
 	\end{description}
 	
 	%----------------------------------------------------------------------------
