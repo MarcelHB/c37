@@ -11,6 +11,8 @@
  #include "map.h"
  #include "map_loader.h"
  
+ static int parse(void*, int, const JSON_value*);
+ 
  /*--------------------------------------------------------------------------*/
  /* JSON_Parser benötigt einen Funktionszeiger als Callback, deshalb nicht über 
   * Parameter lösbar .
@@ -144,7 +146,7 @@
 			break;
 		/* [ */
 		case JSON_T_ARRAY_BEGIN:
-			parse_array_begin(node_stack, node_stack_size, &array_depth);
+			parse_array_begin(&intermediate_map, node_stack, node_stack_size, &array_depth);
 			break;
 		/* ] */
 		case JSON_T_ARRAY_END:
@@ -152,13 +154,13 @@
 			break;
 		/* "...": */
 		case JSON_T_KEY:
-			parse_key(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth, &dimension_seal);
+			parse_key(value, &node_stack, &node_stack_size, array_depth);
 			break;
 		case JSON_T_STRING:
 			parse_string(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
 			break;
 		case JSON_T_INTEGER:
-			parse_integer(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth);
+			parse_integer(value, &intermediate_map, &node_stack, &node_stack_size, parsed_tiles, array_depth, &dimension_seal);
 			break;
 		/* true */
 		case JSON_T_TRUE:
@@ -191,32 +193,35 @@
 				(*parsed_tiles)++;
 			}
 		}
-		/* Root->Spawns */
+		/* Root */
 		/* Spawns werden on the fly angelegt, da ihre Anzahl nicht in direkter Abhängigkeit mit der Kartengröße steht. */
-		if(parent == STACK_ROOT && stack_top == STACK_SPAWNS) {
-			if(array_depth == 1) {
-				Spawn spawn = {
-						/*.id = */NULL,
-						/*.name = */NULL,
-						/*.x = */0,
-						/*.y = */0,
-						/*.direction = */WEST,
-						/*.glyph = */' ',
-						/*.npc = */0,
-						/*.humanoid = */0,
-						/*.hp = */0,
-						/*.max_hp = */1,
-						/*.type = */SPAWN_TYPE_INVALID,
-						/*.properties = */NULL,
-						/*.inventory = */NULL,
-						/*.inventory_size = */0
-				};
-				map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
-				map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
-				/* Fallbackwerte */
-				*(map->spawns[map->number_of_spawns - 1]) = spawn;
-				/* ID abhängig von der Anzahl an Spawns */
-				calculate_spawn_id(map->spawns[map->number_of_spawns - 1], map->number_of_spawns);
+		if(parent == STACK_ROOT) {
+			/* Root->spawns */
+			if(stack_top == STACK_SPAWNS && map->spawns == NULL) {
+				if(array_depth == 1) {
+					Spawn spawn = {
+							/*.id = */NULL,
+							/*.name = */NULL,
+							/*.x = */0,
+							/*.y = */0,
+							/*.direction = */WEST,
+							/*.glyph = */' ',
+							/*.npc = */0,
+							/*.humanoid = */0,
+							/*.hp = */0,
+							/*.max_hp = */1,
+							/*.type = */SPAWN_TYPE_INVALID,
+							/*.properties = */NULL,
+							/*.inventory = */NULL,
+							/*.inventory_size = */0
+					};
+					map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
+					map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
+					/* Fallbackwerte */
+					*(map->spawns[map->number_of_spawns - 1]) = spawn;
+					/* ID abhängig von der Anzahl an Spawns */
+					calculate_spawn_id(map->spawns[map->number_of_spawns - 1], map->number_of_spawns);
+				}
 			}
 		}
 	}
@@ -234,59 +239,16 @@
  
  /*--------------------------------------------------------------------------*/
  /* Bei Array-Beginn wird die aktuelle Array-Tiefe hochgesetzt. */
- void parse_array_begin(unsigned int* stack, unsigned int stack_size, unsigned int* array_depth) {
+ void parse_array_begin(Map* map, unsigned int* stack, unsigned int stack_size, unsigned int* array_depth) {
 	unsigned int stack_top = node_stack_at(0, stack, stack_size);
 	unsigned int parent = node_stack_at(1, stack, stack_size);
 	
+	/* Root */
 	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
 		(*array_depth)++;
-	}
- }
- 
- /*--------------------------------------------------------------------------*/
- /* ... und sonst dekrementiert. Manche Arrays stellen Objektblöcke dar, diese werden
-  * dann vom Stack gepustet, wenn zu Ende.
-  */
- void parse_array_end(unsigned int** stack, unsigned int* stack_size, unsigned int* array_depth) {
-	int stack_top = node_stack_at(0, *stack, *stack_size);
-	int parent = node_stack_at(1, *stack, *stack_size);
- 
-	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
-		(*array_depth)--;
-		if((*array_depth) == 0) {
-			pop_node_stack(stack, stack_size);
-		}
-	}
- }
- 
- /*--------------------------------------------------------------------------*/
- /* Abhängig von übergeordneten Objekten werden alle Strings links vom Doppelpunkt 
-  * in JSON hier geprüft und zugeordnet.
-  */
- void parse_key(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const unsigned int parsed_tiles, const unsigned int array_depth, char* dimension_seal) {
-	int stack_top = node_stack_at(0, *stack, *stack_size);
-	
-	/* root (Karte) */
-	if(stack_top == STACK_ROOT) {
-		/* root->name (Kartenname) */
-		if(map->name == NULL && strcmp(value->vu.str.value, NODE_NAME) == 0) {
-			push_node_stack(STACK_NAME, stack, stack_size);
-		}
-		/* root->x (Breite) */
-		else if(strcmp(value->vu.str.value, NODE_X) == 0 && (*dimension_seal == 0 || *dimension_seal == 1)) {
-			push_node_stack(STACK_X, stack, stack_size);
-			*dimension_seal |= 2;
-		}
-		/* root->y (Höhe) */
-		else if(strcmp(value->vu.str.value, NODE_Y) == 0 && (*dimension_seal == 0 || *dimension_seal == 2)) {
-			push_node_stack(STACK_Y, stack, stack_size);
-			*dimension_seal |= 1;
-		}
-		/* root->tiles (Kacheln) */
-		/* Kacheln werden (untypisiert) geladen, wenn sich jemand die Mühe gemacht hat, sie überhaupt zu definieren. */
-		else if(map->tiles == NULL && strcmp(value->vu.str.value, NODE_TILES) == 0 && (map->x * map->y > 0)) {
+		/* Root->tiles */
+		if(stack_top == STACK_TILES && map->tiles == NULL && (map->x * map->y > 0)) {
 			unsigned int i,j;
-			push_node_stack(STACK_TILES, stack, stack_size);
 			map->tiles = (Tile*)ex_realloc(map->tiles, sizeof(Tile) * map->x * map->y);
 			for(i = 0; i < map->y; ++i) {
 				for(j = 0; j < map->x; ++j) {
@@ -311,15 +273,60 @@
 				}
 			}
 		}
+	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ /* ... und sonst dekrementiert. Manche Arrays stellen Objektblöcke dar, diese werden
+  * dann vom Stack gepustet, wenn zu Ende.
+  */
+ void parse_array_end(unsigned int** stack, unsigned int* stack_size, unsigned int* array_depth) {
+	int stack_top = node_stack_at(0, *stack, *stack_size);
+	int parent = node_stack_at(1, *stack, *stack_size);
+ 
+	if(parent == STACK_ROOT && (stack_top == STACK_TILES || stack_top == STACK_SPAWNS)) {
+		(*array_depth)--;
+		if((*array_depth) == 0) {
+			pop_node_stack(stack, stack_size);
+		}
+	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ /* Abhängig von übergeordneten Objekten werden alle Strings links vom Doppelpunkt 
+  * in JSON hier geprüft und zugeordnet.
+  */
+ void parse_key(const JSON_value* value, unsigned int** stack, unsigned int* stack_size, const unsigned int array_depth) {
+	int stack_top = node_stack_at(0, *stack, *stack_size);
+	
+	/* root (Karte) */
+	if(stack_top == STACK_ROOT) {
+		/* root->name (Kartenname) */
+		if(strcmp(value->vu.str.value, NODE_NAME) == 0) {
+			push_node_stack(STACK_NAME, stack, stack_size);
+		}
+		/* root->x (Breite) */
+		else if(strcmp(value->vu.str.value, NODE_X) == 0) {
+			push_node_stack(STACK_X, stack, stack_size);
+		}
+		/* root->y (Höhe) */
+		else if(strcmp(value->vu.str.value, NODE_Y) == 0) {
+			push_node_stack(STACK_Y, stack, stack_size);
+		}
+		/* root->tiles (Kacheln) */
+		/* Kacheln werden (untypisiert) geladen, wenn sich jemand die Mühe gemacht hat, sie überhaupt zu definieren. */
+		else if(strcmp(value->vu.str.value, NODE_TILES) == 0) {
+			push_node_stack(STACK_TILES, stack, stack_size);
+		}
 		/* root->spawns */
-		else if(map->spawns == NULL && strcmp(value->vu.str.value, NODE_SPAWNS) == 0) {
+		else if(strcmp(value->vu.str.value, NODE_SPAWNS) == 0) {
 			push_node_stack(STACK_SPAWNS, stack, stack_size);
 		}
 	}
 	/* root->tiles->[] */
 	else if(stack_top == STACK_TILES && array_depth == 2) {
 		/* tile->type */
-		if(map->tiles[parsed_tiles-1].type == TILE_TYPE_INVALID && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
+		if(strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE, stack, stack_size);
 		}
 		/* tile->id */
@@ -327,7 +334,7 @@
 			push_node_stack(STACK_ID, stack, stack_size);
 		}
 		/* tile->items */
-		else if(map->tiles[parsed_tiles-1].items == NULL && strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
+		else if(strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
 			push_node_stack(STACK_ITEMS, stack, stack_size);
 		}
 		/* tile->brightness */
@@ -338,16 +345,13 @@
 		else {
 			/* Die Erkennung, ob es wirklich irgendein Typ-Property ist, ist ausgelagert. */
 			unsigned int index = tile_property_identifier(value->vu.str.value);
-			if(index != STACK_INVALID_INDEX) {
-				/* wenn erkannt, Identifier auf den Stack */
-				push_node_stack(index, stack, stack_size);
-			}
+			push_node_stack(index, stack, stack_size);
 		}
 	}
 	/* root->spawns->[] */
 	else if(stack_top == STACK_SPAWNS && array_depth == 1) {
 		/* spawn->type */
-		if(map->spawns[map->number_of_spawns - 1]->type == SPAWN_TYPE_INVALID && strcmp(value->vu.str.value, NODE_TYPE) == 0) {
+		if(strcmp(value->vu.str.value, NODE_TYPE) == 0) {
 			push_node_stack(STACK_TYPE, stack, stack_size);
 		}
 		/* spawn->id */
@@ -355,8 +359,16 @@
 			push_node_stack(STACK_ID, stack, stack_size);
 		}
 		/* spawn->name */
-		else if(map->spawns[map->number_of_spawns - 1]->name == NULL && strcmp(value->vu.str.value, NODE_NAME) == 0) {
+		else if(strcmp(value->vu.str.value, NODE_NAME) == 0) {
 			push_node_stack(STACK_NAME, stack, stack_size);
+		}
+		/* spawn->x */
+		else if(strcmp(value->vu.str.value, NODE_X) == 0) {
+			push_node_stack(STACK_X, stack, stack_size);
+		}
+		/* spawn->x */
+		else if(strcmp(value->vu.str.value, NODE_Y) == 0) {
+			push_node_stack(STACK_Y, stack, stack_size);
 		}
 		/* spawn->direction */
 		else if(strcmp(value->vu.str.value, NODE_DIRECTION) == 0) {
@@ -371,7 +383,7 @@
 			push_node_stack(STACK_MAX_HEALTHPOINTS, stack, stack_size);
 		}
 		/* spawn->items */
-		else if(map->spawns[map->number_of_spawns - 1]->inventory == NULL && strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
+		else if(strcmp(value->vu.str.value, NODE_ITEMS) == 0) {
 			push_node_stack(STACK_ITEMS, stack, stack_size);
 		}
 	}
@@ -388,7 +400,7 @@
 	/* root */
 	if(parent == STACK_ROOT) {
 		/* root->name (Kartenname) */
-		if(stack_top == STACK_NAME) {
+		if(stack_top == STACK_NAME && map->name == NULL) {
 			map->name = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
 			strcpy(map->name, value->vu.str.value);
 		}
@@ -435,7 +447,7 @@
 				spawn->type = type;
 				apply_spawn_defaults(spawn);
 			}
-		}
+		} 
 		/* spawn->id */
 		else if(stack_top == STACK_ID) {
 			/* überschreibt Standard-ID - checkt diese aber nicht auf Kollisionen! */
@@ -445,6 +457,14 @@
 			spawn->id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
 			strcpy(spawn->id, value->vu.str.value);
 		}
+		/* spawn->name */
+		else if(stack_top == STACK_NAME) {
+			if(spawn->name != NULL) {
+				free(spawn->name);
+			}
+			spawn->name = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+			strcpy(spawn->name, value->vu.str.value);
+		}
 	}
 	/* fertig mit Auswertung, springe zurück */
 	pop_node_stack(stack, stack_size);
@@ -452,20 +472,21 @@
  
  /*--------------------------------------------------------------------------*/
  /* für ein paar Integerwerte dasselbe */
- void parse_integer(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const unsigned int parsed_tiles, const unsigned int array_depth) {
+ void parse_integer(const JSON_value* value, Map* map, unsigned int** stack, unsigned int* stack_size, const unsigned int parsed_tiles, const unsigned int array_depth, char* dimension_seal) {
 	unsigned int stack_top = node_stack_at(0, *stack, *stack_size);
 	unsigned int parent = node_stack_at(1, *stack, *stack_size);
 	
 	/* root */
 	if(parent == STACK_ROOT) {
 		/* root->x */
-		if(stack_top == STACK_X) {
+		if(stack_top == STACK_X && (*dimension_seal == 0 || *dimension_seal == 1)) {
 			map->x = value->vu.integer_value;
+			*dimension_seal |= 2;
 		}
 		/* root->y */
-		else if(stack_top == STACK_Y) {
-			printf("assign as y: %d\n", value->vu.integer_value);
+		else if(stack_top == STACK_Y && (*dimension_seal == 0 || *dimension_seal == 2)) {
 			map->y = value->vu.integer_value;
+			*dimension_seal |= 1;
 		}
 	} 
 	/* Tile */
@@ -492,6 +513,22 @@
 		/* spawn->max_hp */
 		else if(stack_top == STACK_MAX_HEALTHPOINTS) {
 			map->spawns[map->number_of_spawns - 1]->max_hp = value->vu.integer_value;
+		}
+		/* spawn->x */
+		else if(stack_top == STACK_X) {
+			unsigned int x = value->vu.integer_value;
+			if(x >= map->x) {
+				x = 0;
+			}
+			map->spawns[map->number_of_spawns - 1]->x = x;
+		}
+		/* spawn->y */
+		else if(stack_top == STACK_Y) {
+			unsigned int y = value->vu.integer_value;
+			if(y >= map->y) {
+				y = 0;
+			}
+			map->spawns[map->number_of_spawns - 1]->y = y;
 		}
 	}
 	/* fertig mit Auswertung, springe zurück */
@@ -623,11 +660,9 @@
  /* Packt einen Identifier auf den Stack. */
  void push_node_stack(unsigned int node, unsigned int** stack, unsigned int* stack_size) {
 	/* Counter hoch */
-	unsigned int new_stack_size = ++(*stack_size),i;
+	unsigned int new_stack_size = ++(*stack_size);
 	/* vergrößern */
 	*stack = (unsigned int*)ex_realloc(*stack, sizeof(unsigned int) * new_stack_size);
-	for(i = 0; i < *stack_size; ++i) {printf("=");}
-	printf(">PUSH %d\n", node);
 	/* kopieren */
 	(*stack)[new_stack_size - 1] = node;
  }
@@ -635,7 +670,7 @@
  /*--------------------------------------------------------------------------*/
  /* Oder holt ihn wieder da runter. */
  unsigned int pop_node_stack(unsigned int** stack, unsigned int* stack_size) {
-	unsigned int tmp,i;
+	unsigned int tmp;
 	unsigned int elements = *stack_size;
 	if(!stack_size) {
 		return STACK_INVALID_INDEX;
@@ -645,8 +680,6 @@
 	tmp = (*stack)[elements - 1];
 	/* POP */
 	elements = --(*stack_size);
-	for(i = 0; i < *stack_size; ++i) {printf("=");}
-	printf(">POP %d\n", tmp);
 	
 	if(!(*stack_size)) {
 		free(*stack);
