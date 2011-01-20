@@ -1,0 +1,59 @@
+﻿Aufbau der Karten im JSON-Format
+================================
+
+Schema:
+
+- Karte (root-Objekt)
+|-> Eigenschaften (z.B. Name, Größe)
+|-> Tiles
+--|-> notwendige Eigenschaften (z.B. Typ, Farbe, Glyphe)
+--|-> typische Eigenschaften
+--|-> Items
+----|-> notwendige Eigenschaften (z.B. Typ, Wert)
+----|-> typische Eigenschaften
+|-> Spawns
+--|-> Eigenschaften (z.B. Position, Typ, Zustand)
+--|-> Inventar
+----|-> notwendige Eigenschaften (z.B. Typ, Wert)
+----|-> typische Eigenschaften
+
+Beispiel:
+
+{
+	"name": "Demonstrationskarte",
+	"x": 5,
+	"y": 3,
+	"tiles": [
+		[{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
+		[
+			{},
+			{"type":"w"},
+			{"type":"f"},
+			{ 
+				"type":"f"
+				"items" : [
+					{
+						"type": "hptn",
+						"cap": 30
+					}
+				]
+			},
+			{ 
+				"type": "door",
+				"open": false,
+				"locked": true
+			}
+		],
+		[{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}]
+	],
+	"spawns": [
+		{
+			"type": "player",
+			"x": 2,
+			"y": 1,
+			"items": [
+				{"type":"hptn"}, {"type":"hptn"}
+			]
+		}
+	]
+}
