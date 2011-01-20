@@ -77,5 +77,4 @@
 	}
 	free(tile->items);
 	free(tile->properties);
-	free(tile);
  }

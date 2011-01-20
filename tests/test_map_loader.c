@@ -154,7 +154,7 @@ int main() {
 	/* Karte->Spawnanzahl */
 	printf("checking spawn counter...");
 	if(map->number_of_spawns != MAP_SPAWNS) {
-		printf("\n-> ERROR! expected %dx, but map has %dx%d!\n", MAP_DIMENSION, map->number_of_spawns);
+		printf("\n-> ERROR! expected %dx, but map has %dx!\n", MAP_DIMENSION, map->number_of_spawns);
 	} else { printf("correct! (%d)\n", map->number_of_spawns); }
 	
 	printf("checking vanilla player...\n");
@@ -181,7 +181,7 @@ int main() {
 		/* player->hp */
 		printf("=> health points...");
 		if(spawn->hp != MAP_PLAYER_HP) {
-			printf("\n-> ERROR! expected %dx%d, but player has %dx%d!\n", MAP_PLAYER_HP, spawn->hp);
+			printf("\n-> ERROR! expected %dx%d, but player has %dx!\n", MAP_PLAYER_HP, spawn->hp);
 		} else { printf("correct! (%d)\n", spawn->hp); }
 		
 		/* player->items */
@@ -213,5 +213,5 @@ int main() {
 	}
 	
 	flush_map(map);
-	return 1;
+	return 0;
 }

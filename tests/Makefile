@@ -1,20 +1,18 @@
 CC = gcc
-CFLAGS = -std=c89 -pedantic -Wall -Wextra -O2 -g
+CFLAGS = -std=c99 -pedantic -Wall -Wextra -O0 -g
 SRC = ../src/
-TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_Parser.o memory.o spawn.o tile.o map_loader.o item.o
+TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o
 .SUFFIXES: .c
 
-test_map_loader_win: $(TEST_MAP_LOADER_OBJECTS)
-	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader.exe 
 test_map_loader: $(TEST_MAP_LOADER_OBJECTS)
-	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader
+	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader.exe -lm
 clean:
 	rm -f *.o
 
 test_map_loader.o: test_map_loader.c
 	$(CC) $(CFLAGS) -c test_map_loader.c
-JSON_Parser.o: $(SRC)JSON_Parser.c
-	$(CC) $(CFLAGS) -c $(SRC)JSON_Parser.c
+JSON_parser.o: $(SRC)JSON_parser.c
+	$(CC) $(CFLAGS) -c $(SRC)JSON_parser.c
 memory.o: $(SRC)memory.c
 	$(CC) $(CFLAGS) -c $(SRC)memory.c
 spawn.o: $(SRC)spawn.c
