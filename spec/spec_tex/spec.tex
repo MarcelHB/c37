@@ -525,7 +525,25 @@ void flush_output_buffer(BufferTile* buf, int tiles);
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
-	
+
+	%----------------------------------------------------------------------------
+	\newpage
+	\subsubsection*{action.h}
+	Dieser Header stellt Funktionen bereit, die bestimmen, wie sich die Spielwelt durch bestimmte Ereignisse verändert.
+
+		\begin{lstlisting}[caption=process\_event]{}
+void process_event(SDL_Event *event, Map *map);
+		\end{lstlisting}
+	\begin{description}
+		\item[Verwendung:] Verändert die Map entsprechend einem eingehenden Event.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item event - das zu verarbeitende Event
+			\item map - die zu aktualisierende Map
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{sdl\_output.h}

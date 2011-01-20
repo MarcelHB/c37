@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "globals.h"
-
+#include "output_buffer.h"
 #include "map.h"
 
 #if defined(__unix__) || defined(__linux__)
@@ -27,7 +27,7 @@ static int height=OUTPUT_IN_GLYPHS_Y;
 /**
  * Setzt die Breite und Höhe des ausgegebenen Spielfeldes fest, sonst nur zur Kompatibilität
  * mit der sdl_output.
- * Produkt aus Breite und Höhe ist die Länge des Arrays, das an output_draw übergeben wird.
+ * Breite mal Höhe sollte die Länge des Arrays sein, das an output_draw übergeben wird.
  */
 void output_init(int wid, int hei){
 	width=wid;
@@ -43,12 +43,13 @@ void output_init(int wid, int hei){
  * tiles - Anzahl der Tiles darin (sollte mindestens width*height aus output_init() sein)
  */
 void output_draw(BufferTile *buf, int tiles){
+	printf("\n");
 	int wid=width;
 	while(tiles--){
 		printf("%c",buf->glyph);
 		buf++;
 		/*zeilenumbruch nach width zeichen*/
-		if(!(wid--)){
+		if(!(--wid)){
 			printf("\n");
 			wid=width;
 		}
