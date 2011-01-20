@@ -8,7 +8,7 @@ all: c37
 .c.o:
 	${CC} ${CFLAGS} -c $<
 
-${OBJ}: config.mk game_messages.h globals.h item.h JSON_parser.h main.h map_loader.h memory.h output_buffer.h sdl_output.h spawn.h text_output.h tile.h
+${OBJ}: config.mk globals.h item.h JSON_parser.h main.h map_loader.h memory.h output_buffer.h sdl_output.h spawn.h text_output.h tile.h
 
 c37: ${OBJ}
 	${CC} ${LDFLAGS} -o $@ ${OBJ}
