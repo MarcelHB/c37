@@ -8,6 +8,8 @@
 
  #ifndef _C37_TILE_H
  #define _C37_TILE_H
+
+#include <stdbool.h>
  
  #include "output_buffer.h"
  #include "item.h"
@@ -69,5 +71,7 @@
  /* Helper */
  void apply_tile_defaults(Tile*);
  void create_tile_properties(Tile*);
+
+ bool tile_can_light (Tile);
  
  #endif

@@ -5,9 +5,14 @@
  * 
  * tile.c
  */
+
+#include <stdbool.h>
  
  #include "globals.h"
  #include "tile.h"
+ #include "tiles/button.h"
+ #include "tiles/door.h"
+ #include "tiles/wall.h"
  
  /*--------------------------------------------------------------------------*/
  void apply_tile_defaults(Tile* tile) {
@@ -78,3 +83,15 @@
 	free(tile->items);
 	free(tile->properties);
  }
+
+bool
+tile_can_light (Tile t) {
+    switch (t.type) {
+        case TILE_TYPE_WALL:
+            return false;
+        case TILE_TYPE_DOOR:
+            return ((DoorProperties *)t.properties)->open ? true : false;
+        default:
+            return true;
+    }
+}

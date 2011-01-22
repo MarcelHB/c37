@@ -8,6 +8,8 @@
  
  #ifndef _C37_MAP_H
  #define _C37_MAP_H
+
+#include <stdbool.h>
  
  #include "item.h"
  #include "tile.h"
@@ -26,6 +28,8 @@
 	Spawn** spawns;
 	unsigned int number_of_spawns;
  } Map;
+
+bool map_can_see (Map *, int, int, int, int);
  
  /* Findet den Spieler */
  Spawn* get_player_spawn(Map*);
