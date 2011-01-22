@@ -8,6 +8,7 @@
  
  #include "globals.h"
  #include "tile.h"
+ #include "map.h"
  
  /*--------------------------------------------------------------------------*/
  void apply_tile_defaults(Tile* tile) {
@@ -78,3 +79,4 @@
 	free(tile->items);
 	free(tile->properties);
  }
+

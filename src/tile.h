@@ -55,14 +55,12 @@
  
  /* lediglich Intialisierungswerte */
  static const struct TileDefault tile_defaults[4] = {
-	{TILE_TYPE_WALL, 0xFFFFFF00, '#'},
+	{TILE_TYPE_WALL, 0xAAAAAA00, '#'},
 	{TILE_TYPE_FLOOR, 0xFFFFFF00, '.'},
 	{TILE_TYPE_BUTTON, 0xFFFFFF00, '+'},
 	{TILE_TYPE_DOOR, 0xCCCCCC00, '|'}
  };
  
- /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
- void render_tile(BufferTile*, Tile*);
  /* Gibt reservierten Speicher eines Tiles frei */
  void free_tile(Tile*);
  

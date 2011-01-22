@@ -9,6 +9,8 @@
  #ifndef _C37_SDL_OUTPUT_H
  #define _C37_SDL_OUTPUT_H
  
+ #include "output_buffer.h"
+ 
  /* initialisiert Ausgabe */
  void output_init(int, int); 
  /* gibt den Ausgabepuffer mittels SDL aus */

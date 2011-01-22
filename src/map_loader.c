@@ -296,7 +296,7 @@
 						/*.number_of_items = */0
 					};
 					int current_index = i * map->x + j;
-					tile.x = i; tile.y = j;
+					tile.x = j; tile.y = i;
 					map->tiles[current_index] = tile;
 					/* Anz. abhängige Kachel-ID */
 					calculate_tile_id(&map->tiles[current_index], i, j);
