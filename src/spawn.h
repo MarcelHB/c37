@@ -40,6 +40,7 @@
  /* verwendete Spawn-type identifier */
  #define SPAWN_TYPE_INVALID				0xFFFFFFFF
  #define SPAWN_TYPE_PLAYER				0x00000000
+ #define SPAWN_TYPE_HOUND				0x00000001
  
  /* Zuordnungstabellen von type -> defaults */
  struct SpawnDefault {
@@ -54,8 +55,13 @@
  
  /* lediglich Intialisierungswerte */
  static const struct SpawnDefault spawn_defaults[1] = {
-	{SPAWN_TYPE_PLAYER, "Spieler", '@', 0, 1, 100, 100}
+	{SPAWN_TYPE_PLAYER, "Spieler", '@', 0, 1, 100, 100},
+	{SPAWN_TYPE_HOUND, "Bluthund", 'h', 1, 0, 50, 50}
  };
+
+typedef struct HoundProperties {
+    unsigned int targetx, targety;
+} HoundProperties;
  
  /* Gibt reservierten Speicher eines Spawns frei */
  void free_spawn(Spawn*);

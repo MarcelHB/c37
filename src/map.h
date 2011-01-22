@@ -36,6 +36,8 @@ bool map_can_see (Map *, int, int, int, int);
  /* Spawn an Position oder NULL */
  Spawn* get_spawn_at(unsigned int, unsigned int, Map*); 
  
+ void spawn_run_ai (Spawn *, Map *);
+
  /* war mal spawn.h */
  /* Wenn ein Spawn auf einein anderen trifft, gucke, was hier passiert (schubsen/töten/sprechen/...) */
  void spawn_spawn_collision(Spawn*, Spawn*, Map*);

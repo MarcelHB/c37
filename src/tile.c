@@ -95,3 +95,15 @@ tile_can_light (Tile t) {
             return true;
     }
 }
+
+bool
+tile_can_walk (Tile t) {
+    switch (t.type) {
+        case TILE_TYPE_WALL:
+            return false;
+        case TILE_TYPE_DOOR:
+            return ((DoorProperties *)t.properties)->open ? true : false;
+        default:
+            return true;
+    }
+}

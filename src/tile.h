@@ -73,5 +73,6 @@
  void create_tile_properties(Tile*);
 
  bool tile_can_light (Tile);
+ bool tile_can_walk (Tile);
  
  #endif
