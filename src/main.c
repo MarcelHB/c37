@@ -32,12 +32,12 @@ int main (int argc, char *argv[]) {
 	if(argc == 2) {
 		map = load_map(argv[1]);
 		if(map == NULL) {
-			fprintf(stderr, "Karte nicht ladbar!");
+			fprintf(stderr, "Karte nicht ladbar!\n");
 			return EXIT_FAILURE;
 		}
 	}
 	else{
-		fprintf(stderr, "Kartennamen angeben!");
+		fprintf(stderr, "Kartennamen angeben!\n");
 		return EXIT_FAILURE;
 	}
 	
@@ -68,7 +68,6 @@ int main (int argc, char *argv[]) {
 					break;
 				case SDLK_LEFT:
 					spawn->x -= 1;
-					fprintf(stdout, "after lkey is %dx%d\n", spawn->x, spawn->y); 
 					break;
 				case SDLK_RIGHT:
 					spawn->x += 1;
