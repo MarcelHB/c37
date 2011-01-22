@@ -29,8 +29,13 @@ int main (int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	
-	if(argc == 2)
+	if(argc == 2) {
 		map = load_map(argv[1]);
+		if(map == NULL) {
+			fprintf(stderr, "Karte nicht ladbar!");
+			return EXIT_FAILURE;
+		}
+	}
 	else{
 		fprintf(stderr, "Kartennamen angeben!");
 		return EXIT_FAILURE;
