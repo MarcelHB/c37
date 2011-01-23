@@ -54,7 +54,7 @@
  };
  
  /* lediglich Intialisierungswerte */
- static const struct SpawnDefault spawn_defaults[1] = {
+ static const struct SpawnDefault spawn_defaults[2] = {
 	{SPAWN_TYPE_PLAYER, "Spieler", '@', 0, 1, 100, 100},
 	{SPAWN_TYPE_HOUND, "Bluthund", 'h', 1, 0, 50, 50}
  };
