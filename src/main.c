@@ -28,8 +28,10 @@ int main(int argc, char *argv[]){
 		fprintf(stderr,"Kartennamen angeben");
 		return EXIT_FAILURE;
 	}
-	if(map==NULL)
+	if(map == NULL) {
 		fprintf(stderr,"Fehler beim Laden der Karte");
+		return EXIT_FAILURE;
+	}
 	/*Map zeichnen*/
 	int num_tiles=OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y;
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y);
