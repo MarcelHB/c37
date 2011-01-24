@@ -48,6 +48,8 @@ int main (int argc, char *argv[]) {
 	}
 	
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y);
+	
+	explore_area(get_player_spawn(map), map);
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);
 	
