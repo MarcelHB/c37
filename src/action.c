@@ -241,7 +241,16 @@ spawn_run_ai (Spawn *self, Map *map) {
 void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
     if (SPAWN_TYPE_PLAYER == self->type && SPAWN_TYPE_HOUND == other->type) {
         if (other->hp <= 10) {
-            /* Der Hund ist tot. Irgendwas muss geschehen. */
+            Spawn **new_spawns = ex_calloc(map->number_of_spawns - 1, sizeof(Spawn *));
+            for (int ii = 0, jj = 0; ii < map->number_of_spawns; ++ii) {
+                if (map->spawns[ii] != other) {
+                    new_spawns[jj++] = map->spawns[ii];
+                }
+            }
+            free(map->spawns);
+            map->spawns = new_spawns;
+            --map->number_of_spawns;
+            free(other);
         } else {
             other->hp -= 10;
         }
@@ -257,6 +266,12 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
 void spawn_tile_collision (Spawn *self, Tile *tile, Map *map, char **c, int n) {
     if (tile_can_walk(*tile) && tile->number_of_items > 0) {
         /* Items aufsammeln. */
+        self->inventory = ex_realloc(self->inventory, self->inventory_size + tile->number_of_items);
+        for (int ii = 0; ii < tile->number_of_items; ++ii) {
+            self->inventory[self->inventory_size + ii] = tile->items[ii];
+        }
+        free(tile->items);
+        tile->number_of_items = 0;
     } else if (tile->type == TILE_TYPE_WALL) {
         if (self->hp > 0) {
             --self->hp;
