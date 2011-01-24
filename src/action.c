@@ -237,3 +237,21 @@ spawn_run_ai (Spawn *self, Map *map) {
     self->x = nx;
     self->y = ny;
 }
+
+void toggle_tile (Tile *self, Map *map) {
+    switch (self->type) {
+        case TILE_TYPE_BUTTON:
+            for (unsigned int ii = 0; ii < map->x * map->y; ++ii) {
+                if (0 == strcmp(((ButtonProperties *)self->properties)->toggle_id, map->tiles[ii].id)) {
+                    toggle_tile(&(map->tiles[ii]), map);
+                }
+            }
+            break;
+        case TILE_TYPE_DOOR:
+            if (!((DoorProperties*)self->properties)->locked) {
+                ((DoorProperties*)self->properties)->open ^= 1;
+            }
+            break;
+        default:
+            break;
+}
