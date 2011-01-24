@@ -48,6 +48,15 @@
  #define TILE_TYPE_BUTTON				0x00000002
  #define TILE_TYPE_DOOR					0x00000003
  
+ #define TILE_GLYPH_WALL				'#'
+ #define TILE_GLYPH_FLOOR				'.'
+ #define TILE_GLYPH_BUTTON				'+'
+ #define TILE_GLYPH_BUTTON				'+'
+ #define TILE_GLYPH_DOOR_VERT_CLOSED	'|'
+ #define TILE_GLYPH_DOOR_VERT_OPEN		'~'
+ #define TILE_GLYPH_DOOR_HORIZ_CLOSED 	'-'
+ #define TILE_GLYPH_DOOR_HORIZ_OPEN 	'/'
+ 
  /* Zuordnungstabellen von type -> defaults */
  struct TileDefault {
 	unsigned int type;
@@ -57,14 +66,12 @@
  
  /* lediglich Intialisierungswerte */
  static const struct TileDefault tile_defaults[4] = {
-	{TILE_TYPE_WALL, 0xFFFFFF00, '#'},
-	{TILE_TYPE_FLOOR, 0xFFFFFF00, '.'},
-	{TILE_TYPE_BUTTON, 0xFFFFFF00, '+'},
-	{TILE_TYPE_DOOR, 0xCCCCCC00, '|'}
+	{TILE_TYPE_WALL, 0xFFFFFF00, TILE_GLYPH_WALL},
+	{TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
+	{TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
+	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED}
  };
  
- /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
- void render_tile(BufferTile*, Tile*);
  /* Gibt reservierten Speicher eines Tiles frei */
  void free_tile(Tile*);
  

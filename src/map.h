@@ -37,5 +37,7 @@ bool map_can_see (Map *, int, int, int, int);
  Spawn* get_spawn_at(unsigned int, unsigned int, Map*); 
  /* Deckt die unerkundete Gegend um einen Spawn herum auf. */
  void explore_area(Spawn*, Map*);
+ /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
+ void render_tile(BufferTile*, Tile*, Map*);
 
 #endif

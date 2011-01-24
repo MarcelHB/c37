@@ -13,6 +13,7 @@
 #include "output_buffer.h"
 #include "text_output.h"
 #include "action.h"
+#include "main.h"
 
 static Map *map;
 static BufferTile *buf;
@@ -55,3 +56,45 @@ int main(int argc, char *argv[]){
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }
+
+/*--------------------------------------------------------------------------*/
+void create_output_buffer(Map* map, BufferTile* buf, int size) {
+	/* Spieler in die Mitte, seine Position als Versatz benutzen */
+	int i, j, translated_x, translated_y, center_x, center_y;
+	Spawn* spawn = get_player_spawn(map);
+	if(spawn == NULL) {
+		fprintf(stderr, "Keine Spielfigur vorhanden!");
+		exit(1);
+	}
+	clear_output_buffer(buf, size);
+
+	center_x = OUTPUT_IN_GLYPHS_X / 2 + 1; center_y = OUTPUT_IN_GLYPHS_Y / 2 + 1;
+	translated_x = center_x - spawn->x; translated_y = center_y - spawn->y;
+
+	j = 0;
+	for(i = 0; i < size; ++i) {
+		unsigned int current_x, current_y;
+		if(i != 0 && (i % (OUTPUT_IN_GLYPHS_X)) == 0) {
+			++j;
+		}
+		current_y = j;
+		current_x = i % OUTPUT_IN_GLYPHS_X;
+		/* unteres Renderende erreicht */
+		if(current_y == OUTPUT_IN_GLYPHS_Y) {
+			break;
+		}
+		/* Hier Kartenteil? */
+		if(translated_x <= (int)current_x && translated_y <= (int)current_y && current_x < (translated_x + map->x) && current_y < (translated_y + map->y)) {
+			render_tile(&buf[i], &map->tiles[(current_y - translated_y) * map->x + (current_x - translated_x)], map);
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------*/
+ void clear_output_buffer(BufferTile* buf, int num) {
+	int i = 0;
+	for(; i < num; ++i) {
+		buf[i].glyph = ' ';
+		buf[i].color = 0x00000000;
+	}
+ }
