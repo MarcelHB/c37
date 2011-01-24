@@ -72,11 +72,12 @@
 			SDL_FreeSurface(stencil_surface);
 		}
 	}
+	SDL_UpdateRect(screen, 0, 0, 0, 0);
  }
  
  /*--------------------------------------------------------------------------*/
  void output_clear() {
-	SDL_UpdateRect(screen, 0, 0, 0, 0);
+	SDL_FillRect(screen, NULL, 0x00000000);
  }
  
  /*--------------------------------------------------------------------------*/
