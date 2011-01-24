@@ -130,7 +130,7 @@ void render_tile(BufferTile* buf, Tile* tile, Map* map) {
 		blue = (buf->color >> 8) & 0xFF;
 		red *= (tile->brightness / 255.0);
 		green *= (tile->brightness / 255.0);
-		green *= (tile->brightness / 255.0);
-		buf->color = (((red << 24) | (green << 16)) | (red << 8));
+		blue *= (tile->brightness / 255.0);
+		buf->color = (((red << 24) | (green << 16)) | (blue << 8));
 	}
 }
