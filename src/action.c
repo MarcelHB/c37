@@ -294,19 +294,44 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
 }
 
 void toggle_tile (Tile *self, Map *map) {
-    switch (self->type) {
-        case TILE_TYPE_BUTTON:
-            for (unsigned int ii = 0; ii < map->x * map->y; ++ii) {
-                if (0 == strcmp(((ButtonProperties *)self->properties)->toggle_id, map->tiles[ii].id)) {
-                    toggle_tile(&(map->tiles[ii]), map);
-                }
-            }
-            break;
-        case TILE_TYPE_DOOR:
-            if (!((DoorProperties*)self->properties)->locked) {
-                ((DoorProperties*)self->properties)->open ^= 1;
-            }
-            break;
-        default:
-            break;
+	/* Button */
+    if(self->type == TILE_TYPE_BUTTON) {	
+		ButtonProperties* btn_props = (ButtonProperties*)self->properties;
+		if(btn_props->toggle_id == NULL) {
+			return;
+		}
+		unsigned int map_size = map->x * map->y;
+		Tile* to_toggle;
+		for (unsigned int ii = 0; ii < map_size; ++ii) {
+			to_toggle = &map->tiles[ii];
+			if(to_toggle->id == NULL || to_toggle == self) {
+				continue;
+			}
+			if (0 == strcmp(btn_props->toggle_id, to_toggle->id)) {
+				/* Sonderbehandlung Tür, wenn durch externen Button gedrückt */
+				if(to_toggle->type == TILE_TYPE_DOOR) {
+					DoorProperties* door_props = (DoorProperties *)to_toggle->properties;
+					/* hat externen Schalter, wird also hier getoggelt */
+					if(door_props->external_button) {
+						door_props->open ^= 1;
+					} 
+					/* sonst entscheidet der Schalter nur über Verriegelung */
+					else {
+						door_props->locked ^= 1;
+					}
+				} else {
+					toggle_tile(to_toggle, map);
+				}
+				break;
+			}
+		}
+	}
+	/* Tür */
+    else if(self->type == TILE_TYPE_DOOR)  {
+		DoorProperties* door_props = (DoorProperties *)self->properties;
+		/* Tür hat eigenen Schalter und ist nicht verschlossen */
+		if(!(door_props->external_button || door_props->locked)) {
+			door_props->open ^= 1;
+		}
+	}
 }

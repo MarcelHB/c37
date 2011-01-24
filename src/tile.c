@@ -99,11 +99,13 @@ tile_can_light (Tile t) {
 bool
 tile_can_walk (Tile t) {
     switch (t.type) {
+		case TILE_TYPE_FLOOR:
+			return true;
         case TILE_TYPE_WALL:
-            return false;
+            return ((WallProperties *)t.properties)->space ? true : false;
         case TILE_TYPE_DOOR:
             return ((DoorProperties *)t.properties)->open ? true : false;
         default:
-            return true;
+            return false;
     }
 }

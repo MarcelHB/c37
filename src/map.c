@@ -134,3 +134,16 @@ void render_tile(BufferTile* buf, Tile* tile, Map* map) {
 		buf->color = (((red << 24) | (green << 16)) | (blue << 8));
 	}
 }
+
+/*---------------------------------------------------------------------------*/
+void explore_area(Spawn* spawn, Map* map) {
+	int x = spawn->x - (VISUAL_SQUARE/2);
+	int y = spawn->y - (VISUAL_SQUARE/2);
+	int i, j;
+
+	for(i = y; i < y + VISUAL_SQUARE; ++i) {
+		for(j = x; j < x + VISUAL_SQUARE; ++j) {
+			map->tiles[i * map->x + j].spotted = 1;
+		}
+	}
+}
