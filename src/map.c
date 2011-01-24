@@ -148,7 +148,9 @@ void explore_area(Spawn* spawn, Map* map) {
 	
 	for(i = y; i < y + VISUAL_SQUARE; ++i) {
 		for(j = x; j < x + VISUAL_SQUARE; ++j) {
-			map->tiles[i * map->x + j].spotted = 1;
+			if(x >= 0 && y >= 0 && x < map->x && y < map->y) {
+				map->tiles[i * map->x + j].spotted = 1;
+			}
 		}
 	}
 }
