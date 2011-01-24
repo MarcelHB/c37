@@ -5,7 +5,7 @@ TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_parser.o memory.o spawn.o tile.
 .SUFFIXES: .c
 
 test_map_loader: $(TEST_MAP_LOADER_OBJECTS)
-	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader.exe -lm
+	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader -lm
 clean:
 	rm -f *.o
 

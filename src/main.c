@@ -51,32 +51,15 @@ int main (int argc, char *argv[]) {
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y);
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);
-	
-	Spawn* spawn = get_player_spawn(map);
-	
-	while(SDL_WaitEvent(&event) && !quit) {
-		if(event.type == SDL_KEYDOWN){
-			switch (event.key.keysym.sym){
-				case SDLK_ESCAPE:
-					quit = 1;
-					break;
-				case SDLK_UP:
-					spawn->y -= 1;
-					break;
-				case SDLK_DOWN:
-					spawn->y += 1;
-					break;
-				case SDLK_LEFT:
-					spawn->x -= 1;
-					break;
-				case SDLK_RIGHT:
-					spawn->x += 1;
-					break;
-				default:
-					break;
-			}
-		}
-		/*process_event(event, map);*/
+	/*Eingabeloop*/
+	SDL_Event *event;
+	while(1){
+		if(!SDL_WaitEvent(event))
+			return EXIT_FAILURE;
+		/*bei Escape beenden*/
+		if(event->key.keysym.sym==SDLK_ESCAPE)
+			break;
+		process_event(event, map);
 		create_output_buffer(map, buf, num_tiles);
 		output_draw(buf, num_tiles);
 		SDL_Delay(1);

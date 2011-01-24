@@ -8,35 +8,80 @@
 
 #include "globals.h"
 #include "spawn.h"
-#include "map.h"
+#include "tile.h"
 
-/*--------------------------------------------------------------------------*/
-Spawn* get_player_spawn(Map* map) {
-	unsigned int i;
-	Spawn* spawn = NULL;
-	
-	for(i = 0; i < map->number_of_spawns; ++i) {
-		spawn = map->spawns[i];
-		if(!spawn->npc) {
-			return spawn;
-		}
-	}
-	
-	return NULL;
+Spawn *
+get_player_spawn (Map *self) {
+    for (unsigned int ii = 0; ii < self->number_of_spawns; ++ii) {
+        if (SPAWN_TYPE_PLAYER == self->spawns[ii]->type) {
+            return self->spawns[ii];
+        }
+    }
+    return NULL;
 }
 
- /*--------------------------------------------------------------------------*/
- void render_tile(BufferTile* buf, Tile* tile, Map* map) {
-	unsigned int i;
+/* Überprüft ob eine Stelle auf einer Map von einer anderen aus sichtbar ist.
+ * (fx, fy) -> (tx, ty)
+ * Siehe: http://www.cs.unc.edu/~mcmillan/comp136/Lecture6/Lines.html (Step 1) */
+bool
+map_can_see (Map *ma, int fx, int fy, int tx, int ty) {
+    if (fx >= ma->x || fx < 0 || fy >= ma->y || fy < 0 ||
+        tx >= ma->x || tx < 0 || ty >= ma->y || ty < 0) return false;
+    if (fx == tx && fy == ty) return true;
+    int dx = tx - fx, dy = ty - fy;
+    if (abs(dx) > abs(dy)) {
+        float m = (float)dy / (float)dx;
+        float b = fy - m * fx;
+        dx = (dx < 0) ? -1 : 1;
+        while ((dx < 0) ? fx > tx : fx < tx) {
+            if (!tile_can_light(ma->tiles[fx * ma->y + (int)(m * fx + b)])) {
+                return false;
+            }
+            fx += dx;
+        }
+    } else {
+        float m = (float)dx / (float)dy;
+        float b = fx - m*fy;
+        dy = (dy < 0) ? -1 : 1;
+        while ((dy < 0) ? fy > ty : fy < ty) {
+            if (!tile_can_light(ma->tiles[(int)(m * fy + b) * ma->y + fx])) {
+                return false;
+            }
+            fy += dy;
+        }
+    }
+    return true;
+}
+
+/*---------------------------------------------------------------------------*/
+Spawn* get_spawn_at(unsigned int x, unsigned int y, Map* map) {
+	int i;
 	Spawn* spawn = NULL;
-	
+	/* noch in Kartengröße? */
+	if(x >= map->x || y >= map->y) {
+		return NULL;
+	}
 	for(i = 0; i < map->number_of_spawns; ++i) {
 		Spawn* candidate = map->spawns[i];
-		if(candidate->x == tile->x && candidate->y == tile->y) {
+		if(candidate->x == x && candidate->y == y) {
 			spawn = candidate;
 			break;
 		}
 	}
+	return spawn;
+}
+ 
+/*---------------------------------------------------------------------------*/
+void render_tile(BufferTile* buf, Tile* tile, Map* map) {
+	Spawn* spawn = NULL;
+
+	/* noch nicht erkundet */
+	if(tile->spotted == 0) {
+		return;
+	}
+	
+	spawn = get_spawn_at(tile->x, tile->y, map);
+	
 	/* Spawn mit Glyphe und Zustandsfarbe rendern */
 	if(spawn != NULL) {
 		float hp_percentage = (float)spawn->hp / spawn->max_hp;
@@ -48,15 +93,48 @@ Spawn* get_player_spawn(Map* map) {
 		color <<= 16;
 		buf->glyph = spawn->glyph;
 		buf->color = color;
-	} else{
+	} else {
 		/* Item */
 		if(tile->number_of_items > 0) {
 			buf->glyph = '*';
 			buf->color = tile->items[0]->color;
 		} else {
+			/* sicher ist sicher */
 			apply_tile_defaults(tile);
 			buf->glyph = tile->glyph;
 			buf->color = tile->color;
+			
+			/* variable Anzeigen */
+			/* Tür */
+			if(tile->type == TILE_TYPE_DOOR) {
+				DoorProperties* door_props = (DoorProperties*)tile->properties;
+				/* horizontal? -> geöffnet? */
+				if(door_props->horizontal) {
+					if(door_props->open) {
+						buf->glyph = TILE_GLYPH_DOOR_HORIZ_OPEN;
+					} else {
+						buf->glyph = TILE_GLYPH_DOOR_HORIZ_CLOSED;
+					}
+				} else {
+					if(door_props->open) {
+						buf->glyph = TILE_GLYPH_DOOR_VERT_OPEN;
+					} else {
+						buf->glyph = TILE_GLYPH_DOOR_VERT_CLOSED;
+					}
+				}
+			}
 		}
 	}
- }
+	
+	/* Helligkeit anpassen */
+	{
+		unsigned int red, green, blue;
+		red = (buf->color >> 24);
+		green = (buf->color >> 16) & 0xFF;
+		blue = (buf->color >> 8) & 0xFF;
+		red *= (tile->brightness / 255.0);
+		green *= (tile->brightness / 255.0);
+		green *= (tile->brightness / 255.0);
+		buf->color = (((red << 24) | (green << 16)) | (red << 8));
+	}
+}

@@ -8,6 +8,8 @@
 
  #ifndef _C37_TILE_H
  #define _C37_TILE_H
+
+#include <stdbool.h>
  
  #include "output_buffer.h"
  #include "item.h"
@@ -46,6 +48,15 @@
  #define TILE_TYPE_BUTTON				0x00000002
  #define TILE_TYPE_DOOR					0x00000003
  
+ #define TILE_GLYPH_WALL				'#'
+ #define TILE_GLYPH_FLOOR				'.'
+ #define TILE_GLYPH_BUTTON				'+'
+ #define TILE_GLYPH_BUTTON				'+'
+ #define TILE_GLYPH_DOOR_VERT_CLOSED	'|'
+ #define TILE_GLYPH_DOOR_VERT_OPEN		'~'
+ #define TILE_GLYPH_DOOR_HORIZ_CLOSED 	'-'
+ #define TILE_GLYPH_DOOR_HORIZ_OPEN 	'/'
+ 
  /* Zuordnungstabellen von type -> defaults */
  struct TileDefault {
 	unsigned int type;
@@ -55,10 +66,10 @@
  
  /* lediglich Intialisierungswerte */
  static const struct TileDefault tile_defaults[4] = {
-	{TILE_TYPE_WALL, 0xAAAAAA00, '#'},
-	{TILE_TYPE_FLOOR, 0xFFFFFF00, '.'},
-	{TILE_TYPE_BUTTON, 0xFFFFFF00, '+'},
-	{TILE_TYPE_DOOR, 0xCCCCCC00, '|'}
+	{TILE_TYPE_WALL, 0xFFFFFF00, TILE_GLYPH_WALL},
+	{TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
+	{TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
+	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED}
  };
  
  /* Gibt reservierten Speicher eines Tiles frei */
@@ -67,5 +78,8 @@
  /* Helper */
  void apply_tile_defaults(Tile*);
  void create_tile_properties(Tile*);
+
+ bool tile_can_light (Tile);
+ bool tile_can_walk (Tile);
  
  #endif
