@@ -18,6 +18,6 @@
  /* Male die Nachrichtenausgabe darüber */
  void print_message_box(BufferTile*, int, char**, int);
  /* Übermalt Ausgabepuffer mit nil-Werten */
- void flush_output_buffer(BufferTile*, int);
+ void clear_output_buffer(BufferTile*, int);
  
  #endif
