@@ -238,6 +238,46 @@ spawn_run_ai (Spawn *self, Map *map) {
     self->y = ny;
 }
 
+void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
+    if (SPAWN_TYPE_PLAYER == self->type && SPAWN_TYPE_HOUND == other->type) {
+        if (other->hp <= 10) {
+            /* Der Hund ist tot. Irgendwas muss geschehen. */
+        } else {
+            other->hp -= 10;
+        }
+    } else if (SPAWN_TYPE_HOUND == self->type && SPAWN_TYPE_PLAYER == other->type) {
+        if (other->hp <= 5) {
+            /* Der Spieler ist tot. Irgendwas muss geschehen. */
+        } else {
+            other->hp -= 5;
+        }
+    }
+}
+
+void spawn_tile_collision (Spawn *self, Tile *tile, Map *map, char **c, int n) {
+    if (tile_can_walk(*tile) && tile->number_of_items > 0) {
+        /* Items aufsammeln. */
+    } else if (tile->type == TILE_TYPE_WALL) {
+        if (self->hp > 0) {
+            --self->hp;
+            /*Ouch.*/
+        }
+    }
+}
+
+void spawn_uses_item (Spawn *self, Item *item, Map *map) {
+    switch (item->type) {
+        case ITEM_TYPE_HEALTH_POTION:
+            self->hp += ((HealthPotionProperties *)item->properties)->capacity;
+            if (self->hp > self->max_hp) {
+                self->hp = self->max_hp;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 void toggle_tile (Tile *self, Map *map) {
     switch (self->type) {
         case TILE_TYPE_BUTTON:
