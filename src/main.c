@@ -39,14 +39,14 @@ int main(int argc, char *argv[]){
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);
 	/*Eingabeloop*/
-	SDL_Event *event;
+	SDL_Event event;
 	while(1){
-		if(!SDL_WaitEvent(event))
+		if(!SDL_WaitEvent(&event))
 			return EXIT_FAILURE;
 		/*bei Escape beenden*/
-		if(event->key.keysym.sym==SDLK_ESCAPE)
+		if(event.key.keysym.sym==SDLK_ESCAPE)
 			break;
-		process_event(event, map);
+		process_event(&event, map);
 		create_output_buffer(map, buf, num_tiles);
 		output_draw(buf, num_tiles);
 	}
