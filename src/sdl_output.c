@@ -12,7 +12,7 @@
 #include "output_buffer.h"
 #include "memory.h"
 
-#define FONT "cour.ttf"
+#define FONT "fonts/cour.ttf"
 #define FONT_SIZE 12
 /*maximale Anzahl an Zeilen, die für Nachrichten überschrieben werden, danach abschneiden*/
 #define MAX_MSG_LINES 3
@@ -40,6 +40,7 @@ void output_init(int w, int h){
 			exit(EXIT_FAILURE);
 		}
 	}
+	TTF_Init();
 	/*Schrift laden*/
 	font=TTF_OpenFont(FONT, FONT_SIZE);
 	if(font==NULL){
@@ -91,7 +92,7 @@ void output_draw(BufferTile *buf, int tiles){
 		/*pos.w, pos.h werden nicht beachtet*/
 		pos.x=num*font_w;
 		pos.y=(num%width)*font_h;
-		if(!SDL_BlitSurface(glyph_surf, NULL, screen, &pos)){
+		if(SDL_BlitSurface(glyph_surf, NULL, screen, &pos)){
 			fprintf(stderr, "Fehler bei der Ausgabe: %s\n", SDL_GetError());
 			exit(EXIT_FAILURE);
 		}
@@ -118,7 +119,7 @@ void output_draw(BufferTile *buf, int tiles){
 			SDL_Rect pos;
 			pos.x=0;
 			pos.y=(height-msg_lines)*font_h;
-			if(!SDL_BlitSurface(msg_surf, NULL, screen, &pos)){
+			if(SDL_BlitSurface(msg_surf, NULL, screen, &pos)){
 				fprintf(stderr, "Fehler bei der Ausgabe einer Nachricht: %s\n", SDL_GetError());
 				exit(EXIT_FAILURE);
 			}
@@ -148,7 +149,7 @@ void output_draw(BufferTile *buf, int tiles){
 	SDL_Rect pos;
 	pos.x=0;
 	pos.y=height*font_h;
-	if(!SDL_BlitSurface(status_surf, NULL, screen, &pos)){
+	if(SDL_BlitSurface(status_surf, NULL, screen, &pos)){
 		fprintf(stderr, "Fehler bei der Ausgabe der Stausleiste: %s\n",SDL_GetError());
 		exit(EXIT_FAILURE);
 	}

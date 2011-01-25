@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include "globals.h"
+#include "memory.h"
 #include "SDL.h"
 #include "map.h"
 #include "spawn.h"
@@ -21,7 +22,7 @@ void process_event(SDL_Event *event, Map *map){
 	/*Aktion des Spielers*/
 	switch(event->key.keysym.sym){
 	case SDLK_UP:
-		npc=get_spawn_at(player->x,player->y-1);
+		npc=get_spawn_at(player->x,player->y-1, map);
 		player->direction=NORTH;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
@@ -33,7 +34,7 @@ void process_event(SDL_Event *event, Map *map){
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -42,7 +43,7 @@ void process_event(SDL_Event *event, Map *map){
 		}
 		break;
 	case SDLK_DOWN:
-		npc=get_spawn_at(player->x,player->y+1);
+		npc=get_spawn_at(player->x,player->y+1, map);
 		player->direction=SOUTH;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
@@ -54,7 +55,7 @@ void process_event(SDL_Event *event, Map *map){
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -63,7 +64,7 @@ void process_event(SDL_Event *event, Map *map){
 		}
 		break;
 	case SDLK_LEFT:
-		npc=get_spawn_at(player->x-1,player->y);
+		npc=get_spawn_at(player->x-1,player->y, map);
 		/*kein NPC in Laufrichtung*/
 		player->direction=WEST;
 		if(npc==NULL){
@@ -75,7 +76,7 @@ void process_event(SDL_Event *event, Map *map){
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -84,7 +85,7 @@ void process_event(SDL_Event *event, Map *map){
 		}
 		break;
 	case SDLK_RIGHT:
-		npc=get_spawn_at(player->x+1,player->y);
+		npc=get_spawn_at(player->x+1,player->y, map);
 		player->direction=EAST;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
@@ -96,7 +97,7 @@ void process_event(SDL_Event *event, Map *map){
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -108,19 +109,19 @@ void process_event(SDL_Event *event, Map *map){
 		/*zu toggelnden Spawn/Tile feststellen*/
 		switch(player->direction){
 		case NORTH:
-			npc=get_spawn_at(player->x,player->y-1);
+			npc=get_spawn_at(player->x,player->y-1, map);
 			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y-1)]);
 			break;
 		case SOUTH:
-			npc=get_spawn_at(player->x,player->y+1);
+			npc=get_spawn_at(player->x,player->y+1, map);
 			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y+1)]);
 			break;
 		case WEST:
-			npc=get_spawn_at(player->x-1,player->y);
+			npc=get_spawn_at(player->x-1,player->y, map);
 			tile=&(map->tiles[player->x-1+OUTPUT_IN_GLYPHS_X*player->y]);
 			break;
 		case EAST:
-			npc=get_spawn_at(player->x+1,player->y);
+			npc=get_spawn_at(player->x+1,player->y, map);
 			tile=&(map->tiles[player->x+1+OUTPUT_IN_GLYPHS_X*player->y]);
 			break;
 		}
@@ -169,7 +170,7 @@ void process_event(SDL_Event *event, Map *map){
 	for(i=0;i<map->number_of_spawns;i++){
 		/*den Spieler auslassen*/
 		if(map->spawns[i]->npc)
-			spawn_action(map->spawns[i]);
+			spawn_action(map->spawns[i], map);
 	}
 }
 
@@ -297,7 +298,7 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map, char **c, int n) {
     } else if (tile->type == TILE_TYPE_WALL) {
         if (self->hp > 0) {
             --self->hp;
-	    update_hp(self-hp);
+			update_hp(self->hp);
             /*Ouch.*/
         }
     }
