@@ -50,7 +50,7 @@ void output_init(int w, int h){
 	/*sollte für alle Zeichen gelten (Festbreitenschrift)*/
 	TTF_SizeText(font, "a", &font_w, &font_h);
 	/*Screen erstellen, einen höher für Statusleiste*/
-	screen=SDL_SetVideoMode(OUTPUT_IN_GLYPHS_X*font_w, (OUTPUT_IN_GLYPHS_Y+1)*font_h, 24, SDL_HWSURFACE);
+	screen=SDL_SetVideoMode(OUTPUT_IN_GLYPHS_X*font_w, (OUTPUT_IN_GLYPHS_Y+1)*font_h, 16, SDL_HWSURFACE);
 	if(screen==NULL){
 		fprintf(stderr, "Kann keinen Output erstellen: %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
@@ -62,7 +62,8 @@ void output_init(int w, int h){
 
 /* gibt den Ausgabepuffer mittels SDL aus */
 void output_draw(BufferTile *buf, int tiles){
-	/*wenns eine Nachricht gibt, dafür Platz machen*/
+	output_clear();
+	/*wenns eine Nachricht gibt, dafür Platz machen*/	
 	int msg_lines;
 	if(msg!=NULL){
 		msg_lines=((strlen(msg)-1)/width)+1;
@@ -75,9 +76,9 @@ void output_draw(BufferTile *buf, int tiles){
 	while(tiles--){
 		/*Farbe*/
 		SDL_Color color;
-		color.r=buf->color<<24;
-		color.g=buf->color<<16;
-		color.b=buf->color<<8;
+		color.r = buf->color >> 24;
+		color.g = (buf->color >> 16) & 0xFF;
+		color.b = (buf->color >> 8) & 0xFF;
 		/*Text-Surface*/
 		char glyph_text[2];
 		glyph_text[0]=buf->glyph;
@@ -90,13 +91,13 @@ void output_draw(BufferTile *buf, int tiles){
 		/*auf den Screen bringen*/
 		SDL_Rect pos;
 		/*pos.w, pos.h werden nicht beachtet*/
-		pos.x=num*font_w;
-		pos.y=(num%width)*font_h;
+		pos.x=(num%width)*font_w;
+		pos.y=(num/width)*font_h;
 		if(SDL_BlitSurface(glyph_surf, NULL, screen, &pos)){
 			fprintf(stderr, "Fehler bei der Ausgabe: %s\n", SDL_GetError());
 			exit(EXIT_FAILURE);
 		}
-		free(glyph_surf);
+		SDL_FreeSurface(glyph_surf);
 		glyph_surf=NULL;
 		buf++;
 		num++;
