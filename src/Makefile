@@ -1,6 +1,6 @@
 include config.mk
 
-SRC = main.c item.c JSON_parser.c map.c map_loader.c memory.c spawn.c text_output.c tile.c
+SRC = action.c main.c item.c JSON_parser.c map.c map_loader.c memory.c spawn.c text_output.c tile.c
 OBJ = ${SRC:.c=.o}
 
 all: c37
