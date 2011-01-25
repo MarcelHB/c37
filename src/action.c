@@ -22,94 +22,87 @@ void process_event(SDL_Event *event, Map *map){
 	switch(event->key.keysym.sym){
 	case SDLK_UP:
 		npc=get_spawn_at(player->x,player->y-1, map);
+		player->direction=NORTH;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
 			if(tile_can_walk(*tile)){
 				player->y--;
-				player->direction=NORTH;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
-				player->direction=NORTH;
 			}
 		}
 		/*NPC in Laufrichtung*/
 		else{
 			spawn_spawn_collision(player,npc,map);
-			player->direction=NORTH;
 		}
 		break;
 	case SDLK_DOWN:
 		npc=get_spawn_at(player->x,player->y+1, map);
+		player->direction=SOUTH;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
 			if(tile_can_walk(*tile)){
 				player->y++;
-				player->direction=SOUTH;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
-				player->direction=SOUTH;
 			}
 		}
 		/*NPC in Laufrichtung*/
 		else{
 			spawn_spawn_collision(player,npc,map);
-			player->direction=SOUTH;
 		}
 		break;
 	case SDLK_LEFT:
 		npc=get_spawn_at(player->x-1,player->y, map);
+		player->direction=WEST;
 		/*kein NPC in Laufrichtung*/
+		player->direction=WEST;
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x-1+map->x*player->y]);
 			if(tile_can_walk(*tile)){
 				player->x--;
-				player->direction=WEST;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
-				player->direction=WEST;
 			}
 		}
 		/*NPC in Laufrichtung*/
 		else{
 			spawn_spawn_collision(player,npc,map);
-			player->direction=WEST;
 		}
 		break;
 	case SDLK_RIGHT:
 		npc=get_spawn_at(player->x+1,player->y, map);
+		player->direction=EAST;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x+1+map->x*player->y]);
 			if(tile_can_walk(*tile)){
 				player->x++;
-				player->direction=EAST;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
-				player->direction=EAST;
 			}
 		}
 		/*NPC in Laufrichtung*/
 		else{
 			spawn_spawn_collision(player,npc,map);
-			player->direction=EAST;
 		}
 		break;
 	case SDLK_SPACE:
