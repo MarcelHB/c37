@@ -11,7 +11,7 @@
 #include "map.h"
 #include "map_loader.h"
 #include "output_buffer.h"
-#include "text_output.h"
+#include "sdl_output.h"
 #include "action.h"
 #include "main.h"
 

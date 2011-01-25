@@ -11,6 +11,7 @@
 #include "spawn.h"
 #include "tile.h"
 #include "action.h"
+#include "sdl_output.h"
 
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(SDL_Event *event, Map *map){
@@ -142,6 +143,23 @@ void process_event(SDL_Event *event, Map *map){
 		else{
 			/*vll noch sowas wie spawn_toggle_spawn?*/
 		}
+		break;
+	case SDLK_PAGEUP:
+		/*Inventar durchschalten*/
+		if(player->inventory!=NULL && player->inventory_size!=0){
+			player->selected_item=(player->selected_item+1)%player->inventory_size;
+			update_item(player->inventory[player->selected_item]->name);
+		}
+		break;
+	case SDLK_PAGEDOWN:
+		if(player->inventory!=NULL && player->inventory_size!=0){
+			if(player->selected_item)
+				player->selected_item=player->selected_item-1;
+			else
+				player->selected_item=player->inventory_size-1;
+			update_item(player->inventory[player->selected_item]->name);
+		}
+
 		break;
 	default:
 		break;
@@ -279,6 +297,7 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map, char **c, int n) {
     } else if (tile->type == TILE_TYPE_WALL) {
         if (self->hp > 0) {
             --self->hp;
+	    update_hp(self-hp);
             /*Ouch.*/
         }
     }
@@ -291,6 +310,7 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
             if (self->hp > self->max_hp) {
                 self->hp = self->max_hp;
             }
+	    update_hp(self->hp);
             break;
         default:
             break;

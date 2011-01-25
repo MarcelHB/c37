@@ -35,6 +35,7 @@
 	/* Besitztümer */
 	Item** inventory;
 	unsigned int inventory_size;
+	unsigned int selected_item;
  } Spawn;
  
  /* verwendete Spawn-type identifier */

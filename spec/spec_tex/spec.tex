@@ -223,6 +223,7 @@ typedef struct Spawn {
 	void* properties;
 	Item** inventory;
 	unsigned int inventory_size;
+	unsigned int selected_item;
 } Spawn;
 		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
@@ -240,6 +241,7 @@ Elemente der Struktur:
 			\item properties - eine von \textit{type} abhängig geladene Struktur für zusätzliche Eigenschaften
 			\item inventory - Ein Array, dessen Adressen auf die Besitztümer zeigen.
 			\item inventory\_size - die Anzahl der Besitztümer
+			\item selected\_item - Index des momentan ausgewählten Items
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=free\_spawn]{}
@@ -597,9 +599,47 @@ void output_close();
 		\item[Rückgabe:] -
 	\end{description}
 
-	%----------------------------------------------------------------------------
-	\subsubsection*{text\_output.h}
-	Dieser Header stellt die selben Funktionen bereit wie sdl\_output.h, benutzt allerdings nicht SDL, sondern gibt die Karte einfach als Text auf der Konsole aus. Farben werden dabei ignoriert.
+		\begin{lstlisting}[caption=update\_hp]{}
+void update_hp(int h);
+		\end{lstlisting}
+
+	\begin{description}
+		\item[Verwendung:] Aktualisiert die Anzahl der Lebenspunkte, die beim nächsten Aufruf von output\_draw() in der Statusleiste angezeigt werden.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item h - neue Lebenspunkte
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+
+		\begin{lstlisting}[caption=update\_item]{}
+void update_item(char *item);
+		\end{lstlisting}
+
+	\begin{description}
+		\item[Verwendung:] Aktualisiert die Anzeige des Items, das beim nächsten Aufruf von output\_draw() in der Statusleiste angezeigt werden.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item item - Name des neuen Items
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+		
+		\begin{lstlisting}[caption=print\_msg]{}
+void print_msg(char *m);
+		\end{lstlisting}
+
+	\begin{description}
+		\item[Verwendung:] Speichert einen String, der beim nächsten Aufruf von output\_draw() über der Statusleiste angezeigt wird (und dabei wahrscheinlich
+			einen Teil des Spielfeldes überschreibt). Die Nachricht wird nur einen Aufruf von output\_draw() lang angezeigt und möglicherweise abgeschnitten,
+			wenn sie zu lang ist.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item m - die Nachricht
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+
 
 
 	%----------------------------------------------------------------------------

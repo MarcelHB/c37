@@ -17,5 +17,11 @@
  void output_clear();
  /* Ausgabedevices schließen */
  void output_close();
+ /* HP in der Statusleiste aktualisieren */
+ void update_hp(int);
+ /* Item in der Statusleiste aktualisieren */
+ void update_item(char*);
+ /* Mitteilung schreiben */
+ void print_msg(char*);
  
  #endif

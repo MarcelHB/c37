@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "globals.h"
 #include "map.h"
 #include "spawn.h"
 #include "tile.h"
