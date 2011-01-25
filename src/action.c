@@ -132,9 +132,21 @@ void process_event(SDL_Event *event, Map *map){
 			tile=&(map->tiles[player->x+1+map->x*player->y]);
 			break;
 		}
-		/*wenn kein NPC dasteht*/
-		if(npc==NULL){
-			toggle_tile(tile,map);
+		/* wenn kein NPC dasteht */
+		if(npc == NULL){
+			/* checken, ob Button, und ob von hier aus drückbar */
+			if(tile->type == TILE_TYPE_BUTTON) {
+				ButtonProperties* btn_props = (ButtonProperties*)tile->properties;
+				/* von Süden? Player guckt nach Norden */
+				if( (player->direction == NORTH && (btn_props->directions & SOUTH)) || 
+					(player->direction == SOUTH && (btn_props->directions & NORTH)) ||
+					(player->direction == EAST && (btn_props->directions & WEST)) || 
+					(player->direction == WEST && (btn_props->directions & EAST)) ) {
+					toggle_tile(tile, map);
+				}
+			} else {
+				toggle_tile(tile, map);
+			}
 		}
 		else{
 			/*vll noch sowas wie spawn_toggle_spawn?*/
