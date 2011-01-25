@@ -9,6 +9,7 @@
  #include "globals.h"
  #include "memory.h"
  #include "spawn.h"
+ #include "item.h"
  
  /*--------------------------------------------------------------------------*/
  void apply_spawn_defaults(Spawn* spawn) {

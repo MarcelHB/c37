@@ -1,10 +1,15 @@
-#include <math.h>
-#include <stdbool.h>
-#include <stdlib.h>
+﻿/**
+ * C-Projekt von Gruppe 37
+ * Autor:
+ * Datum:
+ * 
+ * map.c
+ */
 
-#include "map.h"
+#include "globals.h"
 #include "spawn.h"
 #include "tile.h"
+#include "map.h"
 
 Spawn *
 get_player_spawn (Map *self) {
@@ -20,9 +25,9 @@ get_player_spawn (Map *self) {
  * (fx, fy) -> (tx, ty)
  * Siehe: http://www.cs.unc.edu/~mcmillan/comp136/Lecture6/Lines.html (Step 1) */
 bool
-map_can_see (Map *ma, int fx, int fy, int tx, int ty) {
-    if (fx >= ma->x || fx < 0 || fy >= ma->y || fy < 0 ||
-        tx >= ma->x || tx < 0 || ty >= ma->y || ty < 0) return false;
+map_can_see (Map *ma, unsigned int fx, unsigned int fy, unsigned int tx, unsigned int ty) {
+    if (fx >= ma->x || fy >= ma->y ||
+        tx >= ma->x || ty >= ma->y ) return false;
     if (fx == tx && fy == ty) return true;
     int dx = tx - fx, dy = ty - fy;
     if (abs(dx) > abs(dy)) {
@@ -51,7 +56,7 @@ map_can_see (Map *ma, int fx, int fy, int tx, int ty) {
 
 /*---------------------------------------------------------------------------*/
 Spawn* get_spawn_at(unsigned int x, unsigned int y, Map* map) {
-	int i;
+	unsigned int i;
 	Spawn* spawn = NULL;
 	/* noch in Kartengröße? */
 	if(x >= map->x || y >= map->y) {
@@ -149,7 +154,7 @@ void explore_area(Spawn* spawn, Map* map) {
 	int x = spawn->x - (VISUAL_SQUARE/2);
 	int y = spawn->y - (VISUAL_SQUARE/2);
 	int i, j;
-
+	
 	for(i = y; i < y + VISUAL_SQUARE; ++i) {
 		for(j = x; j < x + VISUAL_SQUARE; ++j) {
 			if(x >= 0 && y >= 0 && x < map->x && y < map->y) {

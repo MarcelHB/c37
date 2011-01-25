@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include "memory.h"
 #include "globals.h"
 #include "SDL.h"
 #include "map.h"
@@ -20,19 +21,19 @@ void process_event(SDL_Event *event, Map *map){
 	/*Aktion des Spielers*/
 	switch(event->key.keysym.sym){
 	case SDLK_UP:
-		npc=get_spawn_at(player->x,player->y-1);
+		npc=get_spawn_at(player->x,player->y-1, map);
 		player->direction=NORTH;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y-1)]);
+			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
 			if(tile_can_walk(*tile)){
 				player->y--;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -41,19 +42,19 @@ void process_event(SDL_Event *event, Map *map){
 		}
 		break;
 	case SDLK_DOWN:
-		npc=get_spawn_at(player->x,player->y+1);
+		npc=get_spawn_at(player->x,player->y+1, map);
 		player->direction=SOUTH;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y+1)]);
+			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
 			if(tile_can_walk(*tile)){
 				player->y++;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -62,19 +63,20 @@ void process_event(SDL_Event *event, Map *map){
 		}
 		break;
 	case SDLK_LEFT:
-		npc=get_spawn_at(player->x-1,player->y);
+		npc=get_spawn_at(player->x-1,player->y, map);
+		player->direction=WEST;
 		/*kein NPC in Laufrichtung*/
 		player->direction=WEST;
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x-1+OUTPUT_IN_GLYPHS_X*player->y]);
+			tile=&(map->tiles[player->x-1+map->x*player->y]);
 			if(tile_can_walk(*tile)){
 				player->x--;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -83,19 +85,19 @@ void process_event(SDL_Event *event, Map *map){
 		}
 		break;
 	case SDLK_RIGHT:
-		npc=get_spawn_at(player->x+1,player->y);
+		npc=get_spawn_at(player->x+1,player->y, map);
 		player->direction=EAST;
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+1+OUTPUT_IN_GLYPHS_X*player->y]);
+			tile=&(map->tiles[player->x+1+map->x*player->y]);
 			if(tile_can_walk(*tile)){
 				player->x++;
 				explore_area(player,map);
 			}
 			/*mit alles anderem kollidieren*/
 			else{
-				spawn_tile_collision(player,tile,map,"",0);
+				spawn_tile_collision(player,tile,map,NULL,0);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -107,20 +109,20 @@ void process_event(SDL_Event *event, Map *map){
 		/*zu toggelnden Spawn/Tile feststellen*/
 		switch(player->direction){
 		case NORTH:
-			npc=get_spawn_at(player->x,player->y-1);
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y-1)]);
+			npc=get_spawn_at(player->x,player->y-1, map);
+			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
 			break;
 		case SOUTH:
-			npc=get_spawn_at(player->x,player->y+1);
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y+1)]);
+			npc=get_spawn_at(player->x,player->y+1, map);
+			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
 			break;
 		case WEST:
-			npc=get_spawn_at(player->x-1,player->y);
-			tile=&(map->tiles[player->x-1+OUTPUT_IN_GLYPHS_X*player->y]);
+			npc=get_spawn_at(player->x-1,player->y, map);
+			tile=&(map->tiles[player->x-1+map->x*player->y]);
 			break;
 		case EAST:
-			npc=get_spawn_at(player->x+1,player->y);
-			tile=&(map->tiles[player->x+1+OUTPUT_IN_GLYPHS_X*player->y]);
+			npc=get_spawn_at(player->x+1,player->y, map);
+			tile=&(map->tiles[player->x+1+map->x*player->y]);
 			break;
 		}
 		/* wenn kein NPC dasteht */
@@ -151,7 +153,7 @@ void process_event(SDL_Event *event, Map *map){
 	for(i=0;i<map->number_of_spawns;i++){
 		/*den Spieler auslassen*/
 		if(map->spawns[i]->npc)
-			spawn_action(map->spawns[i]);
+			spawn_action(map->spawns[i], map);
 	}
 }
 
@@ -246,7 +248,7 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
     if (SPAWN_TYPE_PLAYER == self->type && SPAWN_TYPE_HOUND == other->type) {
         if (other->hp <= 10) {
             Spawn **new_spawns = ex_calloc(map->number_of_spawns - 1, sizeof(Spawn *));
-            for (int ii = 0, jj = 0; ii < map->number_of_spawns; ++ii) {
+            for (unsigned int ii = 0, jj = 0; ii < map->number_of_spawns; ++ii) {
                 if (map->spawns[ii] != other) {
                     new_spawns[jj++] = map->spawns[ii];
                 }
@@ -271,7 +273,7 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map, char **c, int n) {
     if (tile_can_walk(*tile) && tile->number_of_items > 0) {
         /* Items aufsammeln. */
         self->inventory = ex_realloc(self->inventory, self->inventory_size + tile->number_of_items);
-        for (int ii = 0; ii < tile->number_of_items; ++ii) {
+        for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
             self->inventory[self->inventory_size + ii] = tile->items[ii];
         }
         free(tile->items);

@@ -1,12 +1,16 @@
 /**
- * C-Project von Gruppe 37
- *
+ * C-Projekt von Gruppe 37
+ * Autor:
+ * Datum:
+ * 
  * main.c
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "SDL.h"
+
+#include "memory.h"
 #include "globals.h"
 #include "map.h"
 #include "map_loader.h"
@@ -15,45 +19,59 @@
 #include "action.h"
 #include "main.h"
 
-static Map *map;
-static BufferTile *buf;
-
-int main(int argc, char *argv[]){
-	/*SDL anmachen*/
-	if(SDL_Init(SDL_INIT_VIDEO))
+int main (int argc, char *argv[]) {
+	Map* map;
+	int num_tiles = OUTPUT_IN_GLYPHS_X * OUTPUT_IN_GLYPHS_Y, i;
+	BufferTile* buf;
+	
+	if(SDL_Init(SDL_INIT_VIDEO)) {
 		return EXIT_FAILURE;
-	/*Karte laden*/
-	if(argc==2)
-		map=load_map(argv[1]);
+	}
+	
+	if(argc == 2) {
+		map = load_map(argv[1]);
+		if(map == NULL) {
+			fprintf(stderr, "Karte nicht ladbar!\n");
+			return EXIT_FAILURE;
+		}
+	}
 	else{
-		fprintf(stderr,"Kartennamen angeben");
+		fprintf(stderr, "Kartennamen angeben!\n");
 		return EXIT_FAILURE;
 	}
-	if(map == NULL) {
-		fprintf(stderr,"Fehler beim Laden der Karte");
-		return EXIT_FAILURE;
+	
+	/* Ausgabepuffer initialisieren */
+	buf = (BufferTile*)ex_malloc(sizeof(BufferTile) * num_tiles);
+	for(i = 0; i < num_tiles; ++i) {
+		BufferTile bt = {' ', 0x00000000};
+		buf[i] = bt;
 	}
-	/*Map zeichnen*/
-	int num_tiles=OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y;
+	
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y);
+	
+	explore_area(get_player_spawn(map), map);
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);
+	
 	/*Eingabeloop*/
 	SDL_Event event;
-	while(1){
-		if(!SDL_WaitEvent(&event))
-			return EXIT_FAILURE;
-		/*bei Escape beenden*/
-		if(event.key.keysym.sym==SDLK_ESCAPE)
-			break;
-		process_event(&event, map);
-		create_output_buffer(map, buf, num_tiles);
-		output_draw(buf, num_tiles);
+	while(SDL_WaitEvent(&event)){
+		if(event.type == SDL_KEYDOWN) {
+			/*bei Escape beenden*/
+			if(event.key.keysym.sym == SDLK_ESCAPE)
+				break;
+			process_event(&event, map);
+			create_output_buffer(map, buf, num_tiles);
+			output_draw(buf, num_tiles);
+		}
+		SDL_Delay(1);
 	}
-	/*aufräumen*/
-	output_clear();
+	
+	free(buf);
+	flush_map(map);
+	
 	output_close();
-	SDL_Quit();
+	SDL_Quit();		
 	return EXIT_SUCCESS;
 }
 
@@ -67,10 +85,10 @@ void create_output_buffer(Map* map, BufferTile* buf, int size) {
 		exit(1);
 	}
 	clear_output_buffer(buf, size);
-
+	
 	center_x = OUTPUT_IN_GLYPHS_X / 2 + 1; center_y = OUTPUT_IN_GLYPHS_Y / 2 + 1;
 	translated_x = center_x - spawn->x; translated_y = center_y - spawn->y;
-
+	
 	j = 0;
 	for(i = 0; i < size; ++i) {
 		unsigned int current_x, current_y;
