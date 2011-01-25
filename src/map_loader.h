@@ -84,6 +84,7 @@
  #define NODE_EXTERNAL					"ext"
  #define NODE_LOCKED					"locked"
  #define NODE_BREAKABLE					"breaks"
+ #define NODE_DEPTH						"depth"
  
  #define NODE_VALUE						"val"
  #define NODE_WEIGHT					"weight"
@@ -118,12 +119,14 @@
  #define STACK_BREAKABLE				0x00000017
  #define STACK_WEIGHT					0x00000018
  #define STACK_CAPACITY					0x00000019
+ #define STACK_DEPTH					0x00000020
 
  /* lesbare Tile-Type Namen */
  #define TILE_NAME_WALL					"w"
  #define TILE_NAME_FLOOR				"f"
  #define TILE_NAME_BUTTON				"btn"
  #define TILE_NAME_DOOR					"door"
+ #define TILE_NAME_WATER				"h2o"
  
  /* lesbare Spawn-Type Namen */
  #define SPAWN_NAME_PLAYER				"player"

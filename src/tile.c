@@ -64,6 +64,14 @@
 			tile->properties = malloc(sizeof(DoorProperties));
 			*(DoorProperties*)tile->properties = door_props;
 		}
+		/* Wasser */
+		else if(tile->type == TILE_TYPE_WATER) {
+			WaterProperties water_props = {
+				/*.depth = */0xFF
+			};
+			tile->properties = malloc(sizeof(WaterProperties));
+			*(WaterProperties*)tile->properties = door_props;
+		}
 	}
  }
  
@@ -100,6 +108,9 @@ bool
 tile_can_walk (Tile t) {
     switch (t.type) {
 		case TILE_TYPE_FLOOR:
+			return true;
+		case TILE_TYPE_WATER:
+			/* in die Kollision packen, wann man ertrinken soll */
 			return true;
         case TILE_TYPE_WALL:
             return ((WallProperties *)t.properties)->space ? true : false;

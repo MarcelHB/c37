@@ -765,6 +765,14 @@
 				btn_props->directions = (char)value->vu.integer_value;
 			}
 		}
+		/* Wasser */
+		else if(type == TILE_TYPE_WATER) {
+			WaterProperties* water_props = (WaterProperties*)map->tiles[parsed_tiles-1].properties;
+			/* Wassertiefe */
+			if(key == STACK_DEPTH) {
+				water_props->directions = (char)value->vu.integer_value;
+			}
+		}
 	}
 	else if(parent == STACK_ITEMS) {
 		Item* item = NULL;
@@ -1009,6 +1017,10 @@
 	/* Tür->kaputtbar */
 	else if (strcmp(name, NODE_BREAKABLE) == 0) {
 		return STACK_BREAKABLE;
+	}
+	/* Wasser->Tiefe */
+	else if (strcmp(name, NODE_DEPTH) == 0) {
+		return STACK_DEPTH;
 	}
 	return STACK_INVALID_INDEX;
  }

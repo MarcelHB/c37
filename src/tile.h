@@ -47,6 +47,7 @@
  #define TILE_TYPE_FLOOR				0x00000001
  #define TILE_TYPE_BUTTON				0x00000002
  #define TILE_TYPE_DOOR					0x00000003
+ #define TILE_TYPE_WATER				0x00000004
  
  #define TILE_GLYPH_WALL				'#'
  #define TILE_GLYPH_FLOOR				'.'
@@ -56,6 +57,7 @@
  #define TILE_GLYPH_DOOR_VERT_OPEN		'~'
  #define TILE_GLYPH_DOOR_HORIZ_CLOSED 	'-'
  #define TILE_GLYPH_DOOR_HORIZ_OPEN 	'/'
+ #define TILE_GLYPH_WATER				'~'
  
  /* Zuordnungstabellen von type -> defaults */
  struct TileDefault {
@@ -69,7 +71,8 @@
 	{TILE_TYPE_WALL, 0xAAAAAA00, TILE_GLYPH_WALL},
 	{TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
 	{TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
-	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED}
+	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED},
+	{TILE_TYPE_WATER, 0x00004400, TILE_GLYPH_WATER}
  };
  
  /* Gibt reservierten Speicher eines Tiles frei */
