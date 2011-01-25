@@ -52,7 +52,7 @@
 			
 			source_position.x = (tile->glyph % SDL_FONT_RECT_SIZE) * SDL_FONT_RECT_SIZE + 4;
 			source_position.y = (tile->glyph / SDL_FONT_RECT_SIZE) * SDL_FONT_RECT_SIZE + SDL_FONT_SPACE;
-			source_position.h = SDL_FONT_RECT_SIZE;
+			source_position.h = SDL_FONT_RECT_SIZE - SDL_FONT_SPACE;
 			source_position.w = SDL_FONT_RECT_SIZE / 2;
 			dest_position.x = (SDL_FONT_RECT_SIZE-4)*j;
 			dest_position.y = ( i  * SDL_FONT_RECT_SIZE);
