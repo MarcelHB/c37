@@ -127,10 +127,11 @@ void render_tile(BufferTile* buf, Tile* tile, Map* map) {
 			/* Wasser */
 			else if(tile->type == TILE_TYPE_WATER) {
 				/* Wasser färbt sich je nach Tiefe anders blau */
-				unsigned int blue = 0x44;
+				unsigned int blue = 0x66;
+				fprintf(stderr, "water: %c\n", buf->glyph);
 				WaterProperties* water_props = (WaterProperties*)tile->properties;
-				/* 8/11 ist etwa das richtige, wenn 0->0x44, 255->0xFF gelten soll */
-				blue += (water_props->depth * (8/11.0))
+				/* 0.6 ist etwa das richtige, wenn 0->0x66, 255->0xFF gelten soll */
+				blue += (water_props->depth * 0.6);
 				buf->color = (blue << 8);
 			}
 		}

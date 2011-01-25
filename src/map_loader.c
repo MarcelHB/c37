@@ -770,7 +770,7 @@
 			WaterProperties* water_props = (WaterProperties*)map->tiles[parsed_tiles-1].properties;
 			/* Wassertiefe */
 			if(key == STACK_DEPTH) {
-				water_props->directions = (char)value->vu.integer_value;
+				water_props->depth = (char)value->vu.integer_value;
 			}
 		}
 	}
@@ -1053,6 +1053,10 @@
 	/* Tür */
 	else if(strcmp(name, TILE_NAME_DOOR) == 0) {
 		return TILE_TYPE_DOOR;
+	}
+	/* Wasser */
+	else if(strcmp(name, TILE_NAME_WATER) == 0) {
+		return TILE_TYPE_WATER;
 	}
 	return TILE_TYPE_INVALID;
  }

@@ -40,6 +40,7 @@
  #include "tiles/wall.h"
  #include "tiles/button.h"
  #include "tiles/door.h"
+ #include "tiles/water.h"
  
  /* verwendete Tile-type identifier */
  #define TILE_TYPE_INVALID				0xFFFFFFFF
@@ -67,12 +68,12 @@
  };
  
  /* lediglich Intialisierungswerte */
- static const struct TileDefault tile_defaults[4] = {
+ static const struct TileDefault tile_defaults[5] = {
 	{TILE_TYPE_WALL, 0xAAAAAA00, TILE_GLYPH_WALL},
 	{TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
 	{TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
 	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED},
-	{TILE_TYPE_WATER, 0x00004400, TILE_GLYPH_WATER}
+	{TILE_TYPE_WATER, 0x00006600, TILE_GLYPH_WATER}
  };
  
  /* Gibt reservierten Speicher eines Tiles frei */

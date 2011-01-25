@@ -70,7 +70,7 @@
 				/*.depth = */0xFF
 			};
 			tile->properties = malloc(sizeof(WaterProperties));
-			*(WaterProperties*)tile->properties = door_props;
+			*(WaterProperties*)tile->properties = water_props;
 		}
 	}
  }
@@ -110,8 +110,8 @@ tile_can_walk (Tile t) {
 		case TILE_TYPE_FLOOR:
 			return true;
 		case TILE_TYPE_WATER:
-			/* in die Kollision packen, wann man ertrinken soll */
-			return true;
+			/* in die Kollision packen, wann man ertrinken soll, erstmal nicht */
+			return false;
         case TILE_TYPE_WALL:
             return ((WallProperties *)t.properties)->space ? true : false;
         case TILE_TYPE_DOOR:
