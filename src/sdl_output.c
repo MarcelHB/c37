@@ -24,7 +24,7 @@
  /*--------------------------------------------------------------------------*/
  void output_init(int x, int y) {
 	SDL_Init(SDL_INIT_VIDEO); 
-	screen = SDL_SetVideoMode(x * SDL_FONT_RECT_SIZE * SDL_FONT_RATIO, y * SDL_FONT_RECT_SIZE + (x - 1) * SDL_FONT_SPACE, 16, SDL_HWSURFACE);	
+	screen = SDL_SetVideoMode(x * SDL_FONT_RECT_SIZE * SDL_FONT_RATIO, y * SDL_FONT_RECT_SIZE, 16, SDL_HWSURFACE);	
 	size_x = x; size_y = y;
 	
 	SDL_WM_SetCaption("c37 (SDL)", NULL);

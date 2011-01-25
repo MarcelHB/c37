@@ -23,7 +23,10 @@
 	/*.name = */NULL, 
 	/*.tiles = */NULL,
 	/*.spawns = */NULL,
-	/*.number_of_spawns = */0
+	/*.number_of_spawns = */0,
+	/*.message_stream = */NULL,
+	/*.messages = */0,
+	/*.current_message = */0
  };
  static unsigned int array_depth = 0;
  static unsigned int has_root = 0;
@@ -113,6 +116,12 @@
 	}
 	free(map->spawns);
 	map->spawns = NULL;
+	
+	/* Messages */
+	for(i = 0; i < map->messages; ++i) {
+		free(map->message_stream[i]);
+	}
+	free(map->message_stream);
 	
 	free(map);
  }
@@ -214,7 +223,8 @@
 							/*.type = */SPAWN_TYPE_INVALID,
 							/*.properties = */NULL,
 							/*.inventory = */NULL,
-							/*.inventory_size = */0
+							/*.inventory_size = */0,
+							/*.current_item = */0
 					};
 					map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
 					map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
@@ -903,11 +913,11 @@
   * beim nächsten Parsen eh vergessen.
   */
  Map* finalize_map(Map* map) {
-	size_t map_size = sizeof(Map);
+	size_t map_size = sizeof(Map);	
 	map = (Map*)ex_malloc(map_size);
 	/* bewahre Pointer */
 	memcpy(map, &intermediate_map, map_size);
-	reset_intermediate_map();
+	reset_intermediate_map();	
 	return map;
  }
  

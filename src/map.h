@@ -27,6 +27,10 @@
 	/* Actors */
 	Spawn** spawns;
 	unsigned int number_of_spawns;
+	/* Messages */
+	char** message_stream;
+	unsigned int messages;
+	unsigned int current_message;
  } Map;
 
 bool map_can_see (Map *, unsigned int, unsigned int, unsigned int, unsigned int);

@@ -92,30 +92,30 @@
 	free(tile->properties);
  }
 
-bool
-tile_can_light (Tile t) {
-    switch (t.type) {
+/*--------------------------------------------------------------------------*/
+bool tile_can_light(Tile* t) {
+    switch (t->type) {
         case TILE_TYPE_WALL:
             return false;
         case TILE_TYPE_DOOR:
-            return ((DoorProperties *)t.properties)->open ? true : false;
+            return ((DoorProperties *)t->properties)->open ? true : false;
         default:
             return true;
     }
 }
 
-bool
-tile_can_walk (Tile t) {
-    switch (t.type) {
+/*--------------------------------------------------------------------------*/
+bool tile_can_walk(Tile* t) {
+    switch (t->type) {
         case TILE_TYPE_WATER:
             /* in die Kollision packen, wann man ertrinken soll */
             return false;
         case TILE_TYPE_FLOOR:
             return true;
         case TILE_TYPE_WALL:
-            return ((WallProperties *)t.properties)->space ? true : false;
+            return ((WallProperties *)t->properties)->space ? true : false;
         case TILE_TYPE_DOOR:
-            return ((DoorProperties *)t.properties)->open ? true : false;
+            return ((DoorProperties *)t->properties)->open ? true : false;
         default:
             return false;
     }
