@@ -43,10 +43,11 @@ int main(int argc, char *argv[]){
 		buf[i] = bt;
 	}
 	
-	explore_area(get_player_spawn(map), map);
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y);
+	explore_area(get_player_spawn(map), map);
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);
+	
 	/*Eingabeloop*/
 	SDL_Event event;
 	while(SDL_WaitEvent(&event)){
@@ -60,8 +61,9 @@ int main(int argc, char *argv[]){
 		}
 		SDL_Delay(1);
 	}
-	/*aufräumen*/
-	output_clear();
+	free(buf);
+	flush_map(map);
+	
 	output_close();
 	SDL_Quit();
 	return EXIT_SUCCESS;

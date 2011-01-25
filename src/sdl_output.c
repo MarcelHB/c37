@@ -11,6 +11,7 @@
 #include "globals.h"
 #include "output_buffer.h"
 #include "memory.h"
+#include "sdl_output.h"
 
 #define FONT "fonts/cour.ttf"
 #define FONT_SIZE 12
@@ -124,7 +125,7 @@ void output_draw(BufferTile *buf, int tiles){
 				fprintf(stderr, "Fehler bei der Ausgabe einer Nachricht: %s\n", SDL_GetError());
 				exit(EXIT_FAILURE);
 			}
-			free(msg_surf);
+			SDL_FreeSurface(msg_surf);
 			msg_surf=NULL;
 		}
 		msg=NULL;
@@ -154,7 +155,7 @@ void output_draw(BufferTile *buf, int tiles){
 		fprintf(stderr, "Fehler bei der Ausgabe der Stausleiste: %s\n",SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
-	free(status_surf);
+	SDL_FreeSurface(status_surf);
 	status_surf=NULL;
 	SDL_UpdateRect(screen, 0, 0, 0, 0);
 }
@@ -195,5 +196,5 @@ void output_clear(){
 /* Ausgabedevices schließen */
 void output_close(){
 	TTF_CloseFont(font);
-	/*SDL wird in der main zugemacht*/
+	SDL_FreeSurface(screen);
 }

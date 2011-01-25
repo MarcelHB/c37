@@ -27,7 +27,7 @@ void process_event(SDL_Event *event, Map *map){
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y-1)]);
+			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
 			if(tile_can_walk(*tile)){
 				player->y--;
 				explore_area(player,map);
@@ -48,7 +48,7 @@ void process_event(SDL_Event *event, Map *map){
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y+1)]);
+			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
 			if(tile_can_walk(*tile)){
 				player->y++;
 				explore_area(player,map);
@@ -69,7 +69,7 @@ void process_event(SDL_Event *event, Map *map){
 		player->direction=WEST;
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x-1+OUTPUT_IN_GLYPHS_X*player->y]);
+			tile=&(map->tiles[player->x-1+map->x*player->y]);
 			if(tile_can_walk(*tile)){
 				player->x--;
 				explore_area(player,map);
@@ -90,7 +90,7 @@ void process_event(SDL_Event *event, Map *map){
 		/*kein NPC in Laufrichtung*/
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+1+OUTPUT_IN_GLYPHS_X*player->y]);
+			tile=&(map->tiles[player->x+1+map->x*player->y]);
 			if(tile_can_walk(*tile)){
 				player->x++;
 				explore_area(player,map);
@@ -110,19 +110,19 @@ void process_event(SDL_Event *event, Map *map){
 		switch(player->direction){
 		case NORTH:
 			npc=get_spawn_at(player->x,player->y-1, map);
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y-1)]);
+			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
 			break;
 		case SOUTH:
 			npc=get_spawn_at(player->x,player->y+1, map);
-			tile=&(map->tiles[player->x+OUTPUT_IN_GLYPHS_X*(player->y+1)]);
+			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
 			break;
 		case WEST:
 			npc=get_spawn_at(player->x-1,player->y, map);
-			tile=&(map->tiles[player->x-1+OUTPUT_IN_GLYPHS_X*player->y]);
+			tile=&(map->tiles[player->x-1+map->x*player->y]);
 			break;
 		case EAST:
 			npc=get_spawn_at(player->x+1,player->y, map);
-			tile=&(map->tiles[player->x+1+OUTPUT_IN_GLYPHS_X*player->y]);
+			tile=&(map->tiles[player->x+1+map->x*player->y]);
 			break;
 		}
 		/* wenn kein NPC dasteht */
