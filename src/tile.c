@@ -105,7 +105,7 @@
 		free(hint_props->message);
 	}
 	/* Tür */
-	else if(tile->type == TILE_TYPE_HINT) {
+	else if(tile->type == TILE_TYPE_DOOR) {
 		/* Hint->message */
 		DoorProperties* door_props = (DoorProperties*)tile->properties;
 		free(door_props->key_id);

@@ -102,13 +102,16 @@
   */
  void flush_map(Map* map) {
 	unsigned int i;
+	unsigned int map_size = map->x * map->y;
+	
 	/* Name */
 	free(map->name);
 	
 	/* Kacheln */
-	for(i = 0; i < map->x * map->y; ++i) {
+	for(i = 0; i < map_size; ++i) {
 		free_tile(&(map->tiles[i]));
 	}
+	free(map->tiles);
 	map->tiles = NULL;
 	
 	/* Spawns */
@@ -117,6 +120,12 @@
 	}
 	free(map->spawns);
 	map->spawns = NULL;
+	
+	/* Messages */
+	for(i = 0; i < MESSAGE_STREAM_LIMIT; ++i) {
+		free(map->msg_hist[i]);
+	}
+	free(map->msg_hist);
 	
 	free(map);
  }

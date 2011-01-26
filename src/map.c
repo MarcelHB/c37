@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "globals.h"
+#include "memory.h"
 #include "map.h"
 #include "spawn.h"
 #include "tile.h"
@@ -157,7 +158,7 @@ void explore_area(Spawn* spawn, Map* map) {
 	
 	for(i = y; i < y + VISUAL_SQUARE; ++i) {
 		for(j = x; j < x + VISUAL_SQUARE; ++j) {
-			if(x < map->x && y < map->y) {
+			if(j < map->x && i < map->y) {
 				map->tiles[i * map->x + j].spotted = 1;
 			}
 		}
@@ -169,6 +170,8 @@ void push_msg(char *msg, Map *map){
 	++map->latest_msg;
 	map->latest_msg = map->latest_msg % MESSAGE_STREAM_LIMIT;
 	map->current_msg=map->latest_msg;
-	map->msg_hist[map->latest_msg]=msg;
+	free(map->msg_hist[map->latest_msg]);
+	map->msg_hist[map->latest_msg] = (char*)ex_calloc(strlen(msg) + 1, 1);
+	strcpy(map->msg_hist[map->latest_msg], msg);
 	update_msg(msg, 1);
 }
