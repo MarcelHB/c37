@@ -75,9 +75,12 @@
 		}
 		/* Info */
 		else if(tile->type == TILE_TYPE_HINT) {
+			char* default_message = "Nichts zu sagen...";
 			HintProperties hint_props = {
-				/*.message = */"Nichts zu sagen..."
+				/*.message = */NULL
 			};
+			hint_props.message = (char*)ex_calloc(strlen(default_message) + 1, 1);
+			strcpy(hint_props.message, default_message);
 			tile->properties = malloc(sizeof(HintProperties));
 			*(HintProperties*)tile->properties = hint_props;
 		}
