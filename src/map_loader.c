@@ -750,7 +750,7 @@
 			}
 		}
 		/* Hinweis */
-		else if(type == TILE_TYPE_BUTTON) {
+		else if(type == TILE_TYPE_HINT) {
 			HintProperties* hint_props = (HintProperties*)map->tiles[parsed_tiles-1].properties;
 			/* Heiweis->Nachricht */
 			if(key == STACK_MESSAGE) {
@@ -759,6 +759,15 @@
 				}
 				hint_props->message = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
 				strcpy(hint_props->message, value->vu.str.value);
+			}
+		}
+		/* Tür */
+		else if(type == TILE_TYPE_DOOR) {
+			DoorProperties* door_props = (DoorProperties*)map->tiles[parsed_tiles-1].properties;
+			/* Tür->KeyId */
+			if(key == STACK_KEY && door_props->key_id == NULL) {
+				door_props->key_id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+				strcpy(door_props->key_id, value->vu.str.value);
 			}
 		}
 	}
@@ -1031,6 +1040,10 @@
 	else if (strcmp(name, NODE_BREAKABLE) == 0) {
 		return STACK_BREAKABLE;
 	}
+	/* Tür->Schlüssel */
+	else if (strcmp(name, NODE_KEY) == 0) {
+		return STACK_KEY;
+	}
 	/* Wasser->Tiefe */
 	else if (strcmp(name, NODE_DEPTH) == 0) {
 		return STACK_DEPTH;
@@ -1098,6 +1111,10 @@
 	/* Heiltrank */
 	if(strcmp(name, ITEM_NAME_HEALTH_POTION) == 0) {
 		return ITEM_TYPE_HEALTH_POTION;
+	}
+	/* Schluessel */
+	else if(strcmp(name, ITEM_NAME_KEY) == 0) {
+		return ITEM_TYPE_KEY;
 	}
 	return ITEM_TYPE_INVALID;
  }

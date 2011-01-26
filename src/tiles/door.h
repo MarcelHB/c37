@@ -22,6 +22,8 @@
 	/* eintretbar? */
 	char breakable;
 	char broken;
+	/* Schluessel? */
+	char* key_id;
  } DoorProperties;
  
  #endif
