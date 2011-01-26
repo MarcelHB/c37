@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
 		buf[i] = bt;
 	}
 	
-	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y);
+	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y, map->name);
 	explore_area(get_player_spawn(map), map);
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);

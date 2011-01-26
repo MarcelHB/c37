@@ -14,7 +14,7 @@
 #include "sdl_output.h"
 
 #define FONT "fonts/cour.ttf"
-#define FONT_SIZE 12
+#define FONT_SIZE 18
 /*maximale Anzahl an Zeilen, die für Nachrichten überschrieben werden, danach abschneiden*/
 #define MAX_MSG_LINES 3
 
@@ -32,9 +32,9 @@ static int latest=0;
 
 /**
  * Macht die Ausgabe bereit zum Schreiben von Spielfeldern mit einer Breite von w
- * und einer Höhe von h Zeichen.
+ * und einer Höhe von h Zeichen und dem Title c37: mapname.
  */
-void output_init(int w, int h){
+void output_init(int w, int h, char *mapname){
 	/*SDL anmachen, falls es noch nicht ist*/
 	if(!SDL_WasInit(SDL_INIT_VIDEO)){
 		if(SDL_Init(SDL_INIT_VIDEO)){
@@ -52,6 +52,14 @@ void output_init(int w, int h){
 	/*sollte für alle Zeichen gelten (Festbreitenschrift)*/
 	TTF_SizeText(font, "a", &font_w, &font_h);
 	/*Screen erstellen, einen höher für Statusleiste*/
+	SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"),NULL);
+	if(mapname!=NULL){
+		char *title=(char *)ex_calloc(6+strlen(mapname), sizeof(char));
+		sprintf(title, "c37: %s", mapname);
+		SDL_WM_SetCaption(title, title);
+	}
+	else
+		SDL_WM_SetCaption("c37", "c37");
 	screen=SDL_SetVideoMode(OUTPUT_IN_GLYPHS_X*font_w, (OUTPUT_IN_GLYPHS_Y+1)*font_h, 16, SDL_HWSURFACE);
 	if(screen==NULL){
 		fprintf(stderr, "Kann keinen Output erstellen: %s\n", SDL_GetError());
@@ -184,7 +192,7 @@ void update_hp(int h){
  * Wenn item NULL ist, steht an der Stelle "--".
  */
 void update_item(char *item){
-	inv=(char *)realloc(inv, (strlen(item)+1)*sizeof(char));
+	inv=(char *)ex_realloc(inv, (strlen(item)+1)*sizeof(char));
 	strcpy(inv, item);
 }
 
@@ -195,7 +203,7 @@ void update_item(char *item){
  * Wenn l!=0 ist, wird die Nachricht als aktuell markiert.
  */
 void update_msg(char *m, int l){
-	msg=(char *)realloc(msg, (strlen(m)+1)*sizeof(char));
+	msg=(char *)ex_realloc(msg, (strlen(m)+1)*sizeof(char));
 	strcpy(msg,m);
 	latest=l;
 }

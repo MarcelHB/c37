@@ -30,7 +30,7 @@
 	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, übernimmt man die Kontrolle über eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und für die angenehmere Betrachtung und Diversifikation der Spielelemente zusätzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezüglich der Interaktion des Spielers mit der Umwelt finden über eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Öffnen einer Tür oder Aufheben eines Gegenstands.
 	\\
 	\\
-	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen, ebenso die darauf aufbauende Erweiterung \textit{SDL_ttf}. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
+	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen, ebenso die darauf aufbauende Erweiterung \textit{SDL\_ttf}. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
 	\newpage
 	\section*{Design}
 		\subsection*{Programmarchitektur}
@@ -553,7 +553,7 @@ void toggle_tile(Tile* tile, Map* map);
 	Dieser Header stellt Funktionen bereit, die die Ausgaberoutinen von \textit{SDL} wrappen. Er ist prinzipiell so aufgebaut, dass die Ausgabe unabhängig vom graphischen Backend geregelt werden kann.
 	
 		\begin{lstlisting}[caption=output\_init]{}
-void output_init(int width, int height);
+void output_init(int width, int height, char *mapname);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -562,6 +562,7 @@ void output_init(int width, int height);
 		\begin{itemize}
 			\item width - Breite der Map in Zeichen
 			\item height - Höhe der Map in Zeichen
+			\item mapname - Name der Map, der in der Titelleiste angezeigt werden soll
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}

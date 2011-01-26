@@ -10,7 +10,7 @@
  #define _C37_SDL_OUTPUT_H
  
  /* initialisiert Ausgabe */
- void output_init(int, int); 
+ void output_init(int, int, char*); 
  /* gibt den Ausgabepuffer mittels SDL aus */
  void output_draw(BufferTile*, int);
  /* löscht die Ausgabe */
