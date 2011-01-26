@@ -214,7 +214,8 @@
 							/*.type = */SPAWN_TYPE_INVALID,
 							/*.properties = */NULL,
 							/*.inventory = */NULL,
-							/*.inventory_size = */0
+							/*.inventory_size = */0,
+							/*.selected_item = */0
 					};
 					map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
 					map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
@@ -748,6 +749,18 @@
 				strcpy(btn_props->toggle_id, value->vu.str.value);
 			}
 		}
+		/* Hinweis */
+		else if(type == TILE_TYPE_BUTTON) {
+			HintProperties* hint_props = (HintProperties*)map->tiles[parsed_tiles-1].properties;
+			/* Heiweis->Nachricht */
+			if(key == STACK_MESSAGE) {
+				if(hint_props->message != NULL) {
+					free(hint_props->message);
+				}
+				hint_props->message = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+				strcpy(hint_props->message, value->vu.str.value);
+			}
+		}
 	}
  }
  
@@ -1022,6 +1035,10 @@
 	else if (strcmp(name, NODE_DEPTH) == 0) {
 		return STACK_DEPTH;
 	}
+	/* Hinweis->Nachricht */
+	else if (strcmp(name, NODE_MESSAGE) == 0) {
+		return STACK_MESSAGE;
+	}
 	return STACK_INVALID_INDEX;
  }
  
@@ -1057,6 +1074,10 @@
 	/* Wasser */
 	else if(strcmp(name, TILE_NAME_WATER) == 0) {
 		return TILE_TYPE_WATER;
+	}
+	/* Hinweis */
+	else if(strcmp(name, TILE_NAME_HINT) == 0) {
+		return TILE_TYPE_HINT;
 	}
 	return TILE_TYPE_INVALID;
  }

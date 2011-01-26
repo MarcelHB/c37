@@ -29,7 +29,7 @@
 	unsigned int number_of_spawns;
  } Map;
 
-bool map_can_see (Map *, int, int, int, int);
+bool map_can_see (Map *, unsigned int, unsigned int, unsigned int, unsigned int);
  
  /* Findet den Spieler */
  Spawn* get_player_spawn(Map*);
