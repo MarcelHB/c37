@@ -28,6 +28,7 @@ Architektur:
 |,-  : geschlossene Türen
 ~,/  : geöffnete Türen
 ~    : Wasser (je dunkler blau, desto tiefer)
+?    : Schrifttafel
 
 @    : Spielfigur (grün: fit, rot: gefährlich verletzt)
 *    : etwas zum Aufnehmen
@@ -44,6 +45,7 @@ nächstes Item               :   Einfügen
 vorherigese Item            :   Entfernen
 vorherige Nachricht         :   Bild-HOCH
 nächste Nachricht           :   Bilder-RUNTER
+mit der Umwelt interagieren :   Leertaste
 
 
 Abhängigkeiten
