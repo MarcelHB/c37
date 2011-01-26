@@ -7,7 +7,7 @@
 #..+..#  ####-~.~# #.....?   
 #######     #....# #.....#   
             ###### #~...~~~~~
-                   ###~###   
+                   ###-###   
                      #!#     
                      ###     
 */
@@ -17,17 +17,17 @@
 	"y":11,
 	"tiles": [
 		/* y: 0 */
-		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint","msg":"Ein Seil fuehrt hiervon weg."},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{}],
+		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint","msg":"Du siehst ein wegfuehrendes Seil."},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{}],
 		/* y: 1 */
 		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door","id":"sewer_door_01","ext":true},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{}],
 		/* y: 2 */
 		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f","items":[{"type":"hptn"}]},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"door","locked":true,"key":"sewer_key_01"},{"type":"f","brightness":170},{"type":"f","brightness":120},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
 		/* y: 3 */
-		[{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"w"},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"w"},{"type":"w"},{"type":"f","brightness":120},{"type":"f","brightness":120},{"type":"f","brightness":120},{"type":"f","brightness":120},{"type":"w"},{"type":"w","space":true,"brightness":90},{"type":"w","space":true,"brightness":90},{"type":"f","brightness":90},{"type":"f","brightness":90,"items":[{"type":"key","id":"sewer_key_02"}]},{"type":"w"}],
+		[{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"w"},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"w"},{"type":"w"},{"type":"f","brightness":120},{"type":"f","brightness":120},{"type":"f","brightness":120},{"type":"f","brightness":120},{"type":"w"},{"type":"w","space":true,"brightness":90},{"type":"w","space":true,"brightness":90},{"type":"f","brightness":90},{"type":"f","brightness":90,"items":[{"type":"key","id":"sewer_key_02","name":"Ausgangsschluessel"}]},{"type":"w"}],
 		/* y: 4 */
-		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"h2o","depth":80},{"type":"f"},{"type":"f","items":[{"type":"key","id":"sewer_key_01"}]},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f","brightness":170},{"type":"w"},{"type":"w","space":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"h2o","depth":80},{"type":"f"},{"type":"f","items":[{"type":"key","id":"sewer_key_01","name":"Schluessel Sektor 14C"}]},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f","brightness":170},{"type":"w"},{"type":"w","space":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
 		/* y: 5 */
-		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"btn","tid":"sewer_door_01"},{"type":"f"},{"type":"f"},{"type":"w"},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"door","horz":true},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"w"},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"hint","msg":"Traue nicht deinen Augen."},{},{},{}],
+		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"btn","tid":"sewer_door_01"},{"type":"f"},{"type":"f"},{"type":"w"},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"door","horz":true},{"type":"h2o","depth":80},{"type":"f"},{"type":"h2o","depth":80},{"type":"w"},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"hint","msg":"Verlass dich nicht auf deine Augen."},{},{},{}],
 		/* y: 6 */
 		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{},{},{}],
 		/* y: 7 */
