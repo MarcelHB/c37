@@ -28,6 +28,9 @@
 			break;
 		}
 	}
+    if (spawn->type == SPAWN_TYPE_HOUND) {
+        spawn->properties = ex_calloc(1, sizeof(HoundProperties));
+    }
  }
  
  /*--------------------------------------------------------------------------*/

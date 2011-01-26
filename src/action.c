@@ -189,16 +189,16 @@ spawn_run_ai (Spawn *self, Map *map) {
     if (map_can_see(map, self->x, self->y, player->x, player->y)) {
         props->targetx = player->x;
         props->targety = player->y;
+        props->has_target = true;
     }
     if (self->x == props->targetx && self->y == props->targety) {
-        props->targetx = -1;
-        props->targety = -1;
+        props->has_target = false;
     }
 
     if ((1 == abs(player->x - self->x) && 0 == abs(player->y - self->y)) ||
         (0 == abs(player->x - self->x) && 1 == abs(player->y - self->y))) {
-        /* adjacent, attack */
-    } else if (/*-1 != props->targetx && -1 != props->targety*/ 1) { // <- Das wird immer sonst eintreten (unsigned)
+        spawn_spawn_collision(self, player, map);
+    } else if (props->has_target) {
         int dx = props->targetx - self->x, dy = props->targety - self->y;
         if (abs(dx) >= abs(dy)) {
             if (0 < dx) {
@@ -224,7 +224,7 @@ spawn_run_ai (Spawn *self, Map *map) {
             nx = self->x;
             ny = self->y;
         }
-    } else if(0) {  // <-- und daher das nie (dann auch keine Warnungen)
+    } else {
         int dir = rand() % 4;
         switch (dir) {
             case 0: /* north */
