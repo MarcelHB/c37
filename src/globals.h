@@ -17,7 +17,7 @@
  /* interne Settings */
  #define OUTPUT_IN_GLYPHS_X 80
  #define OUTPUT_IN_GLYPHS_Y 25
- #define MESSAGE_STREAM_LIMIT 5
+ #define MESSAGE_STREAM_LIMIT 100
  
  /* einige Spielregeln */
  #define VISUAL_SQUARE 5

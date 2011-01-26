@@ -37,7 +37,9 @@
 	free(spawn->name);
 	free(spawn->id);
 	for(i = 0; i < spawn->inventory_size; ++i) {
-		free_item(spawn->inventory[i]);
+		if(spawn->inventory[i] != NULL) {
+			free_item(spawn->inventory[i]);
+		}
 	}
 	free(spawn->inventory);
 	free(spawn);

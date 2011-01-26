@@ -124,6 +124,37 @@ void process_event(SDL_Event *event, Map *map){
 			}
 		}
 		break;
+	/* aufwärts die Nachrichten scrollen */
+	case SDLK_PAGEUP:
+		if(map->current_message - 1 > map->current_message) {
+			map->current_message = map->messages - 1;
+		} else {
+			--map->current_message;
+		}
+		break;
+	/* abwärts die Nachrichten scrollen */
+	case SDLK_PAGEDOWN:
+		if(map->current_message + 1 >= map->messages) {
+			map->current_message = 0;
+		} else {
+			++map->current_message;
+		}
+		break;
+	/* Item nutzen */
+	case SDLK_u:
+		if(player->inventory != NULL && player->inventory[player->current_item] != NULL) {
+			spawn_uses_item(player, player->inventory[player->current_item], map);
+		}
+		break;
+	/* Item vorwärts schalten */
+	case SDLK_m:
+		next_inventory_item(player, 0);
+		break;
+	/* Item rückwärts schalten */
+	case SDLK_n:
+		next_inventory_item(player, 1);
+		break;
+	/* sonst gibts Warnungen über unhandeled Kram */
 	default:
 		break;
 	}
@@ -167,7 +198,7 @@ void spawn_run_ai (Spawn *self, Map *map) {
     if ((1 == abs(player->x - self->x) && 0 == abs(player->y - self->y)) ||
         (0 == abs(player->x - self->x) && 1 == abs(player->y - self->y))) {
         /* adjacent, attack */
-    } else if (-1 != props->targetx && -1 != props->targety) {
+    } else if (/*-1 != props->targetx && -1 != props->targety*/0) {  /* kann nie wahr werden? (ist immer > 0) */
         int dx = props->targetx - self->x, dy = props->targety - self->y;
         if (abs(dx) >= abs(dy)) {
             if (0 < dx) {
@@ -278,16 +309,31 @@ void spawn_tile_collision(Spawn *self, Tile *tile, Map *map) {
 	}
 	else {
 		if (tile->type == TILE_TYPE_FLOOR && tile->number_of_items > 0) {
+			unsigned int placed = 0, i, j;
+			
 			/* Items aufsammeln. */
-			self->inventory = ex_realloc(self->inventory, self->inventory_size + tile->number_of_items);
-			for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
-				char* item_message = (char*)ex_calloc(22 + strlen(tile->items[ii]->name), 1);				
-				self->inventory[self->inventory_size + ii] = tile->items[ii];
-				
-				sprintf(item_message, "Du hast aufgenommen: %s", tile->items[ii]->name);
+			/* Leere Slots auffuellen */
+			for(j = 0; j < tile->number_of_items; ++j) {
+				for(i = 0; i < self->inventory_size; ++i) {
+					if(self->inventory[i] == NULL) {
+						self->inventory[i] = tile->items[j];
+						++placed;
+					}
+				}
+			}
+			/* neuen Platz schaffen */
+			for(j = placed; j < tile->number_of_items; ++j) {
+				self->inventory = (Item**)ex_realloc(self->inventory, ++self->inventory_size * sizeof(Item*));
+				self->inventory[self->inventory_size - 1] = tile->items[j];
+			}
+			
+			for(i = 0; i < tile->number_of_items; ++i) {
+				char* item_message = (char*)ex_calloc(22 + strlen(tile->items[i]->name), 1);				
+				sprintf(item_message, "Du hast aufgenommen: %s", tile->items[i]->name);
 				message(map, item_message);
 				free(item_message);
 			}
+			
 			free(tile->items);
 			tile->number_of_items = 0;
 		}
@@ -296,17 +342,60 @@ void spawn_tile_collision(Spawn *self, Tile *tile, Map *map) {
 
 /*--------------------------------------------------------------------------*/
 void spawn_uses_item (Spawn *self, Item *item, Map *map) {
+	char delete = 0;
+	
     switch (item->type) {
         case ITEM_TYPE_HEALTH_POTION:
             self->hp += ((HealthPotionProperties *)item->properties)->capacity;
             if (self->hp > self->max_hp) {
                 self->hp = self->max_hp;
-				message(map, "Schluck! (Heiltrank)");
             }
+			message(map, "Schluck! (Heiltrank)");
+			delete = 1;
             break;
         default:
             break;
     }
+	
+	/* Item ist verbraucht */
+	if(delete == 1) {
+		unsigned int i;
+		for(i = 0; i < self->inventory_size; ++i) {
+			if(item == self->inventory[i]) {
+				free(self->inventory[i]);
+				self->inventory[i] = NULL;
+				next_inventory_item(self, 1);
+				break;
+			}
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------*/
+void next_inventory_item(Spawn* spawn, int backwards) {
+	unsigned int cycle = 0;
+	while(cycle <= spawn->inventory_size) {
+		if(backwards) {
+			if(spawn->current_item - 1 > spawn->current_item) {
+				spawn->current_item = spawn->inventory_size - 1;
+			} else {
+				--spawn->current_item;
+			}
+			if(spawn->inventory[spawn->current_item] != NULL) {
+				break;
+			}
+		} else {
+			if(spawn->current_item + 1 == spawn->inventory_size) {
+				spawn->current_item = 0;
+			} else {
+				++spawn->current_item;
+			}
+			if(spawn->inventory[spawn->current_item] != NULL) {
+				break;
+			}
+		}
+		++cycle;
+	}
 }
 
 /*--------------------------------------------------------------------------*/

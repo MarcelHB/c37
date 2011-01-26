@@ -33,5 +33,6 @@ void spawn_tile_collision(Spawn*, Tile*, Map*);
 void toggle_tile(Tile*, Map*);
 
 void spawn_run_ai (Spawn *, Map *);
+void next_inventory_item(Spawn*, int);
 
 #endif
