@@ -23,5 +23,7 @@
  void update_item(char*);
  /* Mitteilung schreiben */
  void print_msg(char*);
+ /* GAME OVER */
+ void game_over();
  
  #endif

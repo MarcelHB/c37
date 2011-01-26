@@ -14,6 +14,6 @@ c37: ${OBJ}
 	${CC} -o ../$@ ${OBJ} ${LDFLAGS}
 
 clean:
-	rm -f c37 ${OBJ}
+	rm -f ../c37 ${OBJ}
 
 .PHONY: all clean

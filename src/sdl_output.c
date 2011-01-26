@@ -188,6 +188,43 @@ void print_msg(char *m){
 	msg=m;
 }
 
+/**
+ * Großes rotes GAME OVER
+ */
+void game_over(){
+	/*größere Schrift*/
+	int size;
+	if(FONT_SIZE*height>(FONT_SIZE*width)/9)
+		size=(FONT_SIZE*width)/18;
+	else
+		size=(FONT_SIZE*height)/2;
+	TTF_CloseFont(font);
+	font=TTF_OpenFont(FONT, size);
+	TTF_SizeText(font, "a", &font_w, &font_h);
+	if(font==NULL){
+		fprintf(stderr, "Schrift kann nicht geladen werden: %s\n", TTF_GetError());
+		exit(EXIT_FAILURE);
+	}
+	/*Ausgabe*/
+	SDL_Color red;
+	red.r=255; red.g=red.b=0;
+	SDL_Surface *go_surf=TTF_RenderText_Solid(font, "GAME OVER", red);
+	if(go_surf==NULL){
+		fprintf(stderr, "Fehler beim Darstellen von \"GAME OVER\": %s\n", TTF_GetError());
+		exit(EXIT_FAILURE);
+	}
+	SDL_Rect pos;
+	pos.x=(screen->w-(font_w*9))/2;
+	pos.y=(screen->h-font_h)/2;
+	if(SDL_BlitSurface(go_surf, NULL, screen, &pos)){
+		fprintf(stderr, "Fehler bei der Ausgabe: %s\n", SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
+	SDL_FreeSurface(go_surf);
+	go_surf=NULL;
+	SDL_UpdateRect(screen, 0, 0, 0, 0);
+}
+
 /* löscht die Ausgabe */
 void output_clear(){
 	SDL_FillRect(screen, NULL, 0);

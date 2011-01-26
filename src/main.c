@@ -22,15 +22,16 @@ int main(int argc, char *argv[]){
 	/*SDL anmachen*/
 	if(SDL_Init(SDL_INIT_VIDEO))
 		return EXIT_FAILURE;
+	SDL_EnableKeyRepeat(200, 50);
 	/*Karte laden*/
 	if(argc==2)
 		map=load_map(argv[1]);
 	else{
-		fprintf(stderr,"Kartennamen angeben");
+		fprintf(stderr,"Kartennamen angeben\n");
 		return EXIT_FAILURE;
 	}
 	if(map == NULL) {
-		fprintf(stderr,"Fehler beim Laden der Karte");
+		fprintf(stderr,"Fehler beim Laden der Karte\n");
 		return EXIT_FAILURE;
 	}
 	/*Map zeichnen*/
@@ -50,16 +51,33 @@ int main(int argc, char *argv[]){
 	
 	/*Eingabeloop*/
 	SDL_Event event;
+	int quit=0;
 	while(SDL_WaitEvent(&event)){
 		if(event.type == SDL_KEYDOWN) {
 			/*bei Escape beenden*/
-			if(event.key.keysym.sym == SDLK_ESCAPE)
+			if(event.key.keysym.sym == SDLK_ESCAPE){
+				quit=1;
 				break;
+			}
 			process_event(&event, map);
 			create_output_buffer(map, buf, num_tiles);
 			output_draw(buf, num_tiles);
 		}
 		SDL_Delay(1);
+		/*Affe tot => Klappe zu*/
+		if(get_player_spawn(map)->hp==0){
+			game_over();
+			break;
+		}
+	}
+	if(!quit){
+		while(SDL_WaitEvent(&event)){
+			/*bei Escape beenden*/
+			if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+				break;
+			}
+			SDL_Delay(1);
+		}
 	}
 	free(buf);
 	flush_map(map);
