@@ -35,6 +35,7 @@ void process_event(SDL_Event *event, Map *map){
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
+				push_msg("Kopf -> Wand", map);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -56,6 +57,7 @@ void process_event(SDL_Event *event, Map *map){
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
+				push_msg("Kopf -> Wand", map);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -77,6 +79,7 @@ void process_event(SDL_Event *event, Map *map){
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
+				push_msg("Kopf -> Wand", map);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -98,6 +101,7 @@ void process_event(SDL_Event *event, Map *map){
 			/*mit alles anderem kollidieren*/
 			else{
 				spawn_tile_collision(player,tile,map,NULL,0);
+				push_msg("Kopf -> Wand", map);
 			}
 		}
 		/*NPC in Laufrichtung*/
@@ -160,7 +164,17 @@ void process_event(SDL_Event *event, Map *map){
 				player->selected_item=player->inventory_size-1;
 			update_item(player->inventory[player->selected_item]->name);
 		}
-
+		break;
+	case SDLK_INSERT:
+		/*durch die History scrollen, nicht wrappen*/
+		if(map->current_msg!=map->latest_msg && map->msg_hist[map->current_msg+1]!=NULL){
+			map->current_msg++;
+			update_msg(map->msg_hist[map->current_msg], map->current_msg==map->latest_msg);
+		}
+		break;
+	case SDLK_DELETE:
+		if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
+			update_msg(map->msg_hist[--map->current_msg], 0);
 		break;
 	default:
 		break;

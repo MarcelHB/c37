@@ -21,8 +21,8 @@
  void update_hp(int);
  /* Item in der Statusleiste aktualisieren */
  void update_item(char*);
- /* Mitteilung schreiben */
- void print_msg(char*);
+ /* Mitteilung aktualisieren */
+ void update_msg(char*, int);
  /* GAME OVER */
  void game_over();
  

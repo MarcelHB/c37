@@ -28,6 +28,7 @@ static SDL_Surface *screen;
 static unsigned int hp=100;
 static char *inv=NULL;
 static char *msg=NULL;
+static int latest=0;
 
 /**
  * Macht die Ausgabe bereit zum Schreiben von Spielfeldern mit einer Breite von w
@@ -106,13 +107,22 @@ void output_draw(BufferTile *buf, int tiles){
 	SDL_Color white;
 	white.r=white.g=white.b=255;
 	/*Nachricht*/
-	if(msg!=NULL){
+	if(msg!=NULL && strlen(msg)!=0){
+		char *msg_tmp=msg;
 		while(msg_lines--){
 			char *tmp=(char *)ex_calloc(width+1, sizeof(char));
 			strncpy(tmp, msg, width);
 			tmp[width]='\0';
 			msg+=width;
-			SDL_Surface *msg_surf=TTF_RenderText_Solid(font, tmp, white);
+			SDL_Surface *msg_surf;
+			/*aktuelle Nachricht orange machen*/
+			if(latest){
+				SDL_Color orange;
+				orange.r=255; orange.g=200; orange.b=0;
+				msg_surf=TTF_RenderText_Solid(font, tmp, orange);
+			}
+			else
+				msg_surf=TTF_RenderText_Solid(font, tmp, white);
 			free(tmp);
 			if(msg_surf==NULL){
 				fprintf(stderr, "Fehler beim Darstellen einer Nachricht: %s\n", TTF_GetError());
@@ -120,7 +130,7 @@ void output_draw(BufferTile *buf, int tiles){
 			}
 			SDL_Rect pos;
 			pos.x=0;
-			pos.y=(height-msg_lines)*font_h;
+			pos.y=(height-msg_lines-1)*font_h;
 			if(SDL_BlitSurface(msg_surf, NULL, screen, &pos)){
 				fprintf(stderr, "Fehler bei der Ausgabe einer Nachricht: %s\n", SDL_GetError());
 				exit(EXIT_FAILURE);
@@ -128,7 +138,7 @@ void output_draw(BufferTile *buf, int tiles){
 			SDL_FreeSurface(msg_surf);
 			msg_surf=NULL;
 		}
-		msg=NULL;
+		msg=msg_tmp;
 	}
 	/*Statusleiste, width sollte mindestens 18 sein*/
 	if(width<18){
@@ -174,18 +184,20 @@ void update_hp(int h){
  * Wenn item NULL ist, steht an der Stelle "--".
  */
 void update_item(char *item){
-	inv=(char *)ex_realloc(inv, sizeof(char)*(strlen(item)+1));
-	strcpy(inv,item);
+	inv=(char *)realloc(inv, (strlen(item)+1)*sizeof(char));
+	strcpy(inv, item);
 }
 
 /**
  * Beim der nächsten Aktualisierung des Bildschirms erscheint die Nachricht m
  * über der Statusleiste (und überschreibt dabei wahrscheinlich einen Teil des Spielfelds).
- * Die Nachricht verschwindet bei der darauffolgenden Aktualisierung wieder.
- * Muss vor output_draw aufgerufen werden, da diese dir Nachricht auf NULL setzt.
+ * Muss vor output_draw aufgerufen werden, damit die Nachricht noch erscheint.
+ * Wenn l!=0 ist, wird die Nachricht als aktuell markiert.
  */
-void print_msg(char *m){
-	msg=m;
+void update_msg(char *m, int l){
+	msg=(char *)realloc(msg, (strlen(m)+1)*sizeof(char));
+	strcpy(msg,m);
+	latest=l;
 }
 
 /**

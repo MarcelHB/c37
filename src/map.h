@@ -27,6 +27,10 @@
 	/* Actors */
 	Spawn** spawns;
 	unsigned int number_of_spawns;
+	/* Message-History */
+	char** msg_hist;
+	int latest_msg;
+	int current_msg;
  } Map;
 
 bool map_can_see (Map *, int, int, int, int);
@@ -39,5 +43,7 @@ bool map_can_see (Map *, int, int, int, int);
  void explore_area(Spawn*, Map*);
  /* schreibt die tatsächliche Anzeige (Spawns/Items drauf?) auf diesem Tile auf den BufferTile */
  void render_tile(BufferTile*, Tile*, Map*);
+ /*neue Nachricht auf die History packen*/
+ void push_msg(char *msg, Map *map);
 
 #endif

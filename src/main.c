@@ -34,6 +34,8 @@ int main(int argc, char *argv[]){
 		fprintf(stderr,"Fehler beim Laden der Karte\n");
 		return EXIT_FAILURE;
 	}
+	map->current_msg=map->latest_msg=0;
+	map->msg_hist=ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
 	/*Map zeichnen*/
 	int num_tiles = OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y, i;
 	

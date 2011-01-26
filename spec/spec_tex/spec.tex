@@ -447,6 +447,21 @@ void toggle_tile(Tile* tile, Map* map);
 		\item[Rückgabe:] -
 	\end{description}
 	
+		\begin{lstlisting}[caption=push\_msg]{}
+void push_msg(char* msg, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Fügt den String \textit{msg} als neuesten Eintrag der Message-History hinzu.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item msg - neue Nachricht
+			\item map - die Map, die die History enthält
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+
+	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{map\_loader.h}
@@ -625,17 +640,17 @@ void update_item(char *item);
 		\item[Rückgabe:] -
 	\end{description}
 		
-		\begin{lstlisting}[caption=print\_msg]{}
-void print_msg(char *m);
+		\begin{lstlisting}[caption=update\_msg]{}
+void update_msg(char *m, int l);
 		\end{lstlisting}
 
 	\begin{description}
 		\item[Verwendung:] Speichert einen String, der beim nächsten Aufruf von output\_draw() über der Statusleiste angezeigt wird (und dabei wahrscheinlich
-			einen Teil des Spielfeldes überschreibt). Die Nachricht wird nur einen Aufruf von output\_draw() lang angezeigt und möglicherweise abgeschnitten,
-			wenn sie zu lang ist.
+			einen Teil des Spielfeldes überschreibt). Die Nachricht wird möglicherweise abgeschnitten, wenn sie zu lang ist.
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item m - die Nachricht
+			\item l - Flag, obs eine akutelle Nachricht ist
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}

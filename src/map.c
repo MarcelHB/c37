@@ -6,6 +6,7 @@
 #include "map.h"
 #include "spawn.h"
 #include "tile.h"
+#include "sdl_output.h"
 
 Spawn *
 get_player_spawn (Map *self) {
@@ -158,4 +159,12 @@ void explore_area(Spawn* spawn, Map* map) {
 			}
 		}
 	}
+}
+
+/*---------------------------------------------------------------------------*/
+void push_msg(char *msg, Map *map){
+	map->latest_msg=(++map->latest_msg)%MESSAGE_STREAM_LIMIT;
+	map->current_msg=map->latest_msg;
+	map->msg_hist[map->latest_msg]=msg;
+	update_msg(msg, 1);
 }
