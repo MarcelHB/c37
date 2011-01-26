@@ -9,6 +9,7 @@
 #include <stdbool.h>
  
  #include "globals.h"
+ #include "memory.h"
  #include "tile.h"
  #include "tiles/button.h"
  #include "tiles/door.h"
@@ -104,7 +105,7 @@
 		free(hint_props->message);
 	}
 	/* Tür */
-	else if(tile->type == TILE_TYPE_HINT) {
+	else if(tile->type == TILE_TYPE_DOOR) {
 		/* Hint->message */
 		DoorProperties* door_props = (DoorProperties*)tile->properties;
 		free(door_props->key_id);

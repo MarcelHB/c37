@@ -160,7 +160,7 @@ void explore_area(Spawn* spawn, Map* map) {
 	
 	for(i = y; i < y + VISUAL_SQUARE; ++i) {
 		for(j = x; j < x + VISUAL_SQUARE; ++j) {
-			if(x < map->x && y < map->y) {
+			if(j < map->x && i < map->y) {
 				map->tiles[i * map->x + j].spotted = 1;
 			}
 		}

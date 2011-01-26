@@ -101,13 +101,16 @@
   */
  void flush_map(Map* map) {
 	unsigned int i;
+	unsigned int map_size = map->x * map->y;
+	
 	/* Name */
 	free(map->name);
 	
 	/* Kacheln */
-	for(i = 0; i < map->x * map->y; ++i) {
+	for(i = 0; i < map_size; ++i) {
 		free_tile(&(map->tiles[i]));
 	}
+	free(map->tiles);
 	map->tiles = NULL;
 	
 	/* Spawns */
