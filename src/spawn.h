@@ -9,6 +9,7 @@
  #ifndef _C37_SPAWN_H
  #define _C37_SPAWN_H
  
+#include <stdbool.h>
  #include "item.h"
 
  typedef struct Spawn {
@@ -62,6 +63,7 @@
 
 typedef struct HoundProperties {
     unsigned int targetx, targety;
+    bool has_target;
 } HoundProperties;
  
  /* Gibt reservierten Speicher eines Spawns frei */
