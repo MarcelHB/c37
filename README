@@ -1,23 +1,61 @@
-﻿C-Projekt der Gruppe 37
-=======================
+﻿                                  ,----, 
+            .--,-``-.           .'   .`| 
+           /   /     '.      .'   .'   ; 
+          / ../        ;   ,---, '    .' 
+          \ ``\  .`-    '  |   :     ./  
+           \___\/   \   :  ;   | .'  /   
+   ,---.        \   :   |  `---' /  ;    
+  /     \       /  /   /     /  ;  /     
+ /    / '       \  \   \    ;  /  /      
+.    ' /    ___ /   :   |  /  /  /       
+'   ; :__  /   /\   /   :./__;  /        
+'   | '.'|/ ,,/  ',-    .|   : /         
+|   :    :\ ''\        ; ;   |/          
+ \   \  /  \   \     .'  `---'           
+  `----'    `--`-,,-'                    
+                                         
 
-Bitte:
-- Änderungen an den Dokumenten so schnell wies geht hier pushen!
-- Für gewagte Experimente bitte erstmal neue Branches erstellen oder eine Demo bauen.
-- Commits einigermaßen beschreiben.
-- Build-paths mit Zwischen-/Logfiles o.ä. in die ".gitignore" eintragen.
-- Ausgenommen die *.o-Dateien, die mit abgegeben werden sollen.
-- Spec up-to-date halten
+c37 ist ein kleines Adventure, das im Rogue-like-Stil gehalten ist - sämtliche Spielelemente sind als ASCII-Zeichen dargestellt, das Spiel ist rundenbasiert. Das Ziel einer Karte ist es, vom Start aus das Ende des Levels zu erreichen. Dabei ist es oft nötig, kleine Schalträtsel zu lösen oder den richtigen Weg zu finden.
 
-Struktur:
-- /fonts : Font-Bitmaps für Schriften
-- /maps : Karten für das Hauptspiel
-- /spec : TeX-Projekt zum Spezifikations-PDF
-- /src : Sourcen und Header
-- /tests : Testumgebung
-- README : Diese Datei
-- LICENSE: verwendete und anzugebende Lizenzen
 
-TODO:
-- Spezifikation ggf. überarbeiten
-- Makefiles
+Erläuterungen der ASCII-Zeichen
+================================
+
+Architektur:
+#    : Wand (wirklich?)
+.    : begehbarer Raum
++    : Schalter
+|,-  : geschlossene Türen
+~,/  : geöffnete Türen
+~    : Wasser (je dunkler blau, desto tiefer)
+
+@    : Spielfigur (grün: fit, rot: gefährlich verletzt)
+*    : etwas zum Aufnehmen
+!    : Ausgang
+a-z  : nicht-humanoides Monster
+
+
+Bedienung
+===================
+
+Bewegung                    :   Pfeiltasten
+ausgewähltes Item benutzen  :   Return
+nächstes Item               :   Einfügen
+vorherigese Item            :   Entfernen
+vorherige Nachricht         :   Bild-HOCH
+nächste Nachricht           :   Bilder-RUNTER
+
+
+Abhängigkeiten
+===================
+
+- SDL
+- SDL_ttf
+
+
+Start
+===================
+
+>> c37 <Kartenname>
+
+Dabei ist der Dateiname der Karte ohne die Endung '.json' anzugeben.

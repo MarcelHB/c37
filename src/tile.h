@@ -56,7 +56,6 @@
  #define TILE_GLYPH_WALL				'#'
  #define TILE_GLYPH_FLOOR				'.'
  #define TILE_GLYPH_BUTTON				'+'
- #define TILE_GLYPH_BUTTON				'+'
  #define TILE_GLYPH_DOOR_VERT_CLOSED	'|'
  #define TILE_GLYPH_DOOR_VERT_OPEN		'~'
  #define TILE_GLYPH_DOOR_HORIZ_CLOSED 	'-'

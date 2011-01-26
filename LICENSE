@@ -1,5 +1,5 @@
 c37 - https://github.com/MarcelHB/c37
-====
+=====================================:
 
 Copyright (c) 2011 Group 37 of "procedural programming" at 
 Hamburg University of Technology (TUHH) in WS10/11
@@ -24,7 +24,8 @@ misrepresented as being the original software.
 distribution.
 
 Simple DirectMedia Layer (SDL) - http://www.libsdl.org/
-==============================
+SDL_ttf - http://www.libsdl.org/projects/SDL_ttf/
+=======================================================:
 
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999
@@ -530,7 +531,7 @@ necessary.  Here is a sample; alter the names:
 That's all there is to it!
 
 JSON-Parser - http://fara.cs.uni-potsdam.de/~jsg/json_parser/
-===========
+=============================================================:
 
 Copyright (c) 2005 JSON.org
 

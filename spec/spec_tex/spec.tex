@@ -30,7 +30,7 @@
 	Das Programm \textit{c37} ist ein kleines Abenteuerspiel. Ohne in einem weiteren Kontext zu stehen, übernimmt man die Kontrolle über eine Spielfigur, die sich durch eine zweidimensionale Ebene bewegen kann. Die Spielwelt wird dabei aus einer Perspektive beobachtet, die senkrecht zur Spielwelt steht. Zur Darstellung der Spielfigur und der Umwelt werden dabei Zeichen aus dem ASCII-Zeichensatz und für die angenehmere Betrachtung und Diversifikation der Spielelemente zusätzlich Farben verwendet. Damit orientiert sich \textit{c37} an der Familie der \textit{Rogue-like}-Spiele. Die Steuerung der Spielfigur erfolgt durch die Tastatur, detaillierte Informationen bezüglich der Interaktion des Spielers mit der Umwelt finden über eine Textausgabe am Spielfeldrand statt. Interaktionen sind beispielsweise das Öffnen einer Tür oder Aufheben eines Gegenstands.
 	\\
 	\\
-	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
+	\textit{c37} ist grundsätzlich nicht auf bestimmte Plattformen beschränkt, verwendet jedoch für Tastaturevents und den graphischen Ausgabemodus die \textit{Simple DirectMedia Layer}-Bibliothek, ist also auf deren Verfügbarkeit angewiesen, ebenso die darauf aufbauende Erweiterung \textit{SDL_ttf}. Das Format, in dem die Karten abgespeichert sind, ist die \textit{JavaScript Object Notation} (JSON). Zum Parsen dieser wird eine frei verfügbare Fremdkomponente von \textit{json.org} verwendet. Der Grund für die Verwendung von JSON liegt darin, dass dieses Format im Gegensatz zu etwa XML wenig Overhead besitzt, einfach per Hand editierbar ist und eine Implementation eines eigenen Text- oder Binärformats einen höheren Zeitaufwand und größere Risiken unentdeckter Sicherheitslücken darstellt.
 	\newpage
 	\section*{Design}
 		\subsection*{Programmarchitektur}
@@ -153,7 +153,7 @@ Elemente der Struktur:
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{item.h}
-	Hier wird eine Struktur definiert, die Gegenstände in der Welt darstellt, die entweder herumliegen oder aufgenommen sind. Dieser Header lädt zusätzlich Item-Property-Structs aus dem Verzeichnis \textit{items}.
+	Hier wird eine Struktur definiert, die Gegenstände in der Welt darstellt, die entweder herumliegen oder aufgenommen sind. Dieser Header lädt zusätzlich Item-Property-Structs aus dem Verzeichnis \textit{items}. Zusätzlich werden hier die Konstanten für bekannte Item-Typen und Standardinitialisierungswerte gesetzt.
 	
 	\begin{lstlisting}[caption=Item]{}
 typedef struct Item {
@@ -208,7 +208,8 @@ void free_item(Item* item);
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{spawn.h}
-	Ein \textit{Spawn} ist eine Struktur, die grundsätzlich alle Informationen enthält, die für spielbare und nichtspielbare Figuren benötigt werden.
+	Ein \textit{Spawn} ist eine Struktur, die grundsätzlich alle Informationen enthält, die für spielbare und nichtspielbare Figuren benötigt werden. Zusätzlich werden hier die Konstanten für bekannte Spawn-Typen und Standardinitialisierungswerte gesetzt.	
+	
 	\begin{lstlisting}[caption=Spawn]{}
 typedef struct Spawn {
 	char* id;
@@ -260,7 +261,7 @@ void free_spawn(Spawn* spawn);
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{tile.h}
-Die \textit{Tile}-Struktur beschreibt eine Kachel des Spielfelds, das aufgrund seiner Beschaffenheit für die Spiellogik wichtig ist. Die Art und der Zustand einer Kachel bestimmt, wie diese in der Ausgabe erscheinen wird.
+Die \textit{Tile}-Struktur beschreibt eine Kachel des Spielfelds, das aufgrund seiner Beschaffenheit für die Spiellogik wichtig ist. Die Art und der Zustand einer Kachel bestimmt, wie diese in der Ausgabe erscheinen wird. Zusätzlich werden hier die Konstanten für bekannte Tile-Typen und Standardinitialisierungswerte gesetzt.
 
 		\begin{lstlisting}[caption=Tile]{}
 typedef struct Tile {
@@ -329,6 +330,10 @@ typedef struct Map {
 	Tile* tiles;
 	Spawn** spawns;
 	unsigned int number_of_spawns;
+	char** msg_hist;
+	int latest_msg;
+	int current_msg;
+	char finished;
 } Map;
 		\end{lstlisting} \hspace*{\fill} \\
 Elemente der Struktur:
@@ -338,6 +343,10 @@ Elemente der Struktur:
 			\item tiles - Eindimensionales Array, das die Spielkacheln enthält.
 			\item spawns - Array, dessen Adressen auf die Spawns zeigen.
 			\item number\_of\_spawns - Anzahl der Spawns auf der Karte
+			\item msg\_hist - Eventlog auf dieser Karte
+			\item latest\_msg - letzte Nachricht auf dem Eventlog
+			\item current\_msg - Index der aktuell angezeigten Nachricht
+			\item finished - Signalisiert, ob der Ausgang gefunden wurde.
 		\end{itemize}
 		
 		\begin{lstlisting}[caption=get\_player\_spawn]{}
@@ -368,24 +377,6 @@ Spawn* get_spawn_at(unsigned int x, unsigned int y, Map* map);
 		\item[Rückgabe:] Rückgabe eines Zeigers auf die Figur auf der Kachel bei (\textit{x}, \textit{y}). Oder \textit{NULL}, wenn keine vorhanden oder außerhalb der Kartengrenze.
 	\end{description}
 	
-	\begin{lstlisting}[caption=spawn\_spawn\_collision]{}
-void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b, Map* map, 
-char** mesgv, int mesgc);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Würfelt das Geschehen aus, das eintritt, wenn Spawns \textit{spawn\_a} und \textit{spawn\_b} aufeinandertreffen.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn\_a - erster Spawn
-			\item spawn\_b - zweiter Spawn
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-			\item mesgv - Nachrichtenstream
-			\item mesgc - Anzahl der Stream-Elemente
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
 		\begin{lstlisting}[caption=explore\_area]{}
 void explore_area(Spawn* spawn, Map* map);
 		\end{lstlisting}
@@ -400,54 +391,7 @@ void explore_area(Spawn* spawn, Map* map);
 		\item[Rückgabe:] -
 	\end{description}
 	
-	
-		\begin{lstlisting}[caption=spawn\_action]{}
-void spawn_action(Spawn* spawn, Map* map);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Würfelt die nächste Aktion aus, die \textit{spawn} tun soll, z.B. Gehen oder Warten.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn - Spawn, für den eine Aktion gewürfelt wird.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-	\begin{lstlisting}[caption=spawn\_tile\_collision]{}
-void spawn_tile_collision(Spawn* spawn, Tile* tile, Map* map, char** mesgv, 
-int mesgc);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Es wird die Aktion ausgeführt, die eintritt, wenn \textit{spawn} die Kachel \textit{it} betreten möchte. Beispielsweise, ob er diese überhaupt betreten darf.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item spawn - handelnder Spawn
-			\item tile - Kachel, die er betreten möchte.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-			\item mesgv - Nachrichtenstream
-			\item mesgc - Anzahl der Stream-Elemente
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=toggle\_tile]{}
-void toggle_tile(Tile* tile, Map* map);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Ändert einen binären Zustand der Kachel \textit{tile}, z.B. Tür auf/zu.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item tile - Kachel, auf der eine Aktion ausgeführt werden soll.
-			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
-		\begin{lstlisting}[caption=push\_msg]{}
+	  \begin{lstlisting}[caption=push\_msg]{}
 void push_msg(char* msg, Map* map);
 		\end{lstlisting}
 		
@@ -513,24 +457,8 @@ void create_output_buffer(Map* map, BufferTile* buf, int tiles);
 		\item[Rückgabe:] -
 	\end{description}
 	
-		\begin{lstlisting}[caption=print\_message\_box]{}
-void print_message_box(BufferTile* buf, int tiles, char** mesgv, int mesgc);
-		\end{lstlisting}
-		
-	\begin{description}
-		\item[Verwendung:] Kopiert einen Textbereich für die Nachrichten in den Ausgabepuffer (und überschreibt damit ggf. Teile der Karte).
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item buf - Ausgabepuffer, der überschrieben werden soll.
-			\item tiles - Anzahl der Tiles des Puffers.
-			\item mesgv - Nachrichtenstream
-			\item mesgc - Anzahl der Stream-Elemente
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-	
 		\begin{lstlisting}[caption=flush\_output\_buffer]{}
-void flush_output_buffer(BufferTile* buf, int tiles);
+void clear_output_buffer(BufferTile* buf, int tiles);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -557,6 +485,64 @@ void process_event(SDL_Event *event, Map *map);
 		\begin{itemize}
 			\item event - das zu verarbeitende Event
 			\item map - die zu aktualisierende Map
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+	\begin{lstlisting}[caption=spawn\_spawn\_collision]{}
+void spawn_spawn_collision(Spawn* spawn_a, Spawn* spawn_b, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Würfelt das Geschehen aus, das eintritt, wenn Spawns \textit{spawn\_a} und \textit{spawn\_b} aufeinandertreffen.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn\_a - erster Spawn
+			\item spawn\_b - zweiter Spawn
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+			\begin{lstlisting}[caption=spawn\_action]{}
+void spawn_action(Spawn* spawn, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Würfelt die nächste Aktion aus, die \textit{spawn} tun soll, z.B. Gehen oder Warten.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - Spawn, für den eine Aktion gewürfelt wird.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+	\begin{lstlisting}[caption=spawn\_tile\_collision]{}
+void spawn_tile_collision(Spawn* spawn, Tile* tile, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Es wird die Aktion ausgeführt, die eintritt, wenn \textit{spawn} die Kachel \textit{it} betreten möchte. Beispielsweise, ob er diese überhaupt betreten darf.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item spawn - handelnder Spawn
+			\item tile - Kachel, die er betreten möchte.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
+		\begin{lstlisting}[caption=toggle\_tile]{}
+void toggle_tile(Tile* tile, Map* map);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Ändert einen binären Zustand der Kachel \textit{tile}, z.B. Tür auf/zu.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item tile - Kachel, auf der eine Aktion ausgeführt werden soll.
+			\item map - zur Verwendung in der Ausführungslogik bereitgestellte Spielkarte
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}

@@ -166,7 +166,8 @@ void explore_area(Spawn* spawn, Map* map) {
 
 /*---------------------------------------------------------------------------*/
 void push_msg(char *msg, Map *map){
-	map->latest_msg=(++map->latest_msg)%MESSAGE_STREAM_LIMIT;
+	++map->latest_msg;
+	map->latest_msg = map->latest_msg % MESSAGE_STREAM_LIMIT;
 	map->current_msg=map->latest_msg;
 	map->msg_hist[map->latest_msg]=msg;
 	update_msg(msg, 1);
