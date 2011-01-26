@@ -28,7 +28,7 @@ void spawn_uses_item(Spawn*, Item*, Map*);
 
 /* war mal tile.h, dann map.h */
 /* Wenn ein Spawn auf ein Tile trifft, gucke, was hier passiert (rennt gegen Wand/stirbt/sammelt auf/...) */
-void spawn_tile_collision(Spawn*, Tile*, Map*, char**, int);
+void spawn_tile_collision(Spawn*, Tile*, Map*);
 /* irgendwas wird getoggelt (Tür auf, zu ...) */
 void toggle_tile(Tile*, Map*);
 

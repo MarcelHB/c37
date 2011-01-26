@@ -28,15 +28,9 @@ void process_event(SDL_Event *event, Map *map){
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
-			if(tile_can_walk(*tile)){
-				player->y--;
-				explore_area(player,map);
-			}
-			/*mit alles anderem kollidieren*/
-			else{
-				spawn_tile_collision(player,tile,map,NULL,0);
-				push_msg("Kopf -> Wand", map);
-			}
+			player->y--;
+			spawn_tile_collision(player,tile,map);
+			explore_area(player,map);
 		}
 		/*NPC in Laufrichtung*/
 		else{
@@ -50,15 +44,9 @@ void process_event(SDL_Event *event, Map *map){
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
-			if(tile_can_walk(*tile)){
-				player->y++;
-				explore_area(player,map);
-			}
-			/*mit alles anderem kollidieren*/
-			else{
-				spawn_tile_collision(player,tile,map,NULL,0);
-				push_msg("Kopf -> Wand", map);
-			}
+			player->y++;
+			spawn_tile_collision(player,tile,map);
+			explore_area(player,map);
 		}
 		/*NPC in Laufrichtung*/
 		else{
@@ -72,15 +60,9 @@ void process_event(SDL_Event *event, Map *map){
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x-1+map->x*player->y]);
-			if(tile_can_walk(*tile)){
-				player->x--;
-				explore_area(player,map);
-			}
-			/*mit alles anderem kollidieren*/
-			else{
-				spawn_tile_collision(player,tile,map,NULL,0);
-				push_msg("Kopf -> Wand", map);
-			}
+			player->x--;
+			spawn_tile_collision(player,tile,map);
+			explore_area(player,map);
 		}
 		/*NPC in Laufrichtung*/
 		else{
@@ -94,15 +76,9 @@ void process_event(SDL_Event *event, Map *map){
 		if(npc==NULL){
 			/*auf Laufbarem laufen*/
 			tile=&(map->tiles[player->x+1+map->x*player->y]);
-			if(tile_can_walk(*tile)){
-				player->x++;
-				explore_area(player,map);
-			}
-			/*mit alles anderem kollidieren*/
-			else{
-				spawn_tile_collision(player,tile,map,NULL,0);
-				push_msg("Kopf -> Wand", map);
-			}
+			player->x++;
+			spawn_tile_collision(player,tile,map);
+			explore_area(player,map);
 		}
 		/*NPC in Laufrichtung*/
 		else{
@@ -279,7 +255,7 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
     if (SPAWN_TYPE_PLAYER == self->type && SPAWN_TYPE_HOUND == other->type) {
         if (other->hp <= 10) {
             Spawn **new_spawns = ex_calloc(map->number_of_spawns - 1, sizeof(Spawn *));
-            for (int ii = 0, jj = 0; ii < map->number_of_spawns; ++ii) {
+            for (unsigned int ii = 0, jj = 0; ii < map->number_of_spawns; ++ii) {
                 if (map->spawns[ii] != other) {
                     new_spawns[jj++] = map->spawns[ii];
                 }
@@ -300,32 +276,63 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
     }
 }
 
-void spawn_tile_collision (Spawn *self, Tile *tile, Map *map, char **c, int n) {
-    if (tile_can_walk(*tile) && tile->number_of_items > 0) {
-        /* Items aufsammeln. */
-        self->inventory = ex_realloc(self->inventory, self->inventory_size + tile->number_of_items);
-        for (int ii = 0; ii < tile->number_of_items; ++ii) {
-            self->inventory[self->inventory_size + ii] = tile->items[ii];
-        }
-        free(tile->items);
-        tile->number_of_items = 0;
-    } else if (tile->type == TILE_TYPE_WALL) {
-        if (self->hp > 0) {
-            --self->hp;
-			update_hp(self->hp);
-            /*Ouch.*/
-        }
-    }
+void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
+	if(!tile_can_walk(*tile)) {
+		/* umkehren */
+		switch(self->direction) {
+			case NORTH:
+				self->y++;
+				break;
+			case SOUTH:
+				self->y--;
+				break;
+			case EAST:
+				self->x--;
+				break;
+			case WEST:
+				self->x++;
+				break;
+		}
+		if (tile->type == TILE_TYPE_WALL) {
+			if (self->hp > 0) {
+				--self->hp;
+				update_hp(self->hp);
+				push_msg("Kopf -> Wand (-1HP)", map);
+			}
+		}
+	}
+	else {
+		if (tile->type == TILE_TYPE_FLOOR && tile->number_of_items > 0) {
+			/* Items aufsammeln. */
+			self->inventory = ex_realloc(self->inventory, self->inventory_size + tile->number_of_items);
+			for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
+				self->inventory[self->inventory_size + ii] = tile->items[ii];
+			}
+			/* Aufzählen, was aufgesammelt */
+			for(unsigned int i = 0; i < tile->number_of_items; ++i) {
+				char* item_message = (char*)ex_calloc(22 + strlen(tile->items[i]->name), 1);				
+				sprintf(item_message, "Du hast aufgenommen: %s", tile->items[i]->name);
+				push_msg(item_message, map);
+				free(item_message);
+			}
+			
+			free(tile->items);
+			tile->number_of_items = 0;
+		}
+	}
 }
 
 void spawn_uses_item (Spawn *self, Item *item, Map *map) {
+	(void)map;
     switch (item->type) {
         case ITEM_TYPE_HEALTH_POTION:
             self->hp += ((HealthPotionProperties *)item->properties)->capacity;
             if (self->hp > self->max_hp) {
                 self->hp = self->max_hp;
             }
-	    update_hp(self->hp);
+			push_msg("Schluck! (Heiltrank)", map);
+			update_hp(self->hp);
+			/* raus mit dem Item ... */
             break;
         default:
             break;
@@ -365,7 +372,7 @@ void toggle_tile (Tile *self, Map *map) {
 			}
 		}
 	}
-else if(self->type == TILE_TYPE_DOOR)  {
+	else if(self->type == TILE_TYPE_DOOR)  {
 		DoorProperties* door_props = (DoorProperties *)self->properties;
 		/* Tür hat eigenen Schalter und ist nicht verschlossen */
 		if(!door_props->locked) {
@@ -388,14 +395,14 @@ else if(self->type == TILE_TYPE_DOOR)  {
 								next_inventory_item(player, 1);
 							}*/
 							door_props->locked = 0;
-							/* message(map, "Tuer entriegelt"); */
+							push_msg("Tuer entriegelt", map);
 							break;
 						}
 					}
 				}
 				/* wurde nicht aufgemacht */
 				if(door_props->locked) {
-					/*message(map, "Tuer verschlossen");*/
+					push_msg("Tuer verschlossen", map);
 				}
 			}
 		}
@@ -405,7 +412,7 @@ else if(self->type == TILE_TYPE_DOOR)  {
 		HintProperties* hint_props = (HintProperties *)self->properties;
 		if(hint_props->message != NULL) {
 			/* Was das Ding zu sagen hat, in den Ausgabestream packen! */
-			/* message(map, hint_props->message); */
+			push_msg(hint_props->message, map);
 		}
 	}
 }
