@@ -152,6 +152,11 @@ void process_event(SDL_Event *event, Map *map){
 		if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
 			update_msg(map->msg_hist[--map->current_msg], 0);
 		break;
+	case SDLK_RETURN:
+		if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
+			spawn_uses_item (player, player->inventory[player->selected_item], map);
+		}
+		break;
 	default:
 		break;
 	}
@@ -304,9 +309,9 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 	else {
 		if (tile->type == TILE_TYPE_FLOOR && tile->number_of_items > 0) {
 			/* Items aufsammeln. */
-			self->inventory = ex_realloc(self->inventory, self->inventory_size + tile->number_of_items);
+			self->inventory = ex_realloc(self->inventory, (self->inventory_size + tile->number_of_items) * sizeof(Item*));
 			for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
-				self->inventory[self->inventory_size + ii] = tile->items[ii];
+				self->inventory[++self->inventory_size - 1] = tile->items[ii];
 			}
 			/* Aufzählen, was aufgesammelt */
 			for(unsigned int i = 0; i < tile->number_of_items; ++i) {

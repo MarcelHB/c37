@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SDL.h"
+
+#include "memory.h"
 #include "globals.h"
 #include "map.h"
 #include "map_loader.h"
