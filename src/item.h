@@ -31,6 +31,7 @@
  /* verwendete Tile-type identifier */
  #define ITEM_TYPE_INVALID				0xFFFFFFFF
  #define ITEM_TYPE_HEALTH_POTION		0x00000001
+ #define ITEM_TYPE_KEY					0x00000002
  
  /* Zuordnungstabellen von type -> defaults */
  /* "healthpotion" -> "Health Potition", blau, 3lbs, 5GM ... */
@@ -43,8 +44,9 @@
  };
  
  /* lediglich Intialisierungswerte */
- static const struct ItemDefault item_defaults[1] = {
-	{ITEM_TYPE_HEALTH_POTION, "Heiltrank", 0xFF000000, 1, 10}
+ static const struct ItemDefault item_defaults[2] = {
+	{ITEM_TYPE_HEALTH_POTION, "Heiltrank", 0xFF000000, 1, 10},
+	{ITEM_TYPE_KEY, "Schluessel", 0xDDDDDD00, 1, 10}
  };
  
  /* Gibt reservierten Speicher eines Items frei */

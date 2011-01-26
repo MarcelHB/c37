@@ -59,7 +59,8 @@
 				/*.locked = */0,
 				/*.external_button = */0,
 				/*.breakable = */0,
-				/*.broken = */0
+				/*.broken = */0,
+				/*.key_id = */NULL
 			};
 			tile->properties = malloc(sizeof(DoorProperties));
 			*(DoorProperties*)tile->properties = door_props;
@@ -98,6 +99,12 @@
 		/* Hint->message */
 		HintProperties* hint_props = (HintProperties*)tile->properties;
 		free(hint_props->message);
+	}
+	/* Tür */
+	else if(tile->type == TILE_TYPE_HINT) {
+		/* Hint->message */
+		DoorProperties* door_props = (DoorProperties*)tile->properties;
+		free(door_props->key_id);
 	}
 	for(i = 0; i < tile->number_of_items; ++i) {
 		free_item(tile->items[i]);
