@@ -72,6 +72,14 @@
 			tile->properties = malloc(sizeof(WaterProperties));
 			*(WaterProperties*)tile->properties = water_props;
 		}
+		/* Info */
+		else if(tile->type == TILE_TYPE_HINT) {
+			HintProperties hint_props = {
+				/*.message = */"Nichts zu sagen..."
+			};
+			tile->properties = malloc(sizeof(HintProperties));
+			*(HintProperties*)tile->properties = hint_props;
+		}
 	}
  }
  
@@ -84,6 +92,12 @@
 		/* Button->toggle_id */
 		ButtonProperties* btn_props = (ButtonProperties*)tile->properties;
 		free(btn_props->toggle_id);
+	}
+	/* Info */
+	else if(tile->type == TILE_TYPE_HINT) {
+		/* Hint->message */
+		HintProperties* hint_props = (HintProperties*)tile->properties;
+		free(hint_props->message);
 	}
 	for(i = 0; i < tile->number_of_items; ++i) {
 		free_item(tile->items[i]);

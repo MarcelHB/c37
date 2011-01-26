@@ -41,6 +41,7 @@
  #include "tiles/button.h"
  #include "tiles/door.h"
  #include "tiles/water.h"
+ #include "tiles/hint.h"
  
  /* verwendete Tile-type identifier */
  #define TILE_TYPE_INVALID				0xFFFFFFFF
@@ -49,6 +50,7 @@
  #define TILE_TYPE_BUTTON				0x00000002
  #define TILE_TYPE_DOOR					0x00000003
  #define TILE_TYPE_WATER				0x00000004
+ #define TILE_TYPE_HINT					0x00000005
  
  #define TILE_GLYPH_WALL				'#'
  #define TILE_GLYPH_FLOOR				'.'
@@ -59,6 +61,7 @@
  #define TILE_GLYPH_DOOR_HORIZ_CLOSED 	'-'
  #define TILE_GLYPH_DOOR_HORIZ_OPEN 	'/'
  #define TILE_GLYPH_WATER				'~'
+ #define TILE_GLYPH_HINT				'?'
  
  /* Zuordnungstabellen von type -> defaults */
  struct TileDefault {
@@ -68,12 +71,13 @@
  };
  
  /* lediglich Intialisierungswerte */
- static const struct TileDefault tile_defaults[5] = {
+ static const struct TileDefault tile_defaults[6] = {
 	{TILE_TYPE_WALL, 0xAAAAAA00, TILE_GLYPH_WALL},
 	{TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
 	{TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
 	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED},
-	{TILE_TYPE_WATER, 0x00006600, TILE_GLYPH_WATER}
+	{TILE_TYPE_WATER, 0x00006600, TILE_GLYPH_WATER},
+	{TILE_TYPE_HINT, 0xFFFFFF00, TILE_GLYPH_HINT}
  };
  
  /* Gibt reservierten Speicher eines Tiles frei */

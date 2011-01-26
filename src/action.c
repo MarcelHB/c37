@@ -440,4 +440,11 @@ void toggle_tile (Tile *self, Map *map) {
 			door_props->open ^= 1;
 		}
 	}
+	/* Hinweis */
+	else if(self->type == TILE_TYPE_HINT)  {
+		HintProperties* hint_props = (HintProperties *)self->properties;
+		if(hint_props->message != NULL) {
+			message(map, hint_props->message);
+		}
+	}
 }
