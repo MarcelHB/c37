@@ -85,6 +85,8 @@
  #define NODE_LOCKED					"locked"
  #define NODE_BREAKABLE					"breaks"
  #define NODE_DEPTH            			"depth"
+ #define NODE_MESSAGE          			"msg"
+ #define NODE_KEY            			"key"
  
  #define NODE_VALUE						"val"
  #define NODE_WEIGHT					"weight"
@@ -120,18 +122,22 @@
  #define STACK_WEIGHT					0x00000018
  #define STACK_CAPACITY					0x00000019
  #define STACK_DEPTH          			0x00000020
-
+ #define STACK_MESSAGE         			0x00000021
+ #define STACK_KEY            			0x00000022
+ 
  /* lesbare Tile-Type Namen */
  #define TILE_NAME_WALL					"w"
  #define TILE_NAME_FLOOR				"f"
  #define TILE_NAME_BUTTON				"btn"
  #define TILE_NAME_DOOR					"door"
  #define TILE_NAME_WATER        		"h2o"
+ #define TILE_NAME_HINT          		"hint"
  
  /* lesbare Spawn-Type Namen */
  #define SPAWN_NAME_PLAYER				"player"
  
  /* lesbare Item-Type Namen */
  #define ITEM_NAME_HEALTH_POTION		"hptn"
+ #define ITEM_NAME_KEY          		"key"
  
  #endif

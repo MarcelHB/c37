@@ -217,7 +217,7 @@ spawn_run_ai (Spawn *self, Map *map) {
     if ((1 == abs(player->x - self->x) && 0 == abs(player->y - self->y)) ||
         (0 == abs(player->x - self->x) && 1 == abs(player->y - self->y))) {
         /* adjacent, attack */
-    } else if (-1 != props->targetx && -1 != props->targety) {
+    } else if (/*-1 != props->targetx && -1 != props->targety*/ 1) { // <- Das wird immer sonst eintreten (unsigned)
         int dx = props->targetx - self->x, dy = props->targety - self->y;
         if (abs(dx) >= abs(dy)) {
             if (0 < dx) {
@@ -243,7 +243,7 @@ spawn_run_ai (Spawn *self, Map *map) {
             nx = self->x;
             ny = self->y;
         }
-    } else {
+    } else if(0) {  // <-- und daher das nie (dann auch keine Warnungen)
         int dir = rand() % 4;
         switch (dir) {
             case 0: /* north */
@@ -365,12 +365,47 @@ void toggle_tile (Tile *self, Map *map) {
 			}
 		}
 	}
-	/* Tür */
-    else if(self->type == TILE_TYPE_DOOR)  {
+else if(self->type == TILE_TYPE_DOOR)  {
 		DoorProperties* door_props = (DoorProperties *)self->properties;
 		/* Tür hat eigenen Schalter und ist nicht verschlossen */
-		if(!(door_props->external_button || door_props->locked)) {
-			door_props->open ^= 1;
+		if(!door_props->locked) {
+			if(!(door_props->external_button)) {
+				door_props->open ^= 1;
+			}
+		} else {
+			/* Mit Schlüssel aufschließbar */
+			if(door_props->key_id != NULL) {
+				unsigned int i;
+				Spawn* player = get_player_spawn(map);
+				/* Inventar scannen */
+				for(i = 0; i < player->inventory_size; ++i) {
+					if(player->inventory[i] != NULL && player->inventory[i]->type == ITEM_TYPE_KEY) {
+						if(strcmp(player->inventory[i]->id, door_props->key_id) == 0) {
+							/* Key entfernen! */
+							/*free_item(player->inventory[i]);
+							player->inventory[i] = NULL;
+							if(i == player->selected_item) {
+								next_inventory_item(player, 1);
+							}*/
+							door_props->locked = 0;
+							/* message(map, "Tuer entriegelt"); */
+							break;
+						}
+					}
+				}
+				/* wurde nicht aufgemacht */
+				if(door_props->locked) {
+					/*message(map, "Tuer verschlossen");*/
+				}
+			}
+		}
+	}
+	/* Hinweis */
+	else if(self->type == TILE_TYPE_HINT)  {
+		HintProperties* hint_props = (HintProperties *)self->properties;
+		if(hint_props->message != NULL) {
+			/* Was das Ding zu sagen hat, in den Ausgabestream packen! */
+			/* message(map, hint_props->message); */
 		}
 	}
 }

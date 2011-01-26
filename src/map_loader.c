@@ -214,7 +214,8 @@
 							/*.type = */SPAWN_TYPE_INVALID,
 							/*.properties = */NULL,
 							/*.inventory = */NULL,
-							/*.inventory_size = */0
+							/*.inventory_size = */0,
+							/*.selected_item = */0
 					};
 					map->spawns = (Spawn**)ex_realloc(map->spawns, sizeof(Spawn*) * ++map->number_of_spawns);
 					map->spawns[map->number_of_spawns - 1] = (Spawn*)ex_malloc(sizeof(Spawn));
@@ -748,6 +749,27 @@
 				strcpy(btn_props->toggle_id, value->vu.str.value);
 			}
 		}
+		/* Hinweis */
+		else if(type == TILE_TYPE_HINT) {
+			HintProperties* hint_props = (HintProperties*)map->tiles[parsed_tiles-1].properties;
+			/* Heiweis->Nachricht */
+			if(key == STACK_MESSAGE) {
+				if(hint_props->message != NULL) {
+					free(hint_props->message);
+				}
+				hint_props->message = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+				strcpy(hint_props->message, value->vu.str.value);
+			}
+		}
+		/* Tür */
+		else if(type == TILE_TYPE_DOOR) {
+			DoorProperties* door_props = (DoorProperties*)map->tiles[parsed_tiles-1].properties;
+			/* Tür->KeyId */
+			if(key == STACK_KEY && door_props->key_id == NULL) {
+				door_props->key_id = (char*)ex_calloc(strlen(value->vu.str.value) + 1, 1);
+				strcpy(door_props->key_id, value->vu.str.value);
+			}
+		}
 	}
  }
  
@@ -1018,9 +1040,17 @@
 	else if (strcmp(name, NODE_BREAKABLE) == 0) {
 		return STACK_BREAKABLE;
 	}
+	/* Tür->Schlüssel */
+	else if (strcmp(name, NODE_KEY) == 0) {
+		return STACK_KEY;
+	}
 	/* Wasser->Tiefe */
 	else if (strcmp(name, NODE_DEPTH) == 0) {
 		return STACK_DEPTH;
+	}
+	/* Hinweis->Nachricht */
+	else if (strcmp(name, NODE_MESSAGE) == 0) {
+		return STACK_MESSAGE;
 	}
 	return STACK_INVALID_INDEX;
  }
@@ -1058,6 +1088,10 @@
 	else if(strcmp(name, TILE_NAME_WATER) == 0) {
 		return TILE_TYPE_WATER;
 	}
+	/* Hinweis */
+	else if(strcmp(name, TILE_NAME_HINT) == 0) {
+		return TILE_TYPE_HINT;
+	}
 	return TILE_TYPE_INVALID;
  }
  
@@ -1077,6 +1111,10 @@
 	/* Heiltrank */
 	if(strcmp(name, ITEM_NAME_HEALTH_POTION) == 0) {
 		return ITEM_TYPE_HEALTH_POTION;
+	}
+	/* Schluessel */
+	else if(strcmp(name, ITEM_NAME_KEY) == 0) {
+		return ITEM_TYPE_KEY;
 	}
 	return ITEM_TYPE_INVALID;
  }
