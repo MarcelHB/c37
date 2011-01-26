@@ -66,6 +66,9 @@ int main(int argc, char *argv[]){
 			process_event(&event, map);
 			create_output_buffer(map, buf, num_tiles);
 			output_draw(buf, num_tiles);
+		} else if(event.type == SDL_QUIT) {
+			quit=1;
+			break;
 		}
 		SDL_Delay(1);
 		/*Affe tot => Klappe zu*/
@@ -82,7 +85,7 @@ int main(int argc, char *argv[]){
 	if(!quit){
 		while(SDL_WaitEvent(&event)){
 			/*bei Escape beenden*/
-			if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+			if(event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
 				break;
 			}
 			SDL_Delay(1);

@@ -181,7 +181,7 @@ int main() {
 		/* player->hp */
 		printf("=> health points...");
 		if(spawn->hp != MAP_PLAYER_HP) {
-			printf("\n-> ERROR! expected %dx%d, but player has %dx!\n", MAP_PLAYER_HP, spawn->hp);
+			printf("\n-> ERROR! expected %dx, but player has %dx!\n", MAP_PLAYER_HP, spawn->hp);
 		} else { printf("correct! (%d)\n", spawn->hp); }
 		
 		/* player->items */
