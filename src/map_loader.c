@@ -954,6 +954,9 @@
 	intermediate_map.tiles = NULL;
 	intermediate_map.spawns = NULL;
 	intermediate_map.number_of_spawns = 0;
+	intermediate_map.message_stream = NULL;
+	intermediate_map.messages = 0;
+	intermediate_map.current_message = 0;
  }
  
  /*--------------------------------------------------------------------------*/
