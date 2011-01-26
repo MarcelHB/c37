@@ -132,6 +132,7 @@
  #define TILE_NAME_DOOR					"door"
  #define TILE_NAME_WATER        		"h2o"
  #define TILE_NAME_HINT          		"hint"
+ #define TILE_NAME_EXIT         		"exit"
  
  /* lesbare Spawn-Type Namen */
  #define SPAWN_NAME_PLAYER				"player"

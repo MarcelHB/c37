@@ -34,7 +34,7 @@ int main(int argc, char *argv[]){
 		fprintf(stderr,"Fehler beim Laden der Karte\n");
 		return EXIT_FAILURE;
 	}
-	map->current_msg=map->latest_msg=0;
+
 	map->msg_hist=ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
 	/*Map zeichnen*/
 	int num_tiles = OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y, i;
@@ -68,7 +68,12 @@ int main(int argc, char *argv[]){
 		SDL_Delay(1);
 		/*Affe tot => Klappe zu*/
 		if(get_player_spawn(map)->hp==0){
-			game_over();
+			game_over(0);
+			break;
+		}
+		/* Ende erreicht */
+		if(map->finished) {
+			game_over(1);
 			break;
 		}
 	}

@@ -31,6 +31,8 @@
 	char** msg_hist;
 	int latest_msg;
 	int current_msg;
+	/* Map beendet? */
+	char finished;
  } Map;
 
 bool map_can_see (Map *, unsigned int, unsigned int, unsigned int, unsigned int);

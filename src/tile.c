@@ -133,6 +133,8 @@ tile_can_walk (Tile t) {
             return false;
         case TILE_TYPE_FLOOR:
             return true;
+		case TILE_TYPE_EXIT:
+            return true;
         case TILE_TYPE_WALL:
             return ((WallProperties *)t.properties)->space ? true : false;
         case TILE_TYPE_DOOR:

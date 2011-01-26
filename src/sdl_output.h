@@ -24,6 +24,6 @@
  /* Mitteilung aktualisieren */
  void update_msg(char*, int);
  /* GAME OVER */
- void game_over();
+ void game_over(int);
  
  #endif

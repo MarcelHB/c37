@@ -23,7 +23,11 @@
 	/*.name = */NULL, 
 	/*.tiles = */NULL,
 	/*.spawns = */NULL,
-	/*.number_of_spawns = */0
+	/*.number_of_spawns = */0,
+	/*.msg_hist = */NULL,
+	/*.latest_msg = */0,
+	/*.current_msg = */0,
+	/*.finished = */0
  };
  static unsigned int array_depth = 0;
  static unsigned int has_root = 0;
@@ -945,6 +949,10 @@
 	intermediate_map.tiles = NULL;
 	intermediate_map.spawns = NULL;
 	intermediate_map.number_of_spawns = 0;
+	intermediate_map.msg_hist = NULL;
+	intermediate_map.latest_msg = 0;
+	intermediate_map.current_msg = 0;
+	intermediate_map.finished = 0;
  }
  
  /*--------------------------------------------------------------------------*/
@@ -1091,6 +1099,10 @@
 	/* Hinweis */
 	else if(strcmp(name, TILE_NAME_HINT) == 0) {
 		return TILE_TYPE_HINT;
+	}
+	/* Ausgang */
+	else if(strcmp(name, TILE_NAME_EXIT) == 0) {
+		return TILE_TYPE_EXIT;
 	}
 	return TILE_TYPE_INVALID;
  }

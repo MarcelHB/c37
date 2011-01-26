@@ -318,6 +318,10 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 			
 			free(tile->items);
 			tile->number_of_items = 0;
+		} 
+		/* Ausgang */
+		else if(tile->type == TILE_TYPE_EXIT) {
+			map->finished = 1;
 		}
 	}
 }

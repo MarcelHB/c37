@@ -203,7 +203,7 @@ void update_msg(char *m, int l){
 /**
  * Großes rotes GAME OVER
  */
-void game_over(){
+void game_over(int successful){
 	/*größere Schrift*/
 	int size;
 	if(FONT_SIZE*height>(FONT_SIZE*width)/9)
@@ -218,22 +218,41 @@ void game_over(){
 		exit(EXIT_FAILURE);
 	}
 	/*Ausgabe*/
-	SDL_Color red;
-	red.r=255; red.g=red.b=0;
-	SDL_Surface *go_surf=TTF_RenderText_Solid(font, "GAME OVER", red);
-	if(go_surf==NULL){
-		fprintf(stderr, "Fehler beim Darstellen von \"GAME OVER\": %s\n", TTF_GetError());
-		exit(EXIT_FAILURE);
+	if(!successful) {
+		SDL_Color red;
+		red.r=255; red.g=red.b=0;
+		SDL_Surface *go_surf=TTF_RenderText_Solid(font, "GAME OVER", red);
+		if(go_surf==NULL){
+			fprintf(stderr, "Fehler beim Darstellen von \"GAME OVER\": %s\n", TTF_GetError());
+			exit(EXIT_FAILURE);
+		}
+		SDL_Rect pos;
+		pos.x=(screen->w-(font_w*9))/2;
+		pos.y=(screen->h-font_h)/2;
+		if(SDL_BlitSurface(go_surf, NULL, screen, &pos)){
+			fprintf(stderr, "Fehler bei der Ausgabe: %s\n", SDL_GetError());
+			exit(EXIT_FAILURE);
+		}
+		SDL_FreeSurface(go_surf);
+		go_surf=NULL;
+	} else {
+		SDL_Color green;
+		green.g=255; green.r=green.b=0;
+		SDL_Surface *go_surf=TTF_RenderText_Solid(font, "WELL DONE :)", green);
+		if(go_surf==NULL){
+			fprintf(stderr, "Fehler beim Darstellen von \"WELL DONE\": %s\n", TTF_GetError());
+			exit(EXIT_FAILURE);
+		}
+		SDL_Rect pos;
+		pos.x=(screen->w-(font_w*12))/2;
+		pos.y=(screen->h-font_h)/2;
+		if(SDL_BlitSurface(go_surf, NULL, screen, &pos)){
+			fprintf(stderr, "Fehler bei der Ausgabe: %s\n", SDL_GetError());
+			exit(EXIT_FAILURE);
+		}
+		SDL_FreeSurface(go_surf);
+		go_surf=NULL;
 	}
-	SDL_Rect pos;
-	pos.x=(screen->w-(font_w*9))/2;
-	pos.y=(screen->h-font_h)/2;
-	if(SDL_BlitSurface(go_surf, NULL, screen, &pos)){
-		fprintf(stderr, "Fehler bei der Ausgabe: %s\n", SDL_GetError());
-		exit(EXIT_FAILURE);
-	}
-	SDL_FreeSurface(go_surf);
-	go_surf=NULL;
 	SDL_UpdateRect(screen, 0, 0, 0, 0);
 }
 
