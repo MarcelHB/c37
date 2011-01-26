@@ -759,7 +759,7 @@
 			}
 		}
 		/* Hinweis */
-		else if(type == TILE_TYPE_BUTTON) {
+		else if(type == TILE_TYPE_HINT) {
 			HintProperties* hint_props = (HintProperties*)map->tiles[parsed_tiles-1].properties;
 			/* Heiweis->Nachricht */
 			if(key == STACK_MESSAGE) {
@@ -1121,7 +1121,7 @@
 	if(strcmp(name, ITEM_NAME_HEALTH_POTION) == 0) {
 		return ITEM_TYPE_HEALTH_POTION;
 	}
-	/* Heiltrank */
+	/* Schlüssel */
 	else if(strcmp(name, ITEM_NAME_KEY) == 0) {
 		return ITEM_TYPE_KEY;
 	}
