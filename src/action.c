@@ -322,6 +322,7 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 			}
 			
 			free(tile->items);
+			tile->items = NULL;
 			tile->number_of_items = 0;
 		} 
 		/* Ausgang */
