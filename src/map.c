@@ -129,8 +129,8 @@ void render_tile(BufferTile* buf, Tile* tile, Map* map) {
 				/* Wasser färbt sich je nach Tiefe anders blau */
 				unsigned int blue = 0x66;
 				WaterProperties* water_props = (WaterProperties*)tile->properties;
-				/* 0.6 ist etwa das richtige, wenn 0->0x66, 255->0xFF gelten soll */
-				blue += (water_props->depth * 0.6);
+				/* 0.6 ist etwa das richtige, wenn 0->0xFF, 255->0x00 gelten soll */
+				blue += ((0xFF - water_props->depth) * 0.6);
 				buf->color = (blue << 8);
 			}
 		}
@@ -151,13 +151,16 @@ void render_tile(BufferTile* buf, Tile* tile, Map* map) {
 
 /*---------------------------------------------------------------------------*/
 void explore_area(Spawn* spawn, Map* map) {
-	int x = spawn->x - (VISUAL_SQUARE/2);
-	int y = spawn->y - (VISUAL_SQUARE/2);
-	int i, j;
+	unsigned int x = spawn->x - (VISUAL_SQUARE/2);
+	unsigned int y = spawn->y - (VISUAL_SQUARE/2);
+	unsigned int i, j;
+	
+	x = x > spawn->x ? 0 : x;
+	y = y > spawn->y ? 0 : y;
 	
 	for(i = y; i < y + VISUAL_SQUARE; ++i) {
 		for(j = x; j < x + VISUAL_SQUARE; ++j) {
-			if(x >= 0 && y >= 0 && (unsigned int)x < map->x && (unsigned int)y < map->y) {
+			if(x < map->x && y < map->y) {
 				map->tiles[i * map->x + j].spotted = 1;
 			}
 		}
