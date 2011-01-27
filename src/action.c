@@ -274,9 +274,11 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
         }
     } else if (SPAWN_TYPE_HOUND == self->type && SPAWN_TYPE_PLAYER == other->type) {
         if (other->hp <= 5) {
-            /* Der Spieler ist tot. Irgendwas muss geschehen. */
+            other->hp = 0;
+            update_hp(self->hp);
         } else {
             other->hp -= 5;
+            update_hp(self->hp);
         }
     }
 }
