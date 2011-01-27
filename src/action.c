@@ -322,6 +322,7 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 				push_msg(item_message, map);
 				free(item_message);
 			}
+			update_item(tile->items[tile->number_of_items-1]->name);
 			
 			free(tile->items);
 			tile->items = NULL;
@@ -345,10 +346,63 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
 			push_msg("Schluck! (Heiltrank)", map);
 			update_hp(self->hp);
 			/* raus mit dem Item ... */
+			delete_item(item, self);
             break;
         default:
             break;
     }
+}
+
+/**
+ * Löscht das erste Item vom Typ item->type aus dem Inventar des Spawns spawn.
+ * Wenn spawn kein Item des Typs hat, bleibt das Inventar unverändert.
+ * Gibt die Anzahl der gelöschten Items zurück (0 oder 1).
+ */
+static int delete_item(Item *item, Spawn *spawn){
+	/*nur, wenn noch was im Inventar ist*/
+	if(spawn->inventory_size>1){
+		Item **result=(Item **)ex_calloc(spawn->inventory_size-1, sizeof(Item *));
+		unsigned int ins=0;
+		for(;spawn->inventory[ins]->type!=item->type;ins++){
+			/*nicht im Inventar*/
+			if(ins>=spawn->inventory_size){
+				free(result);
+				return 0;
+			}
+		}
+		memcpy(result,spawn->inventory,ins*sizeof(Item *));
+		/*zweiten Teil nur, wenn noch was über ist*/
+		if(ins<spawn->inventory_size-1){
+			memcpy(result+ins,spawn->inventory+ins+1,(spawn->inventory_size-ins-1)*sizeof(Item *));
+		}
+		free(spawn->inventory[ins]);
+		free(spawn->inventory);
+		spawn->inventory=result;
+		spawn->inventory_size--;
+		if(!spawn->npc){
+			/*ausgewähltes Item anpassen*/
+			spawn->selected_item=(spawn->selected_item>1) ? spawn->selected_item-1 : 0;
+			/*Ausgabe anpassen*/
+			update_item(spawn->inventory[spawn->selected_item]->name);
+		}
+		return 1;
+	}
+	else{
+		/*letztes Element wird gelöscht*/
+		if(spawn->inventory_size==1){
+			free(spawn->inventory[0]);
+			free(spawn->inventory);
+			spawn->inventory=NULL;
+			spawn->inventory_size--;
+			if(!spawn->npc){
+				spawn->selected_item=0;
+				update_item(NULL);
+			}
+		}
+		else
+			return 0;
+	}
+	return 0;
 }
 
 void toggle_tile (Tile *self, Map *map) {

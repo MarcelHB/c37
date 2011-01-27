@@ -16,6 +16,7 @@
 #include "sdl_output.h"
 #include "action.h"
 #include "main.h"
+#include "spawn.h"
 
 static Map *map;
 static BufferTile *buf;
@@ -36,8 +37,15 @@ int main(int argc, char *argv[]){
 		fprintf(stderr,"Fehler beim Laden der Karte\n");
 		return EXIT_FAILURE;
 	}
-
 	map->msg_hist=ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
+	Spawn *player=get_player_spawn(map);
+	if(player==NULL){
+		fprintf(stderr, "Kein Spieler auf der Karte\n");
+		return EXIT_FAILURE;
+	}
+	/*Wenn was im Inventar ist, anzeigen*/
+	if(player->inventory_size)
+		update_item(player->inventory[0]->name);
 	/*Map zeichnen*/
 	int num_tiles = OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y, i;
 	
@@ -49,7 +57,7 @@ int main(int argc, char *argv[]){
 	}
 	
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y, map->name);
-	explore_area(get_player_spawn(map), map);
+	explore_area(player, map);
 	create_output_buffer(map, buf, num_tiles);
 	output_draw(buf, num_tiles);
 	
@@ -72,7 +80,7 @@ int main(int argc, char *argv[]){
 		}
 		SDL_Delay(1);
 		/*Affe tot => Klappe zu*/
-		if(get_player_spawn(map)->hp==0){
+		if(player->hp<=0){
 			game_over(0);
 			break;
 		}
