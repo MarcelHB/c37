@@ -24,6 +24,7 @@ static TTF_Font *font;
 static int font_w=FONT_SIZE;
 static int font_h=FONT_SIZE;
 static SDL_Surface *screen;
+static SDL_Surface *icon;
 
 static unsigned int hp=100;
 static char *inv=NULL;
@@ -52,11 +53,13 @@ void output_init(int w, int h, char *mapname){
 	/*sollte für alle Zeichen gelten (Festbreitenschrift)*/
 	TTF_SizeText(font, "a", &font_w, &font_h);
 	/*Screen erstellen, einen höher für Statusleiste*/
-	SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"),NULL);
+	icon = SDL_LoadBMP("icon.bmp");
+	SDL_WM_SetIcon(icon,NULL);
 	if(mapname!=NULL){
 		char *title=(char *)ex_calloc(6+strlen(mapname), sizeof(char));
 		sprintf(title, "c37: %s", mapname);
 		SDL_WM_SetCaption(title, title);
+		free(title);
 	}
 	else
 		SDL_WM_SetCaption("c37", "c37");
@@ -279,4 +282,5 @@ void output_clear(){
 void output_close(){
 	TTF_CloseFont(font);
 	SDL_FreeSurface(screen);
+	SDL_FreeSurface(icon);
 }

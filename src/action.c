@@ -14,6 +14,9 @@
 #include "action.h"
 #include "sdl_output.h"
 
+/*Helper, löscht Item*/
+static int delete_item(Item*, Spawn*);
+
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(SDL_Event *event, Map *map){
 	Spawn *player=get_player_spawn(map);
@@ -375,7 +378,7 @@ static int delete_item(Item *item, Spawn *spawn){
 		if(ins<spawn->inventory_size-1){
 			memcpy(result+ins,spawn->inventory+ins+1,(spawn->inventory_size-ins-1)*sizeof(Item *));
 		}
-		free(spawn->inventory[ins]);
+		free_item(spawn->inventory[ins]);
 		free(spawn->inventory);
 		spawn->inventory=result;
 		spawn->inventory_size--;
@@ -452,14 +455,11 @@ void toggle_tile (Tile *self, Map *map) {
 				Spawn* player = get_player_spawn(map);
 				/* Inventar scannen */
 				for(i = 0; i < player->inventory_size; ++i) {
-					if(player->inventory[i] != NULL && player->inventory[i]->type == ITEM_TYPE_KEY) {
-						if(strcmp(player->inventory[i]->id, door_props->key_id) == 0) {
+					Item* key_candidate = player->inventory[i];
+					if(key_candidate != NULL && key_candidate->type == ITEM_TYPE_KEY) {
+						if(strcmp(key_candidate->id, door_props->key_id) == 0) {
 							/* Key entfernen! */
-							/*free_item(player->inventory[i]);
-							player->inventory[i] = NULL;
-							if(i == player->selected_item) {
-								next_inventory_item(player, 1);
-							}*/
+							delete_item(key_candidate, player);
 							door_props->locked = 0;
 							push_msg("Tuer entriegelt", map);
 							break;
