@@ -40,6 +40,8 @@ int main() {
 		return 1;
 	}
 	
+	map->msg_hist=ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char*));
+	
 	/* Karte->Name */
 	printf("checking map name...");
 	if(strcmp(MAP_NAME, map->name) != 0) {
@@ -84,7 +86,7 @@ int main() {
 		char id_error = 0;
 		
 		for(i = 0; i < MAP_DIMENSION; ++i) {
-			id_buffer = (char*)ex_calloc(9, 1);
+			id_buffer = (char*)ex_calloc(13, 1);
 			sprintf(id_buffer, "tile_%d_%d", i+1, i+1);
 			if(strcmp(id_buffer, map->tiles[i * map->x + i].id) != 0) {
 				id_error = 1;
