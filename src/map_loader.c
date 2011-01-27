@@ -444,7 +444,7 @@
 			push_node_stack(STACK_X, stack, stack_size);
 			return;
 		}
-		/* spawn->x */
+		/* spawn->y */
 		else if(strcmp(value->vu.str.value, NODE_Y) == 0) {
 			push_node_stack(STACK_Y, stack, stack_size);
 			return;

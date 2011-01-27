@@ -57,3 +57,87 @@ Beispiel:
 		}
 	]
 }
+
+"!" vor dem Attribut markiert, dass es zwar vom Maploader erkannt und verarbeitet wird, jedoch bisher nicht im Spiel benutzt wird.
+
+Tiles
+==============
+
+Typen:
+
+"w"     : Wand
+"f"     : Boden ("floor")
+"d"     : Tür
+"btn"   : Schalter
+"h2o"   : Wasser
+"hint"  : Hinweis
+"exit"  : Levelende
+{}      : undefiniert (nicht begehbar)
+
+generische Tile-Eigenschaften:
+
+"type"       : String: Typ (siehe Tabelle vorher)
+"id"         : String: Identifizierungsstring
+"items"      : 1-dim. Array: Items, die hier liegen
+"brightness" : Integer (0-255): Helligkeit
+
+typspezifische Eigenschaften,
+Wand:
+"space"      : Bool: begehbar ("fake wall")
+
+Schalter: 
+!"once"      : Bool: nur einmal benutzbar
+"active"     : Bool: aktiviert
+"tid"        : String: ID des zu toggelenden Tiles
+"dirs"       : Bitfeld: Himmelsrichtungen, von wo aus bedienbar
+
+Tür:
+"horz"       : Bool: horizontale Tür
+"open"       : Bool: Tür ist geöffnet
+"locked"     : Bool: Tür ist verriegelt
+"ext"        : Bool: Tür wird von woanders geöffnet
+!"breaks"    : Bool: Tür ist mit Gewalt zu öffnen
+"key"        : String: ID des Keys, der diese Tür öffnen soll
+
+Wasser:
+"depth"      : Integer (0-255): Wassertiefe
+
+Hinweis:
+"msg"        : String: Nachricht, die mitgeteilt werden soll
+
+
+Items
+==============
+
+Typen:
+"hptn"       : Heiltrank
+"key"        : Schlüssel
+
+generische Item-Eigenschaften:
+
+"type"       : String: Typ (siehe Tabelle vorher)
+"id"         : String: Identifizierungsstring
+"name"       : String: Anzeigename (abweichend vom Standard)
+!"val"       : Integer: Wert des Gegenstands
+!"weight"    : Integer: Gewicht des Gegenstands
+
+typspezifische Eigenschaften,
+Heiltrank:
+"cap"        : Integer: Heilungspunkte (abweichend vom Standard)
+
+
+Spawns
+==============
+
+Typen:
+"player"     : Spielfigur
+
+generische Spawn-Eigenschaften:
+"type"       : String: Typ (siehe Tabelle vorher)
+"id"         : String: Identifizierungsstring
+"name"       : String: Anzeigename (abweichend vom Standard)
+"x"          : Integer: Startkoordinate X-Achse
+"y"          : Integer: Startkoordinate y-Achse
+"dir"        : Bitfeld: Blickrichtung
+"hp"         : Integer: Lebenspunkte zu Beginn (abweichend vom Standard)
+"max_hp"     : Integer: max. Lebenspunkte (abweichend vom Standard)
