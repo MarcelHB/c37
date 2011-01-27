@@ -20,7 +20,7 @@
  /* HP in der Statusleiste aktualisieren */
  void update_hp(int);
  /* Item in der Statusleiste aktualisieren */
- void update_item(char*);
+ void update_item(char*, int);
  /* Mitteilung aktualisieren */
  void update_msg(char*, int);
  /* GAME OVER */

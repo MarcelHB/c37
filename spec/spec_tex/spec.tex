@@ -615,7 +615,7 @@ void update_hp(int h);
 	\end{description}
 
 		\begin{lstlisting}[caption=update\_item]{}
-void update_item(char *item);
+void update_item(char *item, int n);
 		\end{lstlisting}
 
 	\begin{description}
@@ -623,6 +623,7 @@ void update_item(char *item);
 		\item[Parameter:] \hfill
 		\begin{itemize}
 			\item item - Name des neuen Items
+			\item n - Zahl, die vor dem Namen im Format Item n: item angezeigt wird, wird weggelassen, wenn negativ
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}

@@ -14,6 +14,9 @@
 #include "action.h"
 #include "sdl_output.h"
 
+/*Helper, löscht Item*/
+static int delete_item(Item*, Spawn*);
+
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(SDL_Event *event, Map *map){
 	Spawn *player=get_player_spawn(map);
@@ -129,7 +132,7 @@ void process_event(SDL_Event *event, Map *map){
 		/*Inventar durchschalten*/
 		if(player->inventory!=NULL && player->inventory_size!=0){
 			player->selected_item=(player->selected_item+1)%player->inventory_size;
-			update_item(player->inventory[player->selected_item]->name);
+			update_item(player->inventory[player->selected_item]->name, player->selected_item+1);
 		}
 		break;
 	case SDLK_PAGEDOWN:
@@ -138,7 +141,7 @@ void process_event(SDL_Event *event, Map *map){
 				player->selected_item=player->selected_item-1;
 			else
 				player->selected_item=player->inventory_size-1;
-			update_item(player->inventory[player->selected_item]->name);
+			update_item(player->inventory[player->selected_item]->name, player->selected_item+1);
 		}
 		break;
 	case SDLK_INSERT:
@@ -322,7 +325,8 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 				push_msg(item_message, map);
 				free(item_message);
 			}
-			update_item(tile->items[tile->number_of_items-1]->name);
+			self->selected_item=self->inventory_size-1;
+			update_item(self->inventory[self->selected_item]->name, self->selected_item+1);
 			
 			free(tile->items);
 			tile->items = NULL;
@@ -383,7 +387,7 @@ static int delete_item(Item *item, Spawn *spawn){
 			/*ausgewähltes Item anpassen*/
 			spawn->selected_item=(spawn->selected_item>1) ? spawn->selected_item-1 : 0;
 			/*Ausgabe anpassen*/
-			update_item(spawn->inventory[spawn->selected_item]->name);
+			update_item(spawn->inventory[spawn->selected_item]->name, spawn->selected_item+1);
 		}
 		return 1;
 	}
@@ -396,7 +400,7 @@ static int delete_item(Item *item, Spawn *spawn){
 			spawn->inventory_size--;
 			if(!spawn->npc){
 				spawn->selected_item=0;
-				update_item(NULL);
+				update_item(NULL, -1);
 			}
 		}
 		else

@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 	}
 	/*Wenn was im Inventar ist, anzeigen*/
 	if(player->inventory_size)
-		update_item(player->inventory[0]->name);
+		update_item(player->inventory[0]->name, 1);
 	/*Map zeichnen*/
 	int num_tiles = OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y, i;
 	

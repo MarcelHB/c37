@@ -27,6 +27,7 @@ static SDL_Surface *screen;
 
 static unsigned int hp=100;
 static char *inv=NULL;
+static int inv_n=1;
 static char *msg=NULL;
 static int latest=0;
 
@@ -148,13 +149,26 @@ void output_draw(BufferTile *buf, int tiles){
 		}
 		msg=msg_tmp;
 	}
-	/*Statusleiste, width sollte mindestens 18 sein*/
-	if(width<18){
-		fprintf(stderr, "Das Spielfeld muss mindestens 18 Zeichen breit sein, sonst ist kein Platz fuer die Statusleiste.");
+	/*Statusleiste, width sollte mindestens 20 sein*/
+	if(width<20){
+		fprintf(stderr, "Das Spielfeld muss mindestens 20 Zeichen breit sein, sonst ist kein Platz fuer die Statusleiste.");
 		exit(EXIT_FAILURE);
 	}
-	char *status=(char *)ex_calloc(width+1, sizeof(char));
-	sprintf(status, "HP: %03d | Item: ", hp);
+	char *status;
+	/*keine Zahl vorm Item, wenn <0*/
+	if(inv_n<0){
+		status=(char *)ex_calloc(width+1, sizeof(char));
+		sprintf(status, "HP: %03d | Item: ", hp);
+	}
+	else{
+		char *tmp=(char *)ex_calloc(21, sizeof(char));
+		sprintf(tmp, "%d", inv_n);
+		int intlen=strlen(tmp);
+		free(tmp);
+		status=(char *)ex_calloc(width+intlen+3, sizeof(char));
+		sprintf(status, "HP: %03d | Item %d: ", hp, inv_n);
+
+	}
 	if(inv==NULL)
 		strcat(status, "--");
 	else
@@ -190,8 +204,10 @@ void update_hp(int h){
  * Aktualisiert die Statusleiste, sodass sie beim nächsten Neuzeichnen
  * des Bildschirms item als ausgewähltes Item anzeigt.
  * Wenn item NULL ist, steht an der Stelle "--".
+ * Die Zahl n wird vor dem Namen ausgegeben (um das Navigieren zu vereinfachen)
+ * und weggelassen, wenn negativ.
  */
-void update_item(char *item){
+void update_item(char *item, int n){
 	if(item==NULL){
 		free(inv);
 		inv=NULL;
@@ -199,6 +215,7 @@ void update_item(char *item){
 	else{
 		inv=(char *)ex_realloc(inv, (strlen(item)+1)*sizeof(char));
 		strcpy(inv, item);
+		inv_n=n;
 	}
 }
 
@@ -215,7 +232,7 @@ void update_msg(char *m, int l){
 }
 
 /**
- * Großes rotes GAME OVER
+ * Großes rotes GAME OVER oder grünes WELL DONE
  */
 void game_over(int successful){
 	/*größere Schrift*/
