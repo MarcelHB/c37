@@ -192,8 +192,14 @@ void update_hp(int h){
  * Wenn item NULL ist, steht an der Stelle "--".
  */
 void update_item(char *item){
-	inv=(char *)ex_realloc(inv, (strlen(item)+1)*sizeof(char));
-	strcpy(inv, item);
+	if(item==NULL){
+		free(inv);
+		inv=NULL;
+	}
+	else{
+		inv=(char *)ex_realloc(inv, (strlen(item)+1)*sizeof(char));
+		strcpy(inv, item);
+	}
 }
 
 /**
