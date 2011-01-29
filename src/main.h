@@ -17,5 +17,7 @@
  void create_output_buffer(Map*, BufferTile*, int);
  /* Übermalt Ausgabepuffer mit nil-Werten */
  void clear_output_buffer(BufferTile*, int);
+ /* Schreibt die für die Ausgabe notwendigen statistischen Daten in das ID-Struct */
+ void get_interface_data(Map*, InterfaceData*);
  
  #endif

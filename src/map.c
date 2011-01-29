@@ -173,5 +173,4 @@ void push_msg(char *msg, Map *map){
 	free(map->msg_hist[map->latest_msg]);
 	map->msg_hist[map->latest_msg] = (char*)ex_calloc(strlen(msg) + 1, 1);
 	strcpy(map->msg_hist[map->latest_msg], msg);
-	update_msg(msg, 1);
 }

@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "SDL.h"
 
 #include "memory.h"
@@ -22,10 +23,16 @@ static Map *map;
 static BufferTile *buf;
 
 int main(int argc, char *argv[]){
+	Spawn *player;
+	InterfaceData idata = {0, NULL, -1, NULL, 1};
+	SDL_Event event;
+	int num_tiles = OUTPUT_IN_GLYPHS_X * OUTPUT_IN_GLYPHS_Y, i;
+	
 	/*SDL anmachen*/
 	if(SDL_Init(SDL_INIT_VIDEO))
 		return EXIT_FAILURE;
 	SDL_EnableKeyRepeat(200, 50);
+	
 	/*Karte laden*/
 	if(argc==2)
 		map=load_map(argv[1]);
@@ -37,17 +44,16 @@ int main(int argc, char *argv[]){
 		fprintf(stderr,"Fehler beim Laden der Karte\n");
 		return EXIT_FAILURE;
 	}
-	map->msg_hist=ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
-	Spawn *player=get_player_spawn(map);
+	
+	player = get_player_spawn(map);
 	if(player==NULL){
 		fprintf(stderr, "Kein Spieler auf der Karte\n");
 		return EXIT_FAILURE;
 	}
-	/*Wenn was im Inventar ist, anzeigen*/
-	if(player->inventory_size)
-		update_item(player->inventory[0]->name, 1);
+	
+	map->msg_hist = ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
+	
 	/*Map zeichnen*/
-	int num_tiles = OUTPUT_IN_GLYPHS_X*OUTPUT_IN_GLYPHS_Y, i;
 	
 	/* Ausgabepuffer initialisieren */
 	buf = (BufferTile*)ex_malloc(sizeof(BufferTile) * num_tiles);
@@ -57,12 +63,13 @@ int main(int argc, char *argv[]){
 	}
 	
 	output_init(OUTPUT_IN_GLYPHS_X, OUTPUT_IN_GLYPHS_Y, map->name);
+	
 	explore_area(player, map);
 	create_output_buffer(map, buf, num_tiles);
-	output_draw(buf, num_tiles);
+	get_interface_data(map, &idata);
+	output_draw(buf, num_tiles, &idata);
 	
 	/*Eingabeloop*/
-	SDL_Event event;
 	int quit=0;
 	while(SDL_WaitEvent(&event)){
 		if(event.type == SDL_KEYDOWN) {
@@ -73,7 +80,8 @@ int main(int argc, char *argv[]){
 			}
 			process_event(&event, map);
 			create_output_buffer(map, buf, num_tiles);
-			output_draw(buf, num_tiles);
+			get_interface_data(map, &idata);
+			output_draw(buf, num_tiles, &idata);
 		} else if(event.type == SDL_QUIT) {
 			quit=1;
 			break;
@@ -101,6 +109,7 @@ int main(int argc, char *argv[]){
 	}
 	free(buf);
 	flush_map(map);
+	free(idata.message); free(idata.item_name);
 	
 	output_close();
 	SDL_Quit();
@@ -140,11 +149,38 @@ void create_output_buffer(Map* map, BufferTile* buf, int size) {
 	}
 }
 
-/*--------------------------------------------------------------------------*/
+ /*--------------------------------------------------------------------------*/
  void clear_output_buffer(BufferTile* buf, int num) {
 	int i = 0;
 	for(; i < num; ++i) {
 		buf[i].glyph = ' ';
 		buf[i].color = 0x00000000;
 	}
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+ void get_interface_data(Map* map, InterfaceData* id) {
+	Spawn* player = get_player_spawn(map);
+	
+	/* Lebenspunkte Spieler */
+	id->player_hp = player->hp;
+	
+	free(id->item_name); free(id->message);
+	
+	if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
+		id->item_name = (char*)ex_calloc(strlen(player->inventory[player->selected_item]->name) + 1, 1);
+		strcpy(id->item_name, player->inventory[player->selected_item]->name);
+		id->item_index = player->selected_item + 1;
+	} else {
+		/* keines vorhanden */
+		id->item_index = -1;
+		id->item_name = NULL;
+	}
+	
+	/* aktuelle Nachricht */
+	if(map->msg_hist[map->current_msg] != NULL) {
+		id->message = (char*)ex_calloc(strlen(map->msg_hist[map->current_msg]) + 1, 1);
+		strcpy(id->message, map->msg_hist[map->current_msg]);
+	}
+	id->last_message = map->current_msg == map->latest_msg ? 1 : 0;
  }

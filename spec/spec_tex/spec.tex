@@ -149,6 +149,24 @@ Elemente der Struktur:
 			\item glyph - Zeichen, das dargestellt werden soll.
 			\item color - 32-bit Farbinformation im Format R8G8B8A8
 		\end{itemize}
+		
+		\begin{lstlisting}[caption=InterfaceData]{}
+typedef struct InterfaceData {
+	unsigned int player_hp;
+	char* item_name;
+	int item_index;
+	char* message;
+	char last_message;
+ } InterfaceData;
+		\end{lstlisting} \hspace*{\fill} \\
+Elemente der Struktur:
+		\begin{itemize}
+			\item player\_hp - aktuelle Lebenspunkte des Spielers
+			\item item\_name - Name des ausgewählten Items
+			\item item\_index - Indexzahl des ausgewählten Items
+			\item message - anzuzeigende Nachricht
+			\item last\_message - Flag, ob es sich um die neueste Nachricht handelt.
+		\end{itemize}
 	
 	%----------------------------------------------------------------------------
 	\newpage
@@ -192,7 +210,7 @@ void spawn_uses_item(Spawn* spawn, Item* item, Map* map);
 		\item[Rückgabe:] -
 	\end{description}
 	
-		\begin{lstlisting}[caption=free\_spawn]{}
+		\begin{lstlisting}[caption=free\_item]{}
 void free_item(Item* item);
 		\end{lstlisting}
 		
@@ -568,7 +586,7 @@ void output_init(int width, int height, char *mapname);
 	\end{description}
 	
 		\begin{lstlisting}[caption=output\_draw]{}
-void output_draw(BufferTile* buf, int tiles);
+void output_draw(BufferTile* buf, int tiles, InterfaceData* id);
 		\end{lstlisting}
 		
 	\begin{description}
@@ -577,6 +595,7 @@ void output_draw(BufferTile* buf, int tiles);
 		\begin{itemize}
 			\item map - Ausgabepuffer, der gezeichnet werden soll.
 			\item tiles - Anzahl der Tiles des Puffers.
+			\item id - Statistische Werte, die nicht in BufferTile-Form gespeichert sind.
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
@@ -601,50 +620,7 @@ void output_close();
 		\item[Rückgabe:] -
 	\end{description}
 
-		\begin{lstlisting}[caption=update\_hp]{}
-void update_hp(int h);
-		\end{lstlisting}
-
-	\begin{description}
-		\item[Verwendung:] Aktualisiert die Anzahl der Lebenspunkte, die beim nächsten Aufruf von output\_draw() in der Statusleiste angezeigt werden.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item h - neue Lebenspunkte
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-
-		\begin{lstlisting}[caption=update\_item]{}
-void update_item(char *item, int n);
-		\end{lstlisting}
-
-	\begin{description}
-		\item[Verwendung:] Aktualisiert die Anzeige des Items, das beim nächsten Aufruf von output\_draw() in der Statusleiste angezeigt werden.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item item - Name des neuen Items
-			\item n - Zahl, die vor dem Namen im Format Item n: item angezeigt wird, wird weggelassen, wenn negativ
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
 		
-		\begin{lstlisting}[caption=update\_msg]{}
-void update_msg(char *m, int l);
-		\end{lstlisting}
-
-	\begin{description}
-		\item[Verwendung:] Speichert einen String, der beim nächsten Aufruf von output\_draw() über der Statusleiste angezeigt wird (und dabei wahrscheinlich
-			einen Teil des Spielfeldes überschreibt). Die Nachricht wird möglicherweise abgeschnitten, wenn sie zu lang ist.
-		\item[Parameter:] \hfill
-		\begin{itemize}
-			\item m - die Nachricht
-			\item l - Flag, obs eine akutelle Nachricht ist
-		\end{itemize}
-		\item[Rückgabe:] -
-	\end{description}
-
-
-
 	%----------------------------------------------------------------------------
 	\newpage
 	\section*{Bewertungskriterien}

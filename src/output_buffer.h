@@ -16,4 +16,17 @@
 	unsigned long color;
  } BufferTile;
  
+typedef struct InterfaceData {
+	/* Spieler HP */
+	unsigned int player_hp;
+	/* ausgewähltes Item */
+	char* item_name;
+	/* Indexnummer dessen */
+	int item_index;
+	/* anzuzeigende Nachricht */
+	char* message;
+	/* aktuelleste? */
+	char last_message;
+ } InterfaceData;
+ 
  #endif

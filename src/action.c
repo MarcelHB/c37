@@ -132,7 +132,6 @@ void process_event(SDL_Event *event, Map *map){
 		/*Inventar durchschalten*/
 		if(player->inventory!=NULL && player->inventory_size!=0){
 			player->selected_item=(player->selected_item+1)%player->inventory_size;
-			update_item(player->inventory[player->selected_item]->name, player->selected_item+1);
 		}
 		break;
 	case SDLK_PAGEDOWN:
@@ -141,19 +140,17 @@ void process_event(SDL_Event *event, Map *map){
 				player->selected_item=player->selected_item-1;
 			else
 				player->selected_item=player->inventory_size-1;
-			update_item(player->inventory[player->selected_item]->name, player->selected_item+1);
 		}
 		break;
 	case SDLK_INSERT:
 		/*durch die History scrollen, nicht wrappen*/
 		if(map->current_msg!=map->latest_msg && map->msg_hist[map->current_msg+1]!=NULL){
 			map->current_msg++;
-			update_msg(map->msg_hist[map->current_msg], map->current_msg==map->latest_msg);
 		}
 		break;
 	case SDLK_DELETE:
 		if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
-			update_msg(map->msg_hist[--map->current_msg], 0);
+			--map->current_msg;
 		break;
 	case SDLK_RETURN:
 		if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
@@ -278,10 +275,8 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
     } else if (SPAWN_TYPE_HOUND == self->type && SPAWN_TYPE_PLAYER == other->type) {
         if (other->hp <= 5) {
             other->hp = 0;
-            update_hp(self->hp);
         } else {
             other->hp -= 5;
-            update_hp(self->hp);
         }
     }
 }
@@ -306,7 +301,6 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 		if (tile->type == TILE_TYPE_WALL) {
 			if (self->hp > 0) {
 				--self->hp;
-				update_hp(self->hp);
 				push_msg("Kopf -> Wand (-1HP)", map);
 			}
 		}
@@ -326,7 +320,6 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 				free(item_message);
 			}
 			self->selected_item=self->inventory_size-1;
-			update_item(self->inventory[self->selected_item]->name, self->selected_item+1);
 			
 			free(tile->items);
 			tile->items = NULL;
@@ -348,7 +341,6 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
                 self->hp = self->max_hp;
             }
 			push_msg("Schluck! (Heiltrank)", map);
-			update_hp(self->hp);
 			/* raus mit dem Item ... */
 			delete_item(item, self);
             break;
@@ -386,8 +378,6 @@ static int delete_item(Item *item, Spawn *spawn){
 		if(!spawn->npc){
 			/*ausgewähltes Item anpassen*/
 			spawn->selected_item=(spawn->selected_item>1) ? spawn->selected_item-1 : 0;
-			/*Ausgabe anpassen*/
-			update_item(spawn->inventory[spawn->selected_item]->name, spawn->selected_item+1);
 		}
 		return 1;
 	}
@@ -400,7 +390,6 @@ static int delete_item(Item *item, Spawn *spawn){
 			spawn->inventory_size--;
 			if(!spawn->npc){
 				spawn->selected_item=0;
-				update_item(NULL, -1);
 			}
 		}
 		else
