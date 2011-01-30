@@ -9,14 +9,15 @@
 #ifndef _C37_ACTION_H
 #define _C37_ACTION_H
 
-#include "SDL.h"
 #include "map.h"
 #include "spawn.h"
 #include "item.h"
 #include "tile.h"
 
+typedef enum {UP, DOWN, LEFT, RIGHT, ACTION, USE, NEXT_MSG, PREV_MSG, NEXT_ITEM, PREV_ITEM, INVALID} KeyAction;
+
 /*aktualisiert eine Map gemäß einem Event*/
-void process_event(SDL_Event*, Map*);
+void process_event(KeyAction, Map*);
 
 /* war mal spawn.h, dann map.h */
 /* Wenn ein Spawn auf einein anderen trifft, gucke, was hier passiert (schubsen/töten/sprechen/...) */

@@ -20,4 +20,6 @@
  /* Schreibt die für die Ausgabe notwendigen statistischen Daten in das ID-Struct */
  void get_interface_data(Map*, InterfaceData*);
  
+ KeyAction get_action(SDLKey);
+ 
  #endif

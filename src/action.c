@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include "globals.h"
 #include "memory.h"
-#include "SDL.h"
 #include "map.h"
 #include "spawn.h"
 #include "tile.h"
@@ -18,13 +17,13 @@
 static int delete_item(Item*, Spawn*);
 
 /*aktualisiert eine Map gemäß einem Event*/
-void process_event(SDL_Event *event, Map *map){
+void process_event(KeyAction action, Map *map){
 	Spawn *player=get_player_spawn(map);
 	Spawn *npc;
 	Tile *tile;
 	/*Aktion des Spielers*/
-	switch(event->key.keysym.sym){
-	case SDLK_UP:
+	switch(action){
+	case UP:
 		npc=get_spawn_at(player->x,player->y-1, map);
 		player->direction=NORTH;
 		/*kein NPC in Laufrichtung*/
@@ -40,7 +39,7 @@ void process_event(SDL_Event *event, Map *map){
 			spawn_spawn_collision(player,npc,map);
 		}
 		break;
-	case SDLK_DOWN:
+	case DOWN:
 		npc=get_spawn_at(player->x,player->y+1, map);
 		player->direction=SOUTH;
 		/*kein NPC in Laufrichtung*/
@@ -56,7 +55,7 @@ void process_event(SDL_Event *event, Map *map){
 			spawn_spawn_collision(player,npc,map);
 		}
 		break;
-	case SDLK_LEFT:
+	case LEFT:
 		npc=get_spawn_at(player->x-1,player->y, map);
 		/*kein NPC in Laufrichtung*/
 		player->direction=WEST;
@@ -72,7 +71,7 @@ void process_event(SDL_Event *event, Map *map){
 			spawn_spawn_collision(player,npc,map);
 		}
 		break;
-	case SDLK_RIGHT:
+	case RIGHT:
 		npc=get_spawn_at(player->x+1,player->y, map);
 		player->direction=EAST;
 		/*kein NPC in Laufrichtung*/
@@ -88,7 +87,7 @@ void process_event(SDL_Event *event, Map *map){
 			spawn_spawn_collision(player,npc,map);
 		}
 		break;
-	case SDLK_SPACE:
+	case ACTION:
 		/*zu toggelnden Spawn/Tile feststellen*/
 		switch(player->direction){
 		case NORTH:
@@ -128,13 +127,13 @@ void process_event(SDL_Event *event, Map *map){
 			/*vll noch sowas wie spawn_toggle_spawn?*/
 		}
 		break;
-	case SDLK_PAGEUP:
+	case NEXT_ITEM:
 		/*Inventar durchschalten*/
 		if(player->inventory!=NULL && player->inventory_size!=0){
 			player->selected_item=(player->selected_item+1)%player->inventory_size;
 		}
 		break;
-	case SDLK_PAGEDOWN:
+	case PREV_ITEM:
 		if(player->inventory!=NULL && player->inventory_size!=0){
 			if(player->selected_item)
 				player->selected_item=player->selected_item-1;
@@ -142,17 +141,17 @@ void process_event(SDL_Event *event, Map *map){
 				player->selected_item=player->inventory_size-1;
 		}
 		break;
-	case SDLK_INSERT:
+	case NEXT_MSG:
 		/*durch die History scrollen, nicht wrappen*/
 		if(map->current_msg!=map->latest_msg && map->msg_hist[map->current_msg+1]!=NULL){
 			map->current_msg++;
 		}
 		break;
-	case SDLK_DELETE:
+	case PREV_MSG:
 		if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
 			--map->current_msg;
 		break;
-	case SDLK_RETURN:
+	case USE:
 		if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
 			spawn_uses_item (player, player->inventory[player->selected_item], map);
 		}

@@ -69,14 +69,18 @@ int main(int argc, char *argv[]){
 	
 	/*Eingabeloop*/
 	int quit=0;
+	KeyAction current_action = INVALID;
 	while(SDL_WaitEvent(&event)){
 		if(event.type == SDL_KEYDOWN) {
+			current_action = get_action(event.key.keysym.sym);
 			/*bei Escape beenden*/
 			if(event.key.keysym.sym == SDLK_ESCAPE){
 				quit=1;
 				break;
 			}
-			process_event(&event, map);
+			if(current_action != INVALID) {
+				process_event(current_action, map);
+			}
 			create_output_buffer(map, buf, num_tiles);
 			get_interface_data(map, &idata);
 			output_draw(buf, num_tiles, &idata);
@@ -181,4 +185,39 @@ void create_output_buffer(Map* map, BufferTile* buf, int size) {
 		strcpy(id->message, map->msg_hist[map->current_msg]);
 	}
 	id->last_message = map->current_msg == map->latest_msg ? 1 : 0;
+ }
+
+ /*--------------------------------------------------------------------------*/
+ KeyAction get_action(SDLKey key) {
+	if(key == SDLK_UP) {	
+		return UP;
+	}
+	else if(key == SDLK_DOWN) {	
+		return DOWN;
+	}
+	else if(key == SDLK_LEFT) {	
+		return LEFT;
+	}
+	else if(key == SDLK_RIGHT) {	
+		return RIGHT;
+	}
+	else if(key == SDLK_SPACE) {	
+		return ACTION;
+	}
+	else if(key == SDLK_PAGEUP) {	
+		return NEXT_ITEM;
+	}
+	else if(key == SDLK_PAGEDOWN) {	
+		return PREV_ITEM;
+	}
+	else if(key == SDLK_INSERT) {	
+		return NEXT_MSG;
+	}
+	else if(key == SDLK_DELETE) {	
+		return PREV_MSG;
+	}
+	else if(key == SDLK_RETURN) {	
+		return USE;
+	}
+	return INVALID;
  }
