@@ -75,6 +75,7 @@
  #define NODE_ITEMS						"items"
  
  #define NODE_SPACE						"space"
+ #define NODE_FLOOR						"floor"
  #define NODE_ONCE						"once"
  #define NODE_TOGGLE_ID					"tid"
  #define NODE_DIRECTIONS				"dirs"
@@ -124,6 +125,7 @@
  #define STACK_DEPTH          			0x00000020
  #define STACK_MESSAGE         			0x00000021
  #define STACK_KEY            			0x00000022
+ #define STACK_FLOOR           			0x00000023
  
  /* lesbare Tile-Type Namen */
  #define TILE_NAME_WALL					"w"
@@ -140,5 +142,6 @@
  /* lesbare Item-Type Namen */
  #define ITEM_NAME_HEALTH_POTION		"hptn"
  #define ITEM_NAME_KEY          		"key"
+ #define ITEM_NAME_DEAD_CAT        		"dcat"
  
  #endif

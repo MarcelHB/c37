@@ -36,7 +36,8 @@
 		/* Wand */
 		if(tile->type == TILE_TYPE_WALL) {
 			WallProperties wall_props = {
-				/*.space = */0
+				/*.space = */0,
+				/*.floor = */0
 			};
 			tile->properties = malloc(sizeof(WallProperties));
 			*(WallProperties*)tile->properties = wall_props;
@@ -121,7 +122,7 @@ bool
 tile_can_light (Tile t) {
     switch (t.type) {
         case TILE_TYPE_WALL:
-            return false;
+            return ((WallProperties *)t.properties)->floor ? true : false;
         case TILE_TYPE_DOOR:
             return ((DoorProperties *)t.properties)->open ? true : false;
         default:
@@ -140,7 +141,7 @@ tile_can_walk (Tile t) {
 		case TILE_TYPE_EXIT:
             return true;
         case TILE_TYPE_WALL:
-            return ((WallProperties *)t.properties)->space ? true : false;
+            return ((WallProperties *)t.properties)->space || ((WallProperties *)t.properties)->floor ? true : false;
         case TILE_TYPE_DOOR:
             return ((DoorProperties *)t.properties)->open ? true : false;
         default:

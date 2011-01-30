@@ -310,14 +310,18 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 			/* Items aufsammeln. */
 			self->inventory = ex_realloc(self->inventory, (self->inventory_size + tile->number_of_items) * sizeof(Item*));
 			for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
-				self->inventory[++self->inventory_size - 1] = tile->items[ii];
+				if(tile->items[ii]->type != ITEM_TYPE_INVALID) {
+					self->inventory[++self->inventory_size - 1] = tile->items[ii];
+				}
 			}
 			/* Aufzählen, was aufgesammelt */
 			for(unsigned int i = 0; i < tile->number_of_items; ++i) {
-				char* item_message = (char*)ex_calloc(22 + strlen(tile->items[i]->name), 1);				
-				sprintf(item_message, "Du hast aufgenommen: %s", tile->items[i]->name);
-				push_msg(item_message, map);
-				free(item_message);
+				if(tile->items[i]->type != ITEM_TYPE_INVALID) {
+					char* item_message = (char*)ex_calloc(22 + strlen(tile->items[i]->name), 1);				
+					sprintf(item_message, "Du hast aufgenommen: %s", tile->items[i]->name);
+					push_msg(item_message, map);
+					free(item_message);
+				}
 			}
 			self->selected_item=self->inventory_size-1;
 			
@@ -344,6 +348,9 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
 			/* raus mit dem Item ... */
 			delete_item(item, self);
             break;
+		case ITEM_TYPE_DEAD_CAT:
+			push_msg("Miau?", map);
+			break;
         default:
             break;
     }
@@ -431,6 +438,7 @@ void toggle_tile (Tile *self, Map *map) {
 			}
 		}
 	}
+	/* Tür */
 	else if(self->type == TILE_TYPE_DOOR)  {
 		DoorProperties* door_props = (DoorProperties *)self->properties;
 		/* Tür hat eigenen Schalter und ist nicht verschlossen */
@@ -470,5 +478,10 @@ void toggle_tile (Tile *self, Map *map) {
 			/* Was das Ding zu sagen hat, in den Ausgabestream packen! */
 			push_msg(hint_props->message, map);
 		}
+	}
+	/* Wand */
+	else if(self->type == TILE_TYPE_WALL)  {
+		WallProperties* wall_props = (WallProperties *)self->properties;
+		wall_props->floor ^= 1;
 	}
 }

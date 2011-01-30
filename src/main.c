@@ -167,7 +167,7 @@ void create_output_buffer(Map* map, BufferTile* buf, int size) {
 	
 	free(id->item_name); free(id->message);
 	
-	if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
+	if(player->inventory != NULL && player->inventory[player->selected_item] != NULL && player->inventory[player->selected_item]->type != ITEM_TYPE_INVALID) {
 		id->item_name = (char*)ex_calloc(strlen(player->inventory[player->selected_item]->name) + 1, 1);
 		strcpy(id->item_name, player->inventory[player->selected_item]->name);
 		id->item_index = player->selected_item + 1;

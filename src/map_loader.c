@@ -858,6 +858,10 @@
 			if(key == STACK_SPACE) {
 				wall_props->space = value;
 			}
+			/* Wand->Zustand */
+			else if(key == STACK_FLOOR) {
+				wall_props->floor = value;
+			}
 		}
 		/* Tür */
 		else if(type == TILE_TYPE_DOOR) {
@@ -1037,6 +1041,10 @@
 	else if (strcmp(name, NODE_SPACE) == 0) {
 		return STACK_SPACE;
 	}
+	/* Wand->eingefahren */
+	else if (strcmp(name, NODE_FLOOR) == 0) {
+		return STACK_FLOOR;
+	}
 	/* Tür->horizontal */
 	else if (strcmp(name, NODE_HORIZONTAL) == 0) {
 		return STACK_HORIZONTAL;
@@ -1136,6 +1144,10 @@
 	/* Schluessel */
 	else if(strcmp(name, ITEM_NAME_KEY) == 0) {
 		return ITEM_TYPE_KEY;
+	}
+	/* tote Katze */
+	else if(strcmp(name, ITEM_NAME_DEAD_CAT) == 0) {	
+		return ITEM_TYPE_DEAD_CAT;
 	}
 	return ITEM_TYPE_INVALID;
  }

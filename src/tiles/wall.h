@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -13,6 +13,8 @@
  typedef struct WallProperties {
 	/* doch begehbar? */
 	char space;
+	/* gewöhnlicher Boden */
+	char floor;
  } WallProperties;
  
  #endif

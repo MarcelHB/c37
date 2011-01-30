@@ -130,6 +130,15 @@ void render_tile(BufferTile* buf, Tile* tile, Map* map) {
 				/* 0.6 ist etwa das richtige, wenn 0->0xFF, 255->0x00 gelten soll */
 				blue += ((0xFF - water_props->depth) * 0.6);
 				buf->color = (blue << 8);
+			} 
+			/* Wand */
+			else if(tile->type == TILE_TYPE_WALL) {
+				WallProperties* wall_props = (WallProperties*)tile->properties;
+				/* freigelegt */
+				if(wall_props->floor) {
+					buf->glyph = TILE_GLYPH_FLOOR;
+					buf->color = 0xFFFFFF00;
+				}
 			}
 		}
 	}
