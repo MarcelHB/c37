@@ -947,6 +947,7 @@
 	/* bewahre Pointer */
 	memcpy(map, &intermediate_map, map_size);
 	reset_intermediate_map();
+	map->msg_hist = ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
 	return map;
  }
  

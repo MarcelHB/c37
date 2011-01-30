@@ -51,8 +51,6 @@ int main(int argc, char *argv[]){
 		return EXIT_FAILURE;
 	}
 	
-	map->msg_hist = ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char *));
-	
 	/*Map zeichnen*/
 	
 	/* Ausgabepuffer initialisieren */

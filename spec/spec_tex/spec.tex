@@ -489,7 +489,21 @@ void clear_output_buffer(BufferTile* buf, int tiles);
 		\end{itemize}
 		\item[Rückgabe:] -
 	\end{description}
-
+	
+		\begin{lstlisting}[caption=get\_interface\_data]{}
+void get_interface_data(Map* map, InterfaceData* idata);
+		\end{lstlisting}
+		
+	\begin{description}
+		\item[Verwendung:] Schreibt in die Struktur \textit{id} die Informationen über den Zustand des Spielers auf der Karte \textit{map}.
+		\item[Parameter:] \hfill
+		\begin{itemize}
+			\item map - zu analysierende Karte
+			\item idata - Struktur, in die die Werte kopiert werden.
+		\end{itemize}
+		\item[Rückgabe:] -
+	\end{description}
+	
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{action.h}

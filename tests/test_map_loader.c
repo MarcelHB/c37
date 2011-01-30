@@ -39,9 +39,7 @@ int main() {
 		printf("ERROR! Unable to load file!");
 		return 1;
 	}
-	
-	map->msg_hist=ex_calloc(MESSAGE_STREAM_LIMIT, sizeof(char*));
-	
+
 	/* Karte->Name */
 	printf("checking map name...");
 	if(strcmp(MAP_NAME, map->name) != 0) {
