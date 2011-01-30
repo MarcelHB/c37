@@ -301,7 +301,7 @@
 						/*.x = */0,
 						/*.y = */0,
 						/*.spotted = */0,
-						/*.brightnes = */0xFF,
+						/*.brightness = */0xFF,
 						/*.glyph = */' ',
 						/*.color = */0xFFFFFF00,
 						/*.type = */TILE_TYPE_INVALID,

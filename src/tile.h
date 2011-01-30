@@ -22,7 +22,7 @@
 	/* erforscht? */
 	char spotted;
 	/* Helligkeit? */
-	unsigned int brightness;
+	unsigned char brightness;
 	/* ASCII-Zeichen zur Anzeige */
 	char glyph;
 	/* 32-bit Farbe nach RGBA */

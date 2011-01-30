@@ -120,6 +120,10 @@
 
 bool
 tile_can_light (Tile t) {
+	if(t.brightness < MIN_VISIBILTY_BRIGHTNESS) {
+		return false;
+	}
+	
     switch (t.type) {
         case TILE_TYPE_WALL:
             return ((WallProperties *)t.properties)->floor ? true : false;
