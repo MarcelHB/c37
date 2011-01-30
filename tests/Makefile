@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -std=c99 -pedantic -Wall -Wextra -O0 -g
 SRC = ../src/
 TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o
-TEST_LOGIC_OBJECTS = test_logic.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o map.o
+TEST_LOGIC_OBJECTS = test_logic.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o map.o action.o
 .SUFFIXES: .c
 
 test_logic: $(TEST_LOGIC_OBJECTS)
@@ -30,5 +30,7 @@ map.o: $(SRC)map.c
 	$(CC) $(CFLAGS) -c $(SRC)map.c
 item.o: $(SRC)item.c
 	$(CC) $(CFLAGS) -c $(SRC)item.c
+action.o: $(SRC)action.c
+	$(CC) $(CFLAGS) -c $(SRC)action.c
 
 	
