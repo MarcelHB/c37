@@ -168,7 +168,10 @@ void explore_area(Spawn* spawn, Map* map) {
 	for(i = y; i < y + VISUAL_SQUARE; ++i) {
 		for(j = x; j < x + VISUAL_SQUARE; ++j) {
 			if(j < map->x && i < map->y) {
-				map->tiles[i * map->x + j].spotted = 1;
+				/* faktisch nicht sichtbar */
+				if(map->tiles[i * map->x + j].brightness >= MIN_VISIBILTY_BRIGHTNESS) {
+					map->tiles[i * map->x + j].spotted = 1;
+				}
 			}
 		}
 	}

@@ -18,7 +18,7 @@
  #define OUTPUT_IN_GLYPHS_X 80
  #define OUTPUT_IN_GLYPHS_Y 25
  #define MESSAGE_STREAM_LIMIT 100
- #define MIN_VISIBILTY_BRIGHTNESS 30
+ #define MIN_VISIBILTY_BRIGHTNESS 60
  
  /* einige Spielregeln */
  #define VISUAL_SQUARE 5
