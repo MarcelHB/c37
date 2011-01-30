@@ -73,20 +73,21 @@
 		\hline
 		OUTPUT\_IN\_GLYPHS\_X & int & vertikale Anzahl an auszugebenden Zeichen \\
 		OUTPUT\_IN\_GLYPHS\_Y & int & horizontale Anzahl an auszugebenden Zeichen \\
-		MESSAGE\_STREAM\_LIMIT & int & max. Anzahl an gespeicherten Nachrichten
+		MESSAGE\_STREAM\_LIMIT & int & max. Anzahl an gespeicherten Nachrichten 
 	\end{tabular}
 	\vspace{1 cm}
 	Eine Übersicht von semantischen Konfigurationsparametern:\\
 	\vspace{1 cm}
-		\begin{tabular}{ p{5.0cm} | p{2.5cm} | p{8.0cm} }
+		\begin{tabular}{ p{5.5cm} | p{2.5cm} | p{8.0cm} }
 		Konstante & Wert & Zweck \\
 		\hline
 		VISUAL\_SQUARE & int & Kantenlänge des Quadrats (quasi Sichtweite), das bei der Erkundung von unbekannten Bereichen verwendet wird. \\
+		MIN\_VISIBILITY\_BRIGHTNESS & int & Geringere Werte decken eine Kachel nicht mehr auf. \\
 		NORTH & $2^3$ (int) & 4. Bit steht für die Himmelsrichtung Norden \\
 		EAST & $2^2$ (int) & 3. Bit steht für die Himmelsrichtung Osten \\
 		SOUTH & $2^1$ (int) & 2. Bit steht für die Himmelsrichtung Süden \\
-		WEST & $2^0$ (int) & 1. Bit steht für die Himmelsrichtung Westen
-	\end{tabular}
+		WEST & $2^0$ (int) & 1. Bit steht für die Himmelsrichtung Westen 
+	\end{tabular} 
 	%----------------------------------------------------------------------------
 	\newpage
 	\subsubsection*{memory.h}
