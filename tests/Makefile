@@ -5,12 +5,14 @@ TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_parser.o memory.o spawn.o tile.
 TEST_LOGIC_OBJECTS = test_logic.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o map.o action.o
 .SUFFIXES: .c
 
+all: test_logic test_map_loader
 test_logic: $(TEST_LOGIC_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_LOGIC_OBJECTS) -o test_logic -lm
 test_map_loader: $(TEST_MAP_LOADER_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader -lm
 clean:
 	rm -f *.o
+	rm -f *.exe
 
 test_logic.o: test_logic.c
 	$(CC) $(CFLAGS) -c test_logic.c
