@@ -211,7 +211,7 @@
 		/* Spawns werden on the fly angelegt, da ihre Anzahl nicht in direkter Abhängigkeit mit der Kartengröße steht. */
 		if(parent == STACK_ROOT) {
 			/* Root->spawns */
-			if(stack_top == STACK_SPAWNS && map->spawns == NULL) {
+			if(stack_top == STACK_SPAWNS) {
 				if(array_depth == 1) {
 					Spawn spawn = {
 							/*.id = */NULL,
@@ -1131,6 +1131,10 @@
 	/* Player */
 	if(strcmp(name, SPAWN_NAME_PLAYER) == 0) {
 		return SPAWN_TYPE_PLAYER;
+	}
+	/* Bluthund */
+	else if(strcmp(name, SPAWN_NAME_BLOODHOUND) == 0) {
+		return SPAWN_TYPE_HOUND;
 	}
 	return SPAWN_TYPE_INVALID;
  }

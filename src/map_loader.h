@@ -138,6 +138,7 @@
  
  /* lesbare Spawn-Type Namen */
  #define SPAWN_NAME_PLAYER				"player"
+ #define SPAWN_NAME_BLOODHOUND			"bldhnd"
  
  /* lesbare Item-Type Namen */
  #define ITEM_NAME_HEALTH_POTION		"hptn"

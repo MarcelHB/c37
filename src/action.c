@@ -277,6 +277,7 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
         } else {
             other->hp -= 5;
         }
+		push_msg("gebissen! (-5HP)", map);
     }
 }
 
