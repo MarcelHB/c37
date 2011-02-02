@@ -431,7 +431,13 @@ void toggle_tile (Tile *self, Map *map) {
 					else {
 						door_props->locked ^= 1;
 					}
-				} else {
+                }
+                /* Wand */
+                else if(to_toggle->type == TILE_TYPE_WALL)  {
+                    WallProperties* wall_props = (WallProperties *)to_toggle->properties;
+                    wall_props->floor ^= 1;
+                }
+                else {
 					toggle_tile(to_toggle, map);
 				}
 				break;
@@ -478,10 +484,5 @@ void toggle_tile (Tile *self, Map *map) {
 			/* Was das Ding zu sagen hat, in den Ausgabestream packen! */
 			push_msg(hint_props->message, map);
 		}
-	}
-	/* Wand */
-	else if(self->type == TILE_TYPE_WALL)  {
-		WallProperties* wall_props = (WallProperties *)self->properties;
-		wall_props->floor ^= 1;
 	}
 }
