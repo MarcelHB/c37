@@ -15,7 +15,7 @@
 #include "sdl_output.h"
 
 /*Helper, löscht Item*/
-static int delete_item(Item*, Spawn*);
+void delete_item(Item*, Spawn*);
 
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(KeyAction action, Map *map){
@@ -380,53 +380,42 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
     }
 }
 
-/**
- * Löscht das erste Item vom Typ item->type aus dem Inventar des Spawns spawn.
- * Wenn spawn kein Item des Typs hat, bleibt das Inventar unverändert.
- * Gibt die Anzahl der gelöschten Items zurück (0 oder 1).
- */
-static int delete_item(Item *item, Spawn *spawn){
-    /*nur, wenn noch was im Inventar ist*/
-    if(spawn->inventory_size>1){
-        Item **result=(Item **)ex_calloc(spawn->inventory_size-1, sizeof(Item *));
-        unsigned int ins=0;
-        for(;spawn->inventory[ins]->type!=item->type;ins++){
-            /*nicht im Inventar*/
-            if(ins>=spawn->inventory_size){
-                free(result);
-                return 0;
+/*---------------------------------------------------------------------------*/
+void delete_item(Item *item, Spawn *spawn) {
+    /* wenn noch mehr im Inventar ist */
+    if(spawn->inventory_size > 1) {
+        unsigned int new_size = spawn->inventory_size - 1, i, j;
+        Item** new_inventory = (Item**)ex_malloc(new_size * sizeof(Item*));
+        
+        for(i = 0, j = 0; i < spawn->inventory_size; ++i) {
+            if(spawn->inventory[i] != item) {
+                new_inventory[j] = spawn->inventory[i];
+                ++j;
+            } else {
+                free_item(spawn->inventory[i]);
             }
         }
-        memcpy(result,spawn->inventory,ins*sizeof(Item *));
-        /*zweiten Teil nur, wenn noch was über ist*/
-        if(ins<spawn->inventory_size-1){
-            memcpy(result+ins,spawn->inventory+ins+1,(spawn->inventory_size-ins-1)*sizeof(Item *));
-        }
-        free_item(spawn->inventory[ins]);
+        
+        --spawn->inventory_size;
         free(spawn->inventory);
-        spawn->inventory=result;
-        spawn->inventory_size--;
-        if(!spawn->npc){
-            /*ausgewähltes Item anpassen*/
-            spawn->selected_item=(spawn->selected_item>1) ? spawn->selected_item-1 : 0;
+        spawn->inventory = new_inventory;
+        
+        if(!spawn->npc) {
+            /* ausgewähltes Item anpassen */
+            spawn->selected_item = (spawn->selected_item > 1) ? spawn->selected_item - 1 : 0;
         }
-        return 1;
-    }
-    else{
-        /*letztes Element wird gelöscht*/
-        if(spawn->inventory_size==1){
-            free(spawn->inventory[0]);
-            free(spawn->inventory);
-            spawn->inventory=NULL;
-            spawn->inventory_size--;
-            if(!spawn->npc){
-                spawn->selected_item=0;
-            }
+    } 
+    /* nur letztes Element wird gelöscht */
+    else if(spawn->inventory_size == 1) {
+        free_item(spawn->inventory[0]);
+        free(spawn->inventory);
+        spawn->inventory = NULL;
+        --spawn->inventory_size;
+        
+        if(!spawn->npc) {
+            spawn->selected_item = 0;
         }
-        else
-            return 0;
     }
-    return 0;
 }
 
 void toggle_tile (Tile *self, Map *map) {

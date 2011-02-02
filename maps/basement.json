@@ -1,0 +1,70 @@
+/*
+        ######+## ##?#####                  
+#+#     #+~-||..# #......#                  
+#.#     #-/~-|#-###-#....#                  
+#.#?#   #*|#..#.....#..*.#####              
+###.###########.....######...####~~~~~~~~~~~
+##.@.#........|......||||......?#~~~~~~~~~~~
+ ##*###########.....######...#.|.........!~~
+  ###         #.....#    ########~~~~~~~~~~~
+        #######-###-###          ~~~~~~~~~~~
+        #.......# #.*.#                     
+        #h......# #-?-#                     
+        ###########.#.###                   
+              #*.h..#*.*#                   
+              ###########                   
+*/
+
+{
+	"name":"Das Verlies",
+	"x":44,
+	"y":14,
+	"tiles": [
+        /* y: 0 */
+        [{},{},{},{},{},{},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"btn","tid":"door_room_01"},{"type":"w"},{"type":"w"},{},{"type":"w"},{"type":"w"},{"type":"hint","msg":"O O O S S"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 1 */
+        [{"type":"w","brightness":61},{"type":"btn","tid":"cell_wall","brightness":61},{"type":"w","brightness":61},{},{},{},{},{},{"type":"w"},{"type":"btn","tid":"door_room_02"},{"type":"door","horz":true,"open":true},{"type":"door","horz":true},{"type":"door","id":"door_room_01","ext":true},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"w"},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"w","brightness":0},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 2 */
+        [{"type":"w","brightness":61},{"type":"f","brightness":61},{"type":"w","brightness":61},{},{},{},{},{},{"type":"w"},{"type":"door","horz":true,"id":"door_room_02","ext":true},{"type":"door","open":true},{"type":"door","horz":true,"open":true},{"type":"door","horz":true},{"type":"door"},{"type":"w"},{"type":"door","horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"door","horz":true},{"type":"w"},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"w","brightness":0},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 3 */
+        [{"type":"w","brightness":61},{"type":"f","brightness":61},{"type":"w"},{"type":"hint","msg":"Hier kommste nicht raus!"},{"type":"w"},{},{},{},{"type":"w"},{"type":"f","items":[{"type":"key","id":"hall_key_01","name":"Schluessel A"}]},{"type":"door"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f","brightness":0},{"type":"f","brightness":0},{"type":"f","items":[{"type":"key","id":"hall_key_02","name":"Schluessel B"}],"brightness":0},{"type":"f","brightness":0},{"type":"w","brightness":0},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 4 */
+        [{"type":"w","brightness":61},{"type":"w","space":true,"brightness":61},{"type":"w","space":true},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"h2o","depth":50},{"type":"h2o","depth":50},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"}],
+        
+        /* y: 5 */
+        [{"type":"w","brightness":61},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w","id":"cell_wall"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door","locked":true,"key":"hall_key_01"},{"type":"door","locked":true,"key":"hall_key_02"},{"type":"door","locked":true,"key":"hall_key_03"},{"type":"door","locked":true,"key":"hall_key_04"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"hint","msg":"Achtung Hochwasser!!"},{"type":"w"},{"type":"h2o","depth":50},{"type":"h2o","depth":50},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o"},{"type":"h2o"}],
+        
+        /* y: 6 */
+        [{},{"type":"w"},{"type":"w"},{"type":"f","items":[{"type":"dcat"}]},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f","items":[{"type":"hptn","cap":5}]},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"exit"},{"type":"h2o"},{"type":"h2o"}],
+        
+        /* y: 7 */
+        [{},{},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{},{},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"h2o","depth":50},{"type":"h2o","depth":50},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o","depth":150},{"type":"h2o"},{"type":"h2o"}],
+        
+        /* y: 8 */
+        [{},{},{},{},{},{},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"door","horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"door","horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{"type":"h2o","depth":50},{"type":"h2o","depth":50},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"},{"type":"h2o"}],
+        
+        /* y: 9 */
+        [{},{},{},{},{},{},{},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{},{"type":"w"},{"type":"f"},{"type":"f","items":[{"type":"key","id":"choice_key","name":"rostiger Schluessel"}]},{"type":"f"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 10 */
+        [{},{},{},{},{},{},{},{},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{},{"type":"w"},{"type":"door","horz":true,"locked":true,"key":"choice_key"},{"type":"w"},{"type":"door","horz":true,"locked":true,"key":"choice_key"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 11 */
+        [{},{},{},{},{},{},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 12 */
+        [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{"type":"w"},{"type":"f","items":[{"type":"key","id":"hall_key_04","name":"Schluessel D"}]},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f","items":[{"type":"key","id":"hall_key_04","name":"Schluessel D"}]},{"type":"f"},{"type":"f","items":[{"type":"hptn"}]},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+        
+        /* y: 13 */
+        [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
+    ],
+    "spawns": [
+		{"type":"player", "x":3, "y":5, "hp":70},
+        {"type":"bldhnd", "x":9, "y":10, "hp":35,"items":[{"type":"key","id":"hall_key_03","name":"Schluessel C"}]},
+        {"type":"bldhnd", "x":17, "y":12, "hp":25}
+	]
+}
