@@ -33,7 +33,7 @@ map_can_see (Map *ma, unsigned int fx, unsigned int fy, unsigned int tx, unsigne
         float b = fy - m * fx;
         dx = (dx < 0) ? -1 : 1;
         while ((dx < 0) ? fx > tx : fx < tx) {
-            if (!tile_can_light(ma->tiles[fx * ma->y + (int)(m * fx + b)])) {
+            if (!tile_can_walk(ma->tiles[(int)(m * fx + b) * ma->x + fx])) {
                 return false;
             }
             fx += dx;
@@ -43,7 +43,7 @@ map_can_see (Map *ma, unsigned int fx, unsigned int fy, unsigned int tx, unsigne
         float b = fx - m*fy;
         dy = (dy < 0) ? -1 : 1;
         while ((dy < 0) ? fy > ty : fy < ty) {
-            if (!tile_can_light(ma->tiles[(int)(m * fy + b) * ma->y + fx])) {
+            if (!tile_can_walk(ma->tiles[fy * ma->x + (int)(m * fy + b)])) {
                 return false;
             }
             fy += dy;
