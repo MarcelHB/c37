@@ -330,7 +330,7 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
         }
     }
     else {
-        if (tile->type == TILE_TYPE_FLOOR && tile->number_of_items > 0) {
+        if (tile->number_of_items > 0) {
             /* Items aufsammeln. */
             self->inventory = ex_realloc(self->inventory, (self->inventory_size + tile->number_of_items) * sizeof(Item*));
             for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
