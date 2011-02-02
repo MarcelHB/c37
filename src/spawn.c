@@ -41,6 +41,7 @@
 	for(i = 0; i < spawn->inventory_size; ++i) {
 		free_item(spawn->inventory[i]);
 	}
+	free(spawn->properties);
 	free(spawn->inventory);
 	free(spawn);
  }

@@ -275,7 +275,7 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
             free(map->spawns);
             map->spawns = new_spawns;
             --map->number_of_spawns;
-            free(other);
+            free_spawn(other);
         } else {
             other->hp -= 10;
         }
