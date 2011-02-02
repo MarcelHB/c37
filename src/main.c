@@ -219,5 +219,8 @@ void create_output_buffer(Map* map, BufferTile* buf, int size) {
 	else if(key == SDLK_RETURN) {	
 		return USE;
 	}
+	else if(key == SDLK_PERIOD) {	
+		return REST;
+	}
 	return INVALID;
  }

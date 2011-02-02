@@ -14,7 +14,7 @@
 #include "item.h"
 #include "tile.h"
 
-typedef enum {UP, DOWN, LEFT, RIGHT, ACTION, USE, NEXT_MSG, PREV_MSG, NEXT_ITEM, PREV_ITEM, INVALID} KeyAction;
+typedef enum {UP, DOWN, LEFT, RIGHT, ACTION, USE, NEXT_MSG, PREV_MSG, NEXT_ITEM, PREV_ITEM, REST, INVALID} KeyAction;
 
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(KeyAction, Map*);
