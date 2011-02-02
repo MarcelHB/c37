@@ -275,6 +275,21 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
             free(map->spawns);
             map->spawns = new_spawns;
             --map->number_of_spawns;
+			
+			/* Items fallen lassen */
+			if(other->inventory_size > 0) {
+				unsigned int i, j, new_size;
+				Tile* died_here = &map->tiles[other->y * map->x + other->x];
+				new_size = died_here->number_of_items + other->inventory_size;
+				died_here->items = (Item**)ex_realloc(died_here->items, new_size * sizeof(Item*));
+				
+				for(i = died_here->number_of_items, j = 0; i < new_size && j < other->inventory_size; ++i, ++j, ++died_here->number_of_items, --other->inventory_size) {
+					died_here->items[i] = other->inventory[j];
+				}
+				
+				free(other->inventory);
+				other->inventory = NULL;
+			}
             free_spawn(other);
         } else {
             other->hp -= 10;
