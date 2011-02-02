@@ -290,7 +290,8 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
 }
 
 void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
-	if(!tile_can_walk(*tile)) {
+	/* Kartenrand / unbegehbar */
+	if(self->x >= map->x || self->y >= map->y || !tile_can_walk(*tile)) {
 		/* umkehren */
 		switch(self->direction) {
 			case NORTH:
