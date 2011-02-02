@@ -227,7 +227,7 @@ spawn_run_ai (Spawn *self, Map *map) {
                 other = map->spawns[ii];
             }
         }
-        if (!tile_can_walk(map->tiles[nx * map->y + ny]) || NULL != other) {
+        if (!tile_can_walk(map->tiles[ny * map->x + nx]) || NULL != other) {
             nx = self->x;
             ny = self->y;
         }
@@ -254,7 +254,7 @@ spawn_run_ai (Spawn *self, Map *map) {
                 other = map->spawns[ii];
             }
         }
-        if (!tile_can_walk(map->tiles[nx * map->y + ny]) || NULL != other) {
+        if (!tile_can_walk(map->tiles[ny * map->x + nx]) || NULL != other) {
             nx = self->x;
             ny = self->y;
         }
