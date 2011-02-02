@@ -19,154 +19,154 @@ static int delete_item(Item*, Spawn*);
 
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(KeyAction action, Map *map){
-	Spawn *player=get_player_spawn(map);
-	Spawn *npc;
-	Tile *tile;
+    Spawn *player=get_player_spawn(map);
+    Spawn *npc;
+    Tile *tile;
     bool should_run_ai = true;
-	/*Aktion des Spielers*/
-	switch(action){
-	case UP:
-		npc=get_spawn_at(player->x,player->y-1, map);
-		player->direction=NORTH;
-		/*kein NPC in Laufrichtung*/
-		if(npc==NULL){
-			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
-			player->y--;
-			spawn_tile_collision(player,tile,map);
-			explore_area(player,map);
-		}
-		/*NPC in Laufrichtung*/
-		else{
-			spawn_spawn_collision(player,npc,map);
-		}
-		break;
-	case DOWN:
-		npc=get_spawn_at(player->x,player->y+1, map);
-		player->direction=SOUTH;
-		/*kein NPC in Laufrichtung*/
-		if(npc==NULL){
-			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
-			player->y++;
-			spawn_tile_collision(player,tile,map);
-			explore_area(player,map);
-		}
-		/*NPC in Laufrichtung*/
-		else{
-			spawn_spawn_collision(player,npc,map);
-		}
-		break;
-	case LEFT:
-		npc=get_spawn_at(player->x-1,player->y, map);
-		/*kein NPC in Laufrichtung*/
-		player->direction=WEST;
-		if(npc==NULL){
-			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x-1+map->x*player->y]);
-			player->x--;
-			spawn_tile_collision(player,tile,map);
-			explore_area(player,map);
-		}
-		/*NPC in Laufrichtung*/
-		else{
-			spawn_spawn_collision(player,npc,map);
-		}
-		break;
-	case RIGHT:
-		npc=get_spawn_at(player->x+1,player->y, map);
-		player->direction=EAST;
-		/*kein NPC in Laufrichtung*/
-		if(npc==NULL){
-			/*auf Laufbarem laufen*/
-			tile=&(map->tiles[player->x+1+map->x*player->y]);
-			player->x++;
-			spawn_tile_collision(player,tile,map);
-			explore_area(player,map);
-		}
-		/*NPC in Laufrichtung*/
-		else{
-			spawn_spawn_collision(player,npc,map);
-		}
-		break;
-	case ACTION:
-		/*zu toggelnden Spawn/Tile feststellen*/
-		switch(player->direction){
-		case NORTH:
-			npc=get_spawn_at(player->x,player->y-1, map);
-			tile=&(map->tiles[player->x+map->x*(player->y-1)]);
-			break;
-		case SOUTH:
-			npc=get_spawn_at(player->x,player->y+1, map);
-			tile=&(map->tiles[player->x+map->x*(player->y+1)]);
-			break;
-		case WEST:
-			npc=get_spawn_at(player->x-1,player->y, map);
-			tile=&(map->tiles[player->x-1+map->x*player->y]);
-			break;
-		case EAST:
-			npc=get_spawn_at(player->x+1,player->y, map);
-			tile=&(map->tiles[player->x+1+map->x*player->y]);
-			break;
-		}
-		/* wenn kein NPC dasteht */
-		if(npc == NULL){
-			/* checken, ob Button, und ob von hier aus drückbar */
-			if(tile->type == TILE_TYPE_BUTTON) {
-				ButtonProperties* btn_props = (ButtonProperties*)tile->properties;
-				/* von Süden? Player guckt nach Norden */
-				if( (player->direction == NORTH && (btn_props->directions & SOUTH)) || 
-					(player->direction == SOUTH && (btn_props->directions & NORTH)) ||
-					(player->direction == EAST && (btn_props->directions & WEST)) || 
-					(player->direction == WEST && (btn_props->directions & EAST)) ) {
-					toggle_tile(tile, map);
-				}
-			} else {
-				toggle_tile(tile, map);
-			}
-		}
-		else{
-			/*vll noch sowas wie spawn_toggle_spawn?*/
-		}
-		break;
-	case NEXT_ITEM:
+    /*Aktion des Spielers*/
+    switch(action){
+    case UP:
+        npc=get_spawn_at(player->x,player->y-1, map);
+        player->direction=NORTH;
+        /*kein NPC in Laufrichtung*/
+        if(npc==NULL){
+            /*auf Laufbarem laufen*/
+            tile=&(map->tiles[player->x+map->x*(player->y-1)]);
+            player->y--;
+            spawn_tile_collision(player,tile,map);
+            explore_area(player,map);
+        }
+        /*NPC in Laufrichtung*/
+        else{
+            spawn_spawn_collision(player,npc,map);
+        }
+        break;
+    case DOWN:
+        npc=get_spawn_at(player->x,player->y+1, map);
+        player->direction=SOUTH;
+        /*kein NPC in Laufrichtung*/
+        if(npc==NULL){
+            /*auf Laufbarem laufen*/
+            tile=&(map->tiles[player->x+map->x*(player->y+1)]);
+            player->y++;
+            spawn_tile_collision(player,tile,map);
+            explore_area(player,map);
+        }
+        /*NPC in Laufrichtung*/
+        else{
+            spawn_spawn_collision(player,npc,map);
+        }
+        break;
+    case LEFT:
+        npc=get_spawn_at(player->x-1,player->y, map);
+        /*kein NPC in Laufrichtung*/
+        player->direction=WEST;
+        if(npc==NULL){
+            /*auf Laufbarem laufen*/
+            tile=&(map->tiles[player->x-1+map->x*player->y]);
+            player->x--;
+            spawn_tile_collision(player,tile,map);
+            explore_area(player,map);
+        }
+        /*NPC in Laufrichtung*/
+        else{
+            spawn_spawn_collision(player,npc,map);
+        }
+        break;
+    case RIGHT:
+        npc=get_spawn_at(player->x+1,player->y, map);
+        player->direction=EAST;
+        /*kein NPC in Laufrichtung*/
+        if(npc==NULL){
+            /*auf Laufbarem laufen*/
+            tile=&(map->tiles[player->x+1+map->x*player->y]);
+            player->x++;
+            spawn_tile_collision(player,tile,map);
+            explore_area(player,map);
+        }
+        /*NPC in Laufrichtung*/
+        else{
+            spawn_spawn_collision(player,npc,map);
+        }
+        break;
+    case ACTION:
+        /*zu toggelnden Spawn/Tile feststellen*/
+        switch(player->direction){
+        case NORTH:
+            npc=get_spawn_at(player->x,player->y-1, map);
+            tile=&(map->tiles[player->x+map->x*(player->y-1)]);
+            break;
+        case SOUTH:
+            npc=get_spawn_at(player->x,player->y+1, map);
+            tile=&(map->tiles[player->x+map->x*(player->y+1)]);
+            break;
+        case WEST:
+            npc=get_spawn_at(player->x-1,player->y, map);
+            tile=&(map->tiles[player->x-1+map->x*player->y]);
+            break;
+        case EAST:
+            npc=get_spawn_at(player->x+1,player->y, map);
+            tile=&(map->tiles[player->x+1+map->x*player->y]);
+            break;
+        }
+        /* wenn kein NPC dasteht */
+        if(npc == NULL){
+            /* checken, ob Button, und ob von hier aus drückbar */
+            if(tile->type == TILE_TYPE_BUTTON) {
+                ButtonProperties* btn_props = (ButtonProperties*)tile->properties;
+                /* von Süden? Player guckt nach Norden */
+                if( (player->direction == NORTH && (btn_props->directions & SOUTH)) || 
+                    (player->direction == SOUTH && (btn_props->directions & NORTH)) ||
+                    (player->direction == EAST && (btn_props->directions & WEST)) || 
+                    (player->direction == WEST && (btn_props->directions & EAST)) ) {
+                    toggle_tile(tile, map);
+                }
+            } else {
+                toggle_tile(tile, map);
+            }
+        }
+        else{
+            /*vll noch sowas wie spawn_toggle_spawn?*/
+        }
+        break;
+    case NEXT_ITEM:
         should_run_ai = false;
-		/*Inventar durchschalten*/
-		if(player->inventory!=NULL && player->inventory_size!=0){
-			player->selected_item=(player->selected_item+1)%player->inventory_size;
-		}
-		break;
-	case PREV_ITEM:
+        /*Inventar durchschalten*/
+        if(player->inventory!=NULL && player->inventory_size!=0){
+            player->selected_item=(player->selected_item+1)%player->inventory_size;
+        }
+        break;
+    case PREV_ITEM:
         should_run_ai = false;
-		if(player->inventory!=NULL && player->inventory_size!=0){
-			if(player->selected_item)
-				player->selected_item=player->selected_item-1;
-			else
-				player->selected_item=player->inventory_size-1;
-		}
-		break;
-	case NEXT_MSG:
+        if(player->inventory!=NULL && player->inventory_size!=0){
+            if(player->selected_item)
+                player->selected_item=player->selected_item-1;
+            else
+                player->selected_item=player->inventory_size-1;
+        }
+        break;
+    case NEXT_MSG:
         should_run_ai = false;
-		/*durch die History scrollen, nicht wrappen*/
-		if(map->current_msg!=map->latest_msg && map->msg_hist[map->current_msg+1]!=NULL){
-			map->current_msg++;
-		}
-		break;
-	case PREV_MSG:
+        /*durch die History scrollen, nicht wrappen*/
+        if(map->current_msg!=map->latest_msg && map->msg_hist[map->current_msg+1]!=NULL){
+            map->current_msg++;
+        }
+        break;
+    case PREV_MSG:
         should_run_ai = false;
-		if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
-			--map->current_msg;
-		break;
-	case USE:
-		if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
-			spawn_uses_item (player, player->inventory[player->selected_item], map);
-		}
-		break;
-	default:
-		break;
-	}
-	/*jetzt handeln die NPCs*/
-	unsigned int i;
+        if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
+            --map->current_msg;
+        break;
+    case USE:
+        if(player->inventory != NULL && player->inventory[player->selected_item] != NULL) {
+            spawn_uses_item (player, player->inventory[player->selected_item], map);
+        }
+        break;
+    default:
+        break;
+    }
+    /*jetzt handeln die NPCs*/
+    unsigned int i;
     if (should_run_ai) {
         for(i=0;i<map->number_of_spawns;i++){
             /*den Spieler auslassen*/
@@ -177,15 +177,15 @@ void process_event(KeyAction action, Map *map){
 }
 
 void spawn_action(Spawn *spawn, Map *map){
-	/*soll hier nach typ geswitcht werden?
-	 * spawn_run_ai geht atm ja nur für hunde*/
-	switch(spawn->type){
-	case SPAWN_TYPE_HOUND:
-		spawn_run_ai(spawn, map);
-		break;
-	default:
-		break;
-	}
+    /*soll hier nach typ geswitcht werden?
+     * spawn_run_ai geht atm ja nur für hunde*/
+    switch(spawn->type){
+    case SPAWN_TYPE_HOUND:
+        spawn_run_ai(spawn, map);
+        break;
+    default:
+        break;
+    }
 }
 
 void
@@ -275,21 +275,21 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
             free(map->spawns);
             map->spawns = new_spawns;
             --map->number_of_spawns;
-			
-			/* Items fallen lassen */
-			if(other->inventory_size > 0) {
-				unsigned int i, j, new_size;
-				Tile* died_here = &map->tiles[other->y * map->x + other->x];
-				new_size = died_here->number_of_items + other->inventory_size;
-				died_here->items = (Item**)ex_realloc(died_here->items, new_size * sizeof(Item*));
-				
-				for(i = died_here->number_of_items, j = 0; i < new_size && j < other->inventory_size; ++i, ++j, ++died_here->number_of_items, --other->inventory_size) {
-					died_here->items[i] = other->inventory[j];
-				}
-				
-				free(other->inventory);
-				other->inventory = NULL;
-			}
+            
+            /* Items fallen lassen */
+            if(other->inventory_size > 0) {
+                unsigned int i, j, new_size;
+                Tile* died_here = &map->tiles[other->y * map->x + other->x];
+                new_size = died_here->number_of_items + other->inventory_size;
+                died_here->items = (Item**)ex_realloc(died_here->items, new_size * sizeof(Item*));
+                
+                for(i = died_here->number_of_items, j = 0; i < new_size && j < other->inventory_size; ++i, ++j, ++died_here->number_of_items, --other->inventory_size) {
+                    died_here->items[i] = other->inventory[j];
+                }
+                
+                free(other->inventory);
+                other->inventory = NULL;
+            }
             free_spawn(other);
         } else {
             other->hp -= 10;
@@ -300,81 +300,81 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
         } else {
             other->hp -= 5;
         }
-		push_msg("gebissen! (-5HP)", map);
+        push_msg("gebissen! (-5HP)", map);
     }
 }
 
 void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
-	/* Kartenrand / unbegehbar */
-	if(self->x >= map->x || self->y >= map->y || !tile_can_walk(*tile)) {
-		/* umkehren */
-		switch(self->direction) {
-			case NORTH:
-				self->y++;
-				break;
-			case SOUTH:
-				self->y--;
-				break;
-			case EAST:
-				self->x--;
-				break;
-			case WEST:
-				self->x++;
-				break;
-		}
-		if (tile->type == TILE_TYPE_WALL) {
-			if (self->hp > 0) {
-				--self->hp;
-				push_msg("Kopf -> Wand (-1HP)", map);
-			}
-		}
-	}
-	else {
-		if (tile->type == TILE_TYPE_FLOOR && tile->number_of_items > 0) {
-			/* Items aufsammeln. */
-			self->inventory = ex_realloc(self->inventory, (self->inventory_size + tile->number_of_items) * sizeof(Item*));
-			for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
-				if(tile->items[ii]->type != ITEM_TYPE_INVALID) {
-					self->inventory[++self->inventory_size - 1] = tile->items[ii];
-				}
-			}
-			/* Aufzählen, was aufgesammelt */
-			for(unsigned int i = 0; i < tile->number_of_items; ++i) {
-				if(tile->items[i]->type != ITEM_TYPE_INVALID) {
-					char* item_message = (char*)ex_calloc(22 + strlen(tile->items[i]->name), 1);				
-					sprintf(item_message, "Du hast aufgenommen: %s", tile->items[i]->name);
-					push_msg(item_message, map);
-					free(item_message);
-				}
-			}
-			self->selected_item=self->inventory_size-1;
-			
-			free(tile->items);
-			tile->items = NULL;
-			tile->number_of_items = 0;
-		} 
-		/* Ausgang */
-		else if(tile->type == TILE_TYPE_EXIT) {
-			map->finished = 1;
-		}
-	}
+    /* Kartenrand / unbegehbar */
+    if(self->x >= map->x || self->y >= map->y || !tile_can_walk(*tile)) {
+        /* umkehren */
+        switch(self->direction) {
+            case NORTH:
+                self->y++;
+                break;
+            case SOUTH:
+                self->y--;
+                break;
+            case EAST:
+                self->x--;
+                break;
+            case WEST:
+                self->x++;
+                break;
+        }
+        if (tile->type == TILE_TYPE_WALL) {
+            if (self->hp > 0) {
+                --self->hp;
+                push_msg("Kopf -> Wand (-1HP)", map);
+            }
+        }
+    }
+    else {
+        if (tile->type == TILE_TYPE_FLOOR && tile->number_of_items > 0) {
+            /* Items aufsammeln. */
+            self->inventory = ex_realloc(self->inventory, (self->inventory_size + tile->number_of_items) * sizeof(Item*));
+            for (unsigned int ii = 0; ii < tile->number_of_items; ++ii) {
+                if(tile->items[ii]->type != ITEM_TYPE_INVALID) {
+                    self->inventory[++self->inventory_size - 1] = tile->items[ii];
+                }
+            }
+            /* Aufzählen, was aufgesammelt */
+            for(unsigned int i = 0; i < tile->number_of_items; ++i) {
+                if(tile->items[i]->type != ITEM_TYPE_INVALID) {
+                    char* item_message = (char*)ex_calloc(22 + strlen(tile->items[i]->name), 1);                
+                    sprintf(item_message, "Du hast aufgenommen: %s", tile->items[i]->name);
+                    push_msg(item_message, map);
+                    free(item_message);
+                }
+            }
+            self->selected_item=self->inventory_size-1;
+            
+            free(tile->items);
+            tile->items = NULL;
+            tile->number_of_items = 0;
+        } 
+        /* Ausgang */
+        else if(tile->type == TILE_TYPE_EXIT) {
+            map->finished = 1;
+        }
+    }
 }
 
 void spawn_uses_item (Spawn *self, Item *item, Map *map) {
-	(void)map;
+    (void)map;
     switch (item->type) {
         case ITEM_TYPE_HEALTH_POTION:
             self->hp += ((HealthPotionProperties *)item->properties)->capacity;
             if (self->hp > self->max_hp) {
                 self->hp = self->max_hp;
             }
-			push_msg("Schluck! (Heiltrank)", map);
-			/* raus mit dem Item ... */
-			delete_item(item, self);
+            push_msg("Schluck! (Heiltrank)", map);
+            /* raus mit dem Item ... */
+            delete_item(item, self);
             break;
-		case ITEM_TYPE_DEAD_CAT:
-			push_msg("Miau?", map);
-			break;
+        case ITEM_TYPE_DEAD_CAT:
+            push_msg("Miau?", map);
+            break;
         default:
             break;
     }
@@ -386,75 +386,75 @@ void spawn_uses_item (Spawn *self, Item *item, Map *map) {
  * Gibt die Anzahl der gelöschten Items zurück (0 oder 1).
  */
 static int delete_item(Item *item, Spawn *spawn){
-	/*nur, wenn noch was im Inventar ist*/
-	if(spawn->inventory_size>1){
-		Item **result=(Item **)ex_calloc(spawn->inventory_size-1, sizeof(Item *));
-		unsigned int ins=0;
-		for(;spawn->inventory[ins]->type!=item->type;ins++){
-			/*nicht im Inventar*/
-			if(ins>=spawn->inventory_size){
-				free(result);
-				return 0;
-			}
-		}
-		memcpy(result,spawn->inventory,ins*sizeof(Item *));
-		/*zweiten Teil nur, wenn noch was über ist*/
-		if(ins<spawn->inventory_size-1){
-			memcpy(result+ins,spawn->inventory+ins+1,(spawn->inventory_size-ins-1)*sizeof(Item *));
-		}
-		free_item(spawn->inventory[ins]);
-		free(spawn->inventory);
-		spawn->inventory=result;
-		spawn->inventory_size--;
-		if(!spawn->npc){
-			/*ausgewähltes Item anpassen*/
-			spawn->selected_item=(spawn->selected_item>1) ? spawn->selected_item-1 : 0;
-		}
-		return 1;
-	}
-	else{
-		/*letztes Element wird gelöscht*/
-		if(spawn->inventory_size==1){
-			free(spawn->inventory[0]);
-			free(spawn->inventory);
-			spawn->inventory=NULL;
-			spawn->inventory_size--;
-			if(!spawn->npc){
-				spawn->selected_item=0;
-			}
-		}
-		else
-			return 0;
-	}
-	return 0;
+    /*nur, wenn noch was im Inventar ist*/
+    if(spawn->inventory_size>1){
+        Item **result=(Item **)ex_calloc(spawn->inventory_size-1, sizeof(Item *));
+        unsigned int ins=0;
+        for(;spawn->inventory[ins]->type!=item->type;ins++){
+            /*nicht im Inventar*/
+            if(ins>=spawn->inventory_size){
+                free(result);
+                return 0;
+            }
+        }
+        memcpy(result,spawn->inventory,ins*sizeof(Item *));
+        /*zweiten Teil nur, wenn noch was über ist*/
+        if(ins<spawn->inventory_size-1){
+            memcpy(result+ins,spawn->inventory+ins+1,(spawn->inventory_size-ins-1)*sizeof(Item *));
+        }
+        free_item(spawn->inventory[ins]);
+        free(spawn->inventory);
+        spawn->inventory=result;
+        spawn->inventory_size--;
+        if(!spawn->npc){
+            /*ausgewähltes Item anpassen*/
+            spawn->selected_item=(spawn->selected_item>1) ? spawn->selected_item-1 : 0;
+        }
+        return 1;
+    }
+    else{
+        /*letztes Element wird gelöscht*/
+        if(spawn->inventory_size==1){
+            free(spawn->inventory[0]);
+            free(spawn->inventory);
+            spawn->inventory=NULL;
+            spawn->inventory_size--;
+            if(!spawn->npc){
+                spawn->selected_item=0;
+            }
+        }
+        else
+            return 0;
+    }
+    return 0;
 }
 
 void toggle_tile (Tile *self, Map *map) {
-	/* Button */
-    if(self->type == TILE_TYPE_BUTTON) {	
-		ButtonProperties* btn_props = (ButtonProperties*)self->properties;
-		if(btn_props->toggle_id == NULL) {
-			return;
-		}
-		unsigned int map_size = map->x * map->y;
-		Tile* to_toggle;
-		for (unsigned int ii = 0; ii < map_size; ++ii) {
-			to_toggle = &map->tiles[ii];
-			if(to_toggle->id == NULL || to_toggle == self) {
-				continue;
-			}
-			if (0 == strcmp(btn_props->toggle_id, to_toggle->id)) {
-				/* Sonderbehandlung Tür, wenn durch externen Button gedrückt */
-				if(to_toggle->type == TILE_TYPE_DOOR) {
-					DoorProperties* door_props = (DoorProperties *)to_toggle->properties;
-					/* hat externen Schalter, wird also hier getoggelt */
-					if(door_props->external_button) {
-						door_props->open ^= 1;
-					} 
-					/* sonst entscheidet der Schalter nur über Verriegelung */
-					else {
-						door_props->locked ^= 1;
-					}
+    /* Button */
+    if(self->type == TILE_TYPE_BUTTON) {    
+        ButtonProperties* btn_props = (ButtonProperties*)self->properties;
+        if(btn_props->toggle_id == NULL) {
+            return;
+        }
+        unsigned int map_size = map->x * map->y;
+        Tile* to_toggle;
+        for (unsigned int ii = 0; ii < map_size; ++ii) {
+            to_toggle = &map->tiles[ii];
+            if(to_toggle->id == NULL || to_toggle == self) {
+                continue;
+            }
+            if (0 == strcmp(btn_props->toggle_id, to_toggle->id)) {
+                /* Sonderbehandlung Tür, wenn durch externen Button gedrückt */
+                if(to_toggle->type == TILE_TYPE_DOOR) {
+                    DoorProperties* door_props = (DoorProperties *)to_toggle->properties;
+                    /* hat externen Schalter, wird also hier getoggelt */
+                    if(door_props->external_button) {
+                        door_props->open ^= 1;
+                    } 
+                    /* sonst entscheidet der Schalter nur über Verriegelung */
+                    else {
+                        door_props->locked ^= 1;
+                    }
                 }
                 /* Wand */
                 else if(to_toggle->type == TILE_TYPE_WALL)  {
@@ -462,51 +462,51 @@ void toggle_tile (Tile *self, Map *map) {
                     wall_props->floor ^= 1;
                 }
                 else {
-					toggle_tile(to_toggle, map);
-				}
-				break;
-			}
-		}
-	}
-	/* Tür */
-	else if(self->type == TILE_TYPE_DOOR)  {
-		DoorProperties* door_props = (DoorProperties *)self->properties;
-		/* Tür hat eigenen Schalter und ist nicht verschlossen */
-		if(!door_props->locked) {
-			if(!(door_props->external_button)) {
-				door_props->open ^= 1;
-			}
-		} else {
-			/* Mit Schlüssel aufschließbar */
-			if(door_props->key_id != NULL) {
-				unsigned int i;
-				Spawn* player = get_player_spawn(map);
-				/* Inventar scannen */
-				for(i = 0; i < player->inventory_size; ++i) {
-					Item* key_candidate = player->inventory[i];
-					if(key_candidate != NULL && key_candidate->type == ITEM_TYPE_KEY) {
-						if(strcmp(key_candidate->id, door_props->key_id) == 0) {
-							/* Key entfernen! */
-							delete_item(key_candidate, player);
-							door_props->locked = 0;
-							push_msg("Tuer entriegelt", map);
-							break;
-						}
-					}
-				}
-				/* wurde nicht aufgemacht */
-				if(door_props->locked) {
-					push_msg("Tuer verschlossen", map);
-				}
-			}
-		}
-	}
-	/* Hinweis */
-	else if(self->type == TILE_TYPE_HINT)  {
-		HintProperties* hint_props = (HintProperties *)self->properties;
-		if(hint_props->message != NULL) {
-			/* Was das Ding zu sagen hat, in den Ausgabestream packen! */
-			push_msg(hint_props->message, map);
-		}
-	}
+                    toggle_tile(to_toggle, map);
+                }
+                break;
+            }
+        }
+    }
+    /* Tür */
+    else if(self->type == TILE_TYPE_DOOR)  {
+        DoorProperties* door_props = (DoorProperties *)self->properties;
+        /* Tür hat eigenen Schalter und ist nicht verschlossen */
+        if(!door_props->locked) {
+            if(!(door_props->external_button)) {
+                door_props->open ^= 1;
+            }
+        } else {
+            /* Mit Schlüssel aufschließbar */
+            if(door_props->key_id != NULL) {
+                unsigned int i;
+                Spawn* player = get_player_spawn(map);
+                /* Inventar scannen */
+                for(i = 0; i < player->inventory_size; ++i) {
+                    Item* key_candidate = player->inventory[i];
+                    if(key_candidate != NULL && key_candidate->type == ITEM_TYPE_KEY) {
+                        if(strcmp(key_candidate->id, door_props->key_id) == 0) {
+                            /* Key entfernen! */
+                            delete_item(key_candidate, player);
+                            door_props->locked = 0;
+                            push_msg("Tuer entriegelt", map);
+                            break;
+                        }
+                    }
+                }
+                /* wurde nicht aufgemacht */
+                if(door_props->locked) {
+                    push_msg("Tuer verschlossen", map);
+                }
+            }
+        }
+    }
+    /* Hinweis */
+    else if(self->type == TILE_TYPE_HINT)  {
+        HintProperties* hint_props = (HintProperties *)self->properties;
+        if(hint_props->message != NULL) {
+            /* Was das Ding zu sagen hat, in den Ausgabestream packen! */
+            push_msg(hint_props->message, map);
+        }
+    }
 }

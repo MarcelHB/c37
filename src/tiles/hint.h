@@ -11,8 +11,8 @@
  
  /* Info */
  typedef struct HintProperties {
-	/* Nachricht */
-	char* message;
+    /* Nachricht */
+    char* message;
  } HintProperties;
  
  #endif

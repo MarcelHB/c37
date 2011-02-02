@@ -18,21 +18,21 @@
  
  /* Struktur einer Karte */
  typedef struct Map {
-	/* Dimension */
-	unsigned int x, y;
-	/* Name */
-	char* name;
-	/* Bestandteile */
-	Tile* tiles;
-	/* Actors */
-	Spawn** spawns;
-	unsigned int number_of_spawns;
-	/* Message-History */
-	char** msg_hist;
-	int latest_msg;
-	int current_msg;
-	/* Map beendet? */
-	char finished;
+    /* Dimension */
+    unsigned int x, y;
+    /* Name */
+    char* name;
+    /* Bestandteile */
+    Tile* tiles;
+    /* Actors */
+    Spawn** spawns;
+    unsigned int number_of_spawns;
+    /* Message-History */
+    char** msg_hist;
+    int latest_msg;
+    int current_msg;
+    /* Map beendet? */
+    char finished;
  } Map;
 
 bool map_can_see (Map *, unsigned int, unsigned int, unsigned int, unsigned int);

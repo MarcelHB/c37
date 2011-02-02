@@ -11,8 +11,8 @@
  
  /* Heiltrank */
  typedef struct HealthPotionProperties {
-	/* Heilungspunkte */
-	unsigned int capacity;
+    /* Heilungspunkte */
+    unsigned int capacity;
  } HealthPotionProperties;
  
  #endif

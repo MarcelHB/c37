@@ -11,8 +11,8 @@
  
  /* Wasser */
  typedef struct WaterProperties {
-	/* Tiefe */
-	unsigned char depth;
+    /* Tiefe */
+    unsigned char depth;
  } WaterProperties;
  
  #endif

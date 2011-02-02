@@ -13,12 +13,12 @@
 #include "map.h"
 
 #if defined(__unix__) || defined(__linux__)
-	#define CLRSCR() printf("\x1B[2J")
+    #define CLRSCR() printf("\x1B[2J")
 #elif defined(__WIN32__) || defined(_MSC_VER)
-	#define CLRSCR() system("cls")
+    #define CLRSCR() system("cls")
 #else
-	/*dann bleibt das halt da stehen*/
-	#define CLRSCR()
+    /*dann bleibt das halt da stehen*/
+    #define CLRSCR()
 #endif
 
 static int width=OUTPUT_IN_GLYPHS_X;
@@ -30,10 +30,10 @@ static int height=OUTPUT_IN_GLYPHS_Y;
  * Breite mal Höhe sollte die Länge des Arrays sein, das an output_draw übergeben wird.
  */
 void output_init(int wid, int hei){
-	width=wid;
-	height=hei;
-	/*aufräumen*/
-	CLRSCR();
+    width=wid;
+    height=hei;
+    /*aufräumen*/
+    CLRSCR();
 }
 
 /**
@@ -43,24 +43,24 @@ void output_init(int wid, int hei){
  * tiles - Anzahl der Tiles darin (sollte mindestens width*height aus output_init() sein)
  */
 void output_draw(BufferTile *buf, int tiles){
-	printf("\n");
-	int wid=width;
-	while(tiles--){
-		printf("%c",buf->glyph);
-		buf++;
-		/*zeilenumbruch nach width zeichen*/
-		if(!(--wid)){
-			printf("\n");
-			wid=width;
-		}
-	}
+    printf("\n");
+    int wid=width;
+    while(tiles--){
+        printf("%c",buf->glyph);
+        buf++;
+        /*zeilenumbruch nach width zeichen*/
+        if(!(--wid)){
+            printf("\n");
+            wid=width;
+        }
+    }
 }
 
 /*
  * Löscht die Ausgabe
  */
 void output_clear(){
-	CLRSCR();
+    CLRSCR();
 }
 
 /*

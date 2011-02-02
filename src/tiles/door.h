@@ -11,19 +11,19 @@
  
  /* Tür */
  typedef struct DoorProperties {
-	/* horizontal? (0 = vertikal) */
-	char horizontal;
-	/* Zustand */
-	char open;
-	/* zugeschlossen */
-	char locked;
-	/* wird woanders aufgemacht? */
-	char external_button;
-	/* eintretbar? */
-	char breakable;
-	char broken;
-	/* Schluessel? */
-	char* key_id;
+    /* horizontal? (0 = vertikal) */
+    char horizontal;
+    /* Zustand */
+    char open;
+    /* zugeschlossen */
+    char locked;
+    /* wird woanders aufgemacht? */
+    char external_button;
+    /* eintretbar? */
+    char breakable;
+    char broken;
+    /* Schluessel? */
+    char* key_id;
  } DoorProperties;
  
  #endif

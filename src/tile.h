@@ -15,25 +15,25 @@
  #include "item.h"
 
  typedef struct Tile {
-	/* ID */
-	char* id;
+    /* ID */
+    char* id;
     /* Platzierung */
-	unsigned int x,y;
-	/* erforscht? */
-	char spotted;
-	/* Helligkeit? */
-	unsigned char brightness;
-	/* ASCII-Zeichen zur Anzeige */
-	char glyph;
-	/* 32-bit Farbe nach RGBA */
-	unsigned long color;
-	/* Polymorphismusersatz für den eig. Typ */
-	unsigned int type;
-	/* spez. Eigenschaften des Kacheltyps */
-	void* properties;
-	/* Items, die hier liegen */
-	Item** items;
-	unsigned int number_of_items;
+    unsigned int x,y;
+    /* erforscht? */
+    char spotted;
+    /* Helligkeit? */
+    unsigned char brightness;
+    /* ASCII-Zeichen zur Anzeige */
+    char glyph;
+    /* 32-bit Farbe nach RGBA */
+    unsigned long color;
+    /* Polymorphismusersatz für den eig. Typ */
+    unsigned int type;
+    /* spez. Eigenschaften des Kacheltyps */
+    void* properties;
+    /* Items, die hier liegen */
+    Item** items;
+    unsigned int number_of_items;
  } Tile;
  
  /* Mapbestandteile */
@@ -44,42 +44,42 @@
  #include "tiles/hint.h"
  
  /* verwendete Tile-type identifier */
- #define TILE_TYPE_INVALID				0xFFFFFFFF
- #define TILE_TYPE_WALL					0x00000000
- #define TILE_TYPE_FLOOR				0x00000001
- #define TILE_TYPE_BUTTON				0x00000002
- #define TILE_TYPE_DOOR					0x00000003
- #define TILE_TYPE_WATER        		0x00000004
- #define TILE_TYPE_HINT					0x00000005
- #define TILE_TYPE_EXIT					0x00000006
+ #define TILE_TYPE_INVALID                0xFFFFFFFF
+ #define TILE_TYPE_WALL                    0x00000000
+ #define TILE_TYPE_FLOOR                0x00000001
+ #define TILE_TYPE_BUTTON                0x00000002
+ #define TILE_TYPE_DOOR                    0x00000003
+ #define TILE_TYPE_WATER                0x00000004
+ #define TILE_TYPE_HINT                    0x00000005
+ #define TILE_TYPE_EXIT                    0x00000006
  
- #define TILE_GLYPH_WALL				'#'
- #define TILE_GLYPH_FLOOR				'.'
- #define TILE_GLYPH_BUTTON				'+'
- #define TILE_GLYPH_DOOR_VERT_CLOSED	'|'
- #define TILE_GLYPH_DOOR_VERT_OPEN		'~'
- #define TILE_GLYPH_DOOR_HORIZ_CLOSED 	'-'
- #define TILE_GLYPH_DOOR_HORIZ_OPEN 	'/'
- #define TILE_GLYPH_WATER       		'~'
- #define TILE_GLYPH_HINT        		'?'
- #define TILE_GLYPH_EXIT        		'!'
+ #define TILE_GLYPH_WALL                '#'
+ #define TILE_GLYPH_FLOOR                '.'
+ #define TILE_GLYPH_BUTTON                '+'
+ #define TILE_GLYPH_DOOR_VERT_CLOSED    '|'
+ #define TILE_GLYPH_DOOR_VERT_OPEN        '~'
+ #define TILE_GLYPH_DOOR_HORIZ_CLOSED     '-'
+ #define TILE_GLYPH_DOOR_HORIZ_OPEN     '/'
+ #define TILE_GLYPH_WATER               '~'
+ #define TILE_GLYPH_HINT                '?'
+ #define TILE_GLYPH_EXIT                '!'
  
  /* Zuordnungstabellen von type -> defaults */
  struct TileDefault {
-	unsigned int type;
-	unsigned long color;
-	char glyph;
+    unsigned int type;
+    unsigned long color;
+    char glyph;
  };
  
  /* lediglich Intialisierungswerte */
  static const struct TileDefault tile_defaults[7] = {
-	{TILE_TYPE_WALL, 0xAAAAAA00, TILE_GLYPH_WALL},
-	{TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
-	{TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
-	{TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED},
-	{TILE_TYPE_WATER, 0x00006600, TILE_GLYPH_WATER},
-	{TILE_TYPE_HINT, 0xFFFFFF00, TILE_GLYPH_HINT},
-	{TILE_TYPE_EXIT, 0xFFFF0000, TILE_GLYPH_EXIT}
+    {TILE_TYPE_WALL, 0xAAAAAA00, TILE_GLYPH_WALL},
+    {TILE_TYPE_FLOOR, 0xFFFFFF00, TILE_GLYPH_FLOOR},
+    {TILE_TYPE_BUTTON, 0xFFFFFF00, TILE_GLYPH_BUTTON},
+    {TILE_TYPE_DOOR, 0xCCCCCC00, TILE_GLYPH_DOOR_VERT_CLOSED},
+    {TILE_TYPE_WATER, 0x00006600, TILE_GLYPH_WATER},
+    {TILE_TYPE_HINT, 0xFFFFFF00, TILE_GLYPH_HINT},
+    {TILE_TYPE_EXIT, 0xFFFF0000, TILE_GLYPH_EXIT}
  };
  
  /* Gibt reservierten Speicher eines Tiles frei */

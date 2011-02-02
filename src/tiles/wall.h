@@ -11,10 +11,10 @@
  
  /* Wand */
  typedef struct WallProperties {
-	/* doch begehbar? */
-	char space;
-	/* gewöhnlicher Boden */
-	char floor;
+    /* doch begehbar? */
+    char space;
+    /* gewöhnlicher Boden */
+    char floor;
  } WallProperties;
  
  #endif
