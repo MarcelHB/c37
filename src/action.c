@@ -4,6 +4,7 @@
  * action.c
  */
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include "globals.h"
 #include "memory.h"
@@ -21,6 +22,7 @@ void process_event(KeyAction action, Map *map){
 	Spawn *player=get_player_spawn(map);
 	Spawn *npc;
 	Tile *tile;
+    bool should_run_ai = true;
 	/*Aktion des Spielers*/
 	switch(action){
 	case UP:
@@ -128,12 +130,14 @@ void process_event(KeyAction action, Map *map){
 		}
 		break;
 	case NEXT_ITEM:
+        should_run_ai = false;
 		/*Inventar durchschalten*/
 		if(player->inventory!=NULL && player->inventory_size!=0){
 			player->selected_item=(player->selected_item+1)%player->inventory_size;
 		}
 		break;
 	case PREV_ITEM:
+        should_run_ai = false;
 		if(player->inventory!=NULL && player->inventory_size!=0){
 			if(player->selected_item)
 				player->selected_item=player->selected_item-1;
@@ -142,12 +146,14 @@ void process_event(KeyAction action, Map *map){
 		}
 		break;
 	case NEXT_MSG:
+        should_run_ai = false;
 		/*durch die History scrollen, nicht wrappen*/
 		if(map->current_msg!=map->latest_msg && map->msg_hist[map->current_msg+1]!=NULL){
 			map->current_msg++;
 		}
 		break;
 	case PREV_MSG:
+        should_run_ai = false;
 		if(map->current_msg!=0 && map->msg_hist[map->current_msg-1]!=NULL)
 			--map->current_msg;
 		break;
@@ -161,11 +167,13 @@ void process_event(KeyAction action, Map *map){
 	}
 	/*jetzt handeln die NPCs*/
 	unsigned int i;
-	for(i=0;i<map->number_of_spawns;i++){
-		/*den Spieler auslassen*/
-		if(map->spawns[i]->npc)
-			spawn_action(map->spawns[i], map);
-	}
+    if (should_run_ai) {
+        for(i=0;i<map->number_of_spawns;i++){
+            /*den Spieler auslassen*/
+            if(map->spawns[i]->npc)
+                spawn_action(map->spawns[i], map);
+        }
+    }
 }
 
 void spawn_action(Spawn *spawn, Map *map){
