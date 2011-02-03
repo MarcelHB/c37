@@ -3,13 +3,16 @@ CFLAGS = -std=c99 -pedantic -Wall -Wextra -O0 -g
 SRC = ../src/
 TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o
 TEST_LOGIC_OBJECTS = test_logic.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o map.o action.o
+TEST_EVENTS_OBJECTS = test_events.o JSON_parser.o memory.o spawn.o tile.o map.o action.o item.o map_loader.o
 .SUFFIXES: .c
 
-all: test_logic test_map_loader
+all: test_logic test_map_loader test_events
 test_logic: $(TEST_LOGIC_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_LOGIC_OBJECTS) -o test_logic -lm
 test_map_loader: $(TEST_MAP_LOADER_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_MAP_LOADER_OBJECTS) -o test_map_loader -lm
+test_events: $(TEST_EVENTS_OBJECTS)
+	$(CC) $(CFLAGS) $(TEST_EVENTS_OBJECTS) -o test_events -lm
 clean:
 	rm -f *.o
 	rm -f *.exe
