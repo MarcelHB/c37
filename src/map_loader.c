@@ -528,6 +528,7 @@
     else if(parent == STACK_TILES) {
         /* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
         if(parsed_tiles >= (map->x) * (map->y)) {
+            pop_node_stack(stack, stack_size);
             return;
         }
         /* tile->type */
@@ -658,6 +659,7 @@
     else if(parent == STACK_TILES && array_depth == 2) {
         /* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
         if(parsed_tiles >= (map->x) * (map->y)) {
+            pop_node_stack(stack, stack_size);
             return;
         }
         /* tile->brightness */
@@ -734,6 +736,7 @@
     if(parent == STACK_TILES && array_depth == 2) {
         /* verhindert, dass Tiles über die X*Y-Größe geschrieben werden können. */
         if(parsed_tiles >= (map->x) * (map->y)) {
+            pop_node_stack(stack, stack_size);
             return;
         }
         /* bisher nur boolesche Properties */
