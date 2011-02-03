@@ -1,12 +1,13 @@
 CC = gcc
 CFLAGS = -std=c99 -pedantic -Wall -Wextra -O0 -g
 SRC = ../src/
+TESTS = test_logic test_map_loader test_events
 TEST_MAP_LOADER_OBJECTS = test_map_loader.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o
 TEST_LOGIC_OBJECTS = test_logic.o JSON_parser.o memory.o spawn.o tile.o map_loader.o item.o map.o action.o
 TEST_EVENTS_OBJECTS = test_events.o JSON_parser.o memory.o spawn.o tile.o map.o action.o item.o map_loader.o
 .SUFFIXES: .c
 
-all: test_logic test_map_loader test_events
+all: $(TESTS)
 test_logic: $(TEST_LOGIC_OBJECTS)
 	$(CC) $(CFLAGS) $(TEST_LOGIC_OBJECTS) -o test_logic -lm
 test_map_loader: $(TEST_MAP_LOADER_OBJECTS)
@@ -16,6 +17,7 @@ test_events: $(TEST_EVENTS_OBJECTS)
 clean:
 	rm -f *.o
 	rm -f *.exe
+	rm -f $(TESTS)
 
 test_logic.o: test_logic.c
 	$(CC) $(CFLAGS) -c test_logic.c
