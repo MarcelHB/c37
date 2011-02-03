@@ -48,7 +48,7 @@ void output_init(int w, int h, char *mapname){
     /*sollte für alle Zeichen gelten (Festbreitenschrift)*/
     TTF_SizeText(font, "a", &font_w, &font_h);
     /*Screen erstellen, einen höher für Statusleiste*/
-    icon = SDL_LoadBMP("icon.bmp");
+    icon = SDL_LoadBMP("icon.ico");
     SDL_WM_SetIcon(icon,NULL);
     if(mapname!=NULL){
         char *title=(char *)ex_calloc(6+strlen(mapname), sizeof(char));
