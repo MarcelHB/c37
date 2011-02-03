@@ -1,6 +1,7 @@
 spec/**/*.log
 spec/**/*.aux
-src/demo/**/*.o
-tests/*.o
+*.o
 *.exe
 *.swp
+stdout.txt
+stderr.txt
