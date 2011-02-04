@@ -31,7 +31,7 @@ Architektur:
 ?    : Schrifttafel
 
 @    : Spielfigur (grün: fit, rot: gefährlich verletzt)
-*    : etwas zum Aufnehmen
+*    : etwas zum Aufnehmen (darüber laufen!)
 !    : Ausgang
 a-z  : nicht-humanoides Monster
 
@@ -47,6 +47,7 @@ vorherige Nachricht         :   Bild-HOCH
 nächste Nachricht           :   Bilder-RUNTER
 mit der Umwelt interagieren :   Leertaste
 
+Bei der Begegnung mit Widersachern wird empfohlen, gegen diese zu laufen. Dieser "Schlag" fügt dem Gegner einen Schaden zu.
 
 Abhängigkeiten
 ===================
@@ -54,10 +55,29 @@ Abhängigkeiten
 - SDL
 - SDL_ttf
 
+Installation (Source)
+=====================
+
+Im Root-Verzeichnis von c37 den Befehl 
+
+>> make
+
+ausführen. Dieser kompiliert das Spiel und die Tests, die Programmdatei wird in der Root-Ebene des c37-Ordners platziert.
+
+Zum Entfernen aller Objekt und Programmdateien, diesen Befehl im Root-Verzeichnis ausführen:
+
+>> make clean
 
 Start
 ===================
 
 >> c37 <Kartenname>
 
-Dabei ist der Dateiname der Karte ohne die Endung '.json' anzugeben.
+Dabei ist der Dateiname der Karte ohne die Endung '.json' anzugeben. Verfügbare Karten befinden sich im maps-Verzeichnis.
+
+Probleme
+===================
+
+Sollte irgendeine Sache das Spielen unmöglich machen oder für Ärger sorgen, bitte auf github.com anmelden und eine Anfrage verfassen:
+
+https://github.com/MarcelHB/c37/issues
