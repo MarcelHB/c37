@@ -28,7 +28,7 @@
             break;
         }
     }
-    if (spawn->type == SPAWN_TYPE_HOUND) {
+    if (spawn->type == SPAWN_TYPE_HOUND || spawn->type == SPAWN_TYPE_ZOMBIE) {
         spawn->properties = ex_calloc(1, sizeof(HoundProperties));
     }
  }

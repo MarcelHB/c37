@@ -43,6 +43,7 @@
  #define SPAWN_TYPE_INVALID                0xFFFFFFFF
  #define SPAWN_TYPE_PLAYER                0x00000000
  #define SPAWN_TYPE_HOUND                0x00000001
+ #define SPAWN_TYPE_ZOMBIE               0x00000002
  
  /* Zuordnungstabellen von type -> defaults */
  struct SpawnDefault {
@@ -56,9 +57,10 @@
  };
  
  /* lediglich Intialisierungswerte */
- static const struct SpawnDefault spawn_defaults[2] = {
+ static const struct SpawnDefault spawn_defaults[3] = {
     {SPAWN_TYPE_PLAYER, "Spieler", '@', 0, 1, 100, 100},
-    {SPAWN_TYPE_HOUND, "Bluthund", 'h', 1, 0, 50, 50}
+    {SPAWN_TYPE_HOUND, "Bluthund", 'h', 1, 0, 50, 50},
+    {SPAWN_TYPE_ZOMBIE, "Zombie", 'Z', 1, 1, 40, 40}
  };
 
 typedef struct HoundProperties {

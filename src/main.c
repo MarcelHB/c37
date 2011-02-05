@@ -124,7 +124,7 @@ void create_output_buffer(Map* map, BufferTile* buf, int size) {
     int i, j, translated_x, translated_y, center_x, center_y;
     Spawn* spawn = get_player_spawn(map);
     if(spawn == NULL) {
-        fprintf(stderr, "Keine Spielfigur vorhanden!");
+        fprintf(stderr, "Keine Spielfigur vorhanden!\n");
         exit(1);
     }
     clear_output_buffer(buf, size);

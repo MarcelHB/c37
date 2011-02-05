@@ -6,8 +6,12 @@
 
 #define TEST_MAP "lonely"
 #define NUM_MOVEMENTS 100
-#define PRINT_ALL
+//#define PRINT_ALL
 
+/**
+ * Führt NUM_MOVEMENTS pseudozufällige Bewegung auf der TEST_MAP aus und überprüft, ob der Spieler durch
+ * process_event ordentlich bewegt wird.
+ */
 int main() {
 	int counter=0, num_moves=0, num_collisions=0;
 	Map* map = NULL;

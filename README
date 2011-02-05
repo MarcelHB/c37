@@ -34,6 +34,7 @@ Architektur:
 *    : etwas zum Aufnehmen (darüber laufen!)
 !    : Ausgang
 a-z  : nicht-humanoides Monster
+A-Z  : hunanoides Monster
 
 
 Bedienung
@@ -41,10 +42,10 @@ Bedienung
 
 Bewegung                    :   Pfeiltasten
 ausgewähltes Item benutzen  :   Return
-nächstes Item               :   Einfügen
-vorherigese Item            :   Entfernen
-vorherige Nachricht         :   Bild-HOCH
-nächste Nachricht           :   Bilder-RUNTER
+nächstes Item               :   Bild Hoch
+vorherigese Item            :   Bild Runter
+vorherige Nachricht         :   Einfügen
+nächste Nachricht           :   Entfernen
 mit der Umwelt interagieren :   Leertaste
 
 Bei der Begegnung mit Widersachern wird empfohlen, gegen diese zu laufen. Dieser "Schlag" fügt dem Gegner einen Schaden zu.

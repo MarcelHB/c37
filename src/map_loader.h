@@ -139,10 +139,13 @@
  /* lesbare Spawn-Type Namen */
  #define SPAWN_NAME_PLAYER				"player"
  #define SPAWN_NAME_BLOODHOUND			"bldhnd"
+ #define SPAWN_NAME_ZOMBIE              "zombie"
  
  /* lesbare Item-Type Namen */
  #define ITEM_NAME_HEALTH_POTION		"hptn"
  #define ITEM_NAME_KEY          		"key"
  #define ITEM_NAME_DEAD_CAT        		"dcat"
+ #define ITEM_NAME_SHOTGUN              "shtg"
+ #define ITEM_NAME_SHOTGUN_AMMO         "shtg_ammo"
  
  #endif

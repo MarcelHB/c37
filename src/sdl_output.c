@@ -146,11 +146,6 @@ void output_draw(BufferTile *buf, int tiles, InterfaceData* id){
         }
         id->message = msg_tmp;
     }
-    /*Statusleiste, width sollte mindestens 20 sein*/
-    if(width<20){
-        fprintf(stderr, "Das Spielfeld muss mindestens 20 Zeichen breit sein, sonst ist kein Platz fuer die Statusleiste.");
-        exit(EXIT_FAILURE);
-    }
     char *status;
     /*keine Zahl vorm Item, wenn <0*/
     if(id->item_index < 0){
@@ -158,10 +153,9 @@ void output_draw(BufferTile *buf, int tiles, InterfaceData* id){
         sprintf(status, "HP: %03d | Item: ", id->player_hp);
     }
     else{
-        char *tmp=(char *)ex_calloc(21, sizeof(char));
-        sprintf(tmp, "%d", id->item_index);
-        int intlen=strlen(tmp);
-        free(tmp);
+        int intlen=0, tmp=id->item_index;
+        while(tmp/=10)
+            intlen++;
         status=(char *)ex_calloc(width+intlen+3, sizeof(char));
         sprintf(status, "HP: %03d | Item %d: ", id->player_hp, id->item_index);
 

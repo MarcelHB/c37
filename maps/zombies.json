@@ -16,15 +16,16 @@
 13 ##..#####..##.@...#....Z..###.*.###...##
 14 ##..#####..#?.##?.#..####..#.#..###.Z.##
 15 #*........*########..####..##.#..##....!
-16 ###############*..#.......##############
-17 ########################################
+16 ###################.......##############
+17 ###############*.#######################
+18 ########################################
 
 */
 
 {
 	"name":"Zombies",
 	"x":40,
-	"y":18,
+	"y":19,
 	"tiles":[
 		/*y=0*/
 		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
@@ -39,7 +40,7 @@
 		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=4*/
-		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"hint", "msg":"Noch n Buero"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"hint", "msg":"Noch n Buero"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door", "locked":true},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=5*/
 		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"hint", "msg":"Noch n Buero"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
@@ -54,33 +55,50 @@
 		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"hint", "msg":"Druckerraum"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=9*/
-		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Konferenzraum"},{"type":"door", "horz":true},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Konferenzraum"},{"type":"door", "horz":true},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"door", "locked":true},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"door"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=10*/
 		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"hint", "msg":"Druckerraum"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=11*/
-		[{"type":"w"},{"type":"w"},{"type":"door", "horz":true},{"type":"door", "horz":true},{"type":"door", "horz":true},{"type":"door", "horz":true},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Buero des namenlosen Helden"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Chefbuero"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Besenkammer"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"w"},{"type":"door", "horz":true, "locked":true},{"type":"door", "horz":true, "locked":true},{"type":"door", "horz":true, "locked":true},{"type":"door", "horz":true, "locked":true},{"type":"door", "horz":true, "locked":true},{"type":"w"},{"type":"w"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Buero des namenlosen Helden"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Chefbuero"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Besenkammer"},{"type":"door", "horz":true},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=12*/
 		[{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=13*/
-		[{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f", "items":[{"type":"hptn", "cap":25}]},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=14*/
-		[{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"hint", "msg":"Der Koch hat angeblich eine Schrotflinte"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Zombie-Apokalypse!"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"hint", "msg":"Der Koch hat angeblich eine Schrotflinte"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"hint", "msg":"Zombie-Apokalypse! Zum Notausgang im Osten!"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"}],
 
 		/*y=15*/
-		[{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"exit"}],
+		[{"type":"w"},{"type":"f", "items":[{"type":"shtg"}]},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f", "items":[{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"}]},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"w", "space":true},{"type":"w", "space":true},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"exit"}],
 
 		/*y=16*/
-		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
+		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w", "space":true},{"type":"w", "space":true},{"type":"w", "space":true},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"f"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
 
-
+		/*y=17*/
+		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"f", "items":[{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"},{"type":"shtg_ammo"}], "brightness":61},{"type":"f", "brightness":61},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}],
+	
+		/*y=18*/
 		[{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"},{"type":"w"}]
 	],
-	"spawns":[
-		{"type":"player", "x":15, "y":13, "hp":100}
+"spawns":[
+        {"type":"zombie", "x":1, "y":1, "hp":40},
+		{"type":"player", "x":15, "y":13, "hp":100},
+        {"type":"zombie", "x":13, "y":3, "hp":40},
+        {"type":"zombie", "x":17, "y":3, "hp":40},
+        {"type":"zombie", "x":24, "y":3, "hp":40},
+        {"type":"zombie", "x":32, "y":3, "hp":40},
+        {"type":"zombie", "x":16, "y":6, "hp":40},
+        {"type":"zombie", "x":19, "y":8, "hp":40},
+        {"type":"zombie", "x":24, "y":8, "hp":40},
+        {"type":"zombie", "x":35, "y":8, "hp":40},
+        {"type":"zombie", "x":36, "y":9, "hp":40},
+        {"type":"zombie", "x":35, "y":11, "hp":40},
+        {"type":"zombie", "x":37, "y":12, "hp":40},
+        {"type":"zombie", "x":23, "y":13, "hp":40},
+        {"type":"zombie", "x":36, "y":14, "hp":40}
 	]
 }

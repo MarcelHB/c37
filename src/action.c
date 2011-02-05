@@ -16,6 +16,8 @@
 
 /*Helper, löscht Item*/
 void delete_item(Item*, Spawn*);
+int delete_item_by_type(unsigned int, Spawn*);
+void damage_spawn(Spawn*, unsigned int, Map*);
 
 /*aktualisiert eine Map gemäß einem Event*/
 void process_event(KeyAction action, Map *map){
@@ -183,6 +185,9 @@ void spawn_action(Spawn *spawn, Map *map){
     case SPAWN_TYPE_HOUND:
         spawn_run_ai(spawn, map);
         break;
+    case SPAWN_TYPE_ZOMBIE:
+        spawn_run_ai(spawn, map);
+	break;
     default:
         break;
     }
@@ -263,44 +268,89 @@ spawn_run_ai (Spawn *self, Map *map) {
     self->y = ny;
 }
 
-void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
-    if (SPAWN_TYPE_PLAYER == self->type && SPAWN_TYPE_HOUND == other->type) {
-        if (other->hp <= 10) {
+/**
+ * Fügt einem Spawn damage Punkte Schaden zu, entfernt ihn von der Map
+ * und lässt seine Items fallen, falls es ihn tötet.
+ */
+void damage_spawn(Spawn *spawn, unsigned int damage, Map *map){
+    /*Sonderbahandlung für den Spieler*/
+    if(spawn->type==SPAWN_TYPE_PLAYER){
+        if(spawn->hp<=damage)
+            spawn->hp=0;
+        else
+            spawn->hp-=damage;
+    }
+    else{
+        /*wenns ihn tötet, entfernen*/
+        if (spawn->hp <= damage) {
             Spawn **new_spawns = ex_calloc(map->number_of_spawns - 1, sizeof(Spawn *));
             for (unsigned int ii = 0, jj = 0; ii < map->number_of_spawns; ++ii) {
-                if (map->spawns[ii] != other) {
+                if (map->spawns[ii] != spawn) {
                     new_spawns[jj++] = map->spawns[ii];
                 }
             }
             free(map->spawns);
             map->spawns = new_spawns;
             --map->number_of_spawns;
-            
+    
             /* Items fallen lassen */
-            if(other->inventory_size > 0) {
+            if(spawn->inventory_size > 0) {
                 unsigned int i, j, new_size;
-                Tile* died_here = &map->tiles[other->y * map->x + other->x];
-                new_size = died_here->number_of_items + other->inventory_size;
+                Tile* died_here = &map->tiles[spawn->y * map->x + spawn->x];
+                new_size = died_here->number_of_items + spawn->inventory_size;
                 died_here->items = (Item**)ex_realloc(died_here->items, new_size * sizeof(Item*));
-                
-                for(i = died_here->number_of_items, j = 0; i < new_size && j < other->inventory_size; ++i, ++j, ++died_here->number_of_items, --other->inventory_size) {
-                    died_here->items[i] = other->inventory[j];
+    
+                for(i = died_here->number_of_items, j = 0; i < new_size && j < spawn->inventory_size; ++i, ++j, ++died_here->number_of_items, --spawn->inventory_size) {
+                    died_here->items[i] = spawn->inventory[j];
                 }
-                
-                free(other->inventory);
-                other->inventory = NULL;
+    
+                free(spawn->inventory);
+                spawn->inventory = NULL;
             }
-            free_spawn(other);
-        } else {
-            other->hp -= 10;
+            free_spawn(spawn);
         }
-    } else if (SPAWN_TYPE_HOUND == self->type && SPAWN_TYPE_PLAYER == other->type) {
-        if (other->hp <= 5) {
-            other->hp = 0;
-        } else {
-            other->hp -= 5;
+        else {
+            spawn->hp -= damage;
         }
-        push_msg("gebissen! (-5HP)", map);
+    }
+}
+
+void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
+    switch(self->type){
+    case SPAWN_TYPE_PLAYER:
+        switch(other->type){
+        case SPAWN_TYPE_HOUND:
+            damage_spawn(other, 10, map);
+            break;
+        case SPAWN_TYPE_ZOMBIE:
+            damage_spawn(other, 10, map);
+            break;
+        default:
+            break;
+        }
+        break;
+    case SPAWN_TYPE_HOUND:
+        switch(other->type){
+        case SPAWN_TYPE_PLAYER:
+            damage_spawn(other, 5, map);
+            push_msg("gebissen! (-5HP)", map);
+            break;
+        default:
+            break;
+        }
+        break;
+    case SPAWN_TYPE_ZOMBIE:
+        switch(other->type){
+        case SPAWN_TYPE_PLAYER:
+            damage_spawn(other, 5, map);
+            push_msg("Baem! (-10HP)", map);
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
     }
 }
 
@@ -323,10 +373,8 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
                 break;
         }
         if (tile->type == TILE_TYPE_WALL) {
-            if (self->hp > 0) {
-                --self->hp;
-                push_msg("Kopf -> Wand (-1HP)", map);
-            }
+            damage_spawn(self, 1, map);
+            push_msg("Kopf -> Wand (-1HP)", map);
         }
     }
     else {
@@ -363,20 +411,84 @@ void spawn_tile_collision (Spawn *self, Tile *tile, Map *map) {
 void spawn_uses_item (Spawn *self, Item *item, Map *map) {
     (void)map;
     switch (item->type) {
-        case ITEM_TYPE_HEALTH_POTION:
-            self->hp += ((HealthPotionProperties *)item->properties)->capacity;
-            if (self->hp > self->max_hp) {
-                self->hp = self->max_hp;
+    case ITEM_TYPE_HEALTH_POTION:
+        self->hp += ((HealthPotionProperties *)item->properties)->capacity;
+        if (self->hp > self->max_hp) {
+            self->hp = self->max_hp;
+        }
+        push_msg("Schluck! (Heiltrank)", map);
+        /* raus mit dem Item ... */
+        delete_item(item, self);
+        break;
+    case ITEM_TYPE_DEAD_CAT:
+        push_msg("Miau?", map);
+        break;
+	case ITEM_TYPE_SHOTGUN:
+	    /*Schaden anrichten, wenn noch Muni da war*/
+	    if(delete_item_by_type(ITEM_TYPE_SHOTGUN_AMMO, self)){
+	        Spawn *victim=NULL;
+            unsigned int damage=0;
+            switch(self->direction){
+            case NORTH:
+		        for(unsigned int i=1;i<=10 && self->y-i+1;i++){
+                    /*wenn da ne Wand ist, nichts tun*/
+                    if(!tile_can_walk(map->tiles[map->x*(self->y-i)+self->x]))
+                        break;
+		            victim=get_spawn_at(self->x, self->y-i, map);
+                    if(victim!=NULL){
+                        /*weniger bei mehr Entfernung*/
+                        damage=(11-i)*3;
+                        break;
+                    }
+                }
+	        	break;
+             case SOUTH:
+		        for(unsigned int i=1;i<=10 && self->y+i<map->y;i++){
+                    /*wenn da ne Wand ist, nichts tun*/
+                    if(!tile_can_walk(map->tiles[map->x*(self->y+i)+self->x]))
+                        break;
+		            victim=get_spawn_at(self->x, self->y+i, map);
+                    if(victim!=NULL){
+                        damage=(11-i)*3;
+                        break;
+                    }
+                }
+	        	break;
+             case WEST:
+		        for(unsigned int i=1;i<=10 && self->x-i+1;i++){
+                    /*wenn da ne Wand ist, nichts tun*/
+                    if(!tile_can_walk(map->tiles[map->x*self->y+self->x-i]))
+                        break;
+		            victim=get_spawn_at(self->x-i, self->y, map);
+                    if(victim!=NULL){
+                        damage=(11-i)*3;
+                        break;
+                    }
+                }
+	        	break;
+             case EAST:
+		        for(unsigned int i=1;i<=10 && self->x+i<map->x;i++){
+                    /*wenn da ne Wand ist, nichts tun*/
+                    if(!tile_can_walk(map->tiles[map->x*self->y+self->x+i]))
+                        break;
+		            victim=get_spawn_at(self->x+i, self->y, map);
+                    if(victim!=NULL){
+                        damage=(11-i)*3;
+                        break;
+                    }
+                }
+	        	break;
+         default:
+                break;
             }
-            push_msg("Schluck! (Heiltrank)", map);
-            /* raus mit dem Item ... */
-            delete_item(item, self);
-            break;
-        case ITEM_TYPE_DEAD_CAT:
-            push_msg("Miau?", map);
-            break;
-        default:
-            break;
+            if(victim!=NULL)
+                damage_spawn(victim, damage, map);
+        }
+        else
+            push_msg("Keine Munition mehr!", map);
+	    break;
+    default:
+        break;
     }
 }
 
@@ -416,6 +528,58 @@ void delete_item(Item *item, Spawn *spawn) {
             spawn->selected_item = 0;
         }
     }
+}
+
+/* Löscht das erste Item vom Typ type aus dem Inventar von Spawn
+ * Returnt 1, wenn was gelöscht wurde, 0 sonst.
+ */
+int delete_item_by_type(unsigned int type, Spawn *spawn){
+    /* wenn noch mehr im Inventar ist */
+    if(spawn->inventory_size > 1) {
+        unsigned int new_size = spawn->inventory_size - 1, i, j;
+        bool update_selected=false, deleted=false;
+        Item** new_inventory = (Item**)ex_malloc(new_size * sizeof(Item*));
+        
+        for(i = 0, j = 0; i < spawn->inventory_size; ++i) {
+            if(spawn->inventory[i]->type != type || deleted) {
+                new_inventory[j] = spawn->inventory[i];
+                ++j;
+            } else {
+                free_item(spawn->inventory[i]);
+                deleted=true;
+                if(i<=spawn->selected_item)
+                    update_selected=true;
+            }
+        }
+        free(spawn->inventory);
+        spawn->inventory = new_inventory;
+        if(deleted){
+            --spawn->inventory_size;
+            
+            if(!spawn->npc && update_selected) {
+                /* ausgewähltes Item anpassen */
+                spawn->selected_item = (spawn->selected_item > 1) ? spawn->selected_item - 1 : 0;
+            }
+        	return 1;
+        }
+        else
+            return 0;
+    } 
+    /* nur letztes Element wird gelöscht */
+    else if(spawn->inventory_size == 1 && spawn->inventory[0]->type==type) {
+        free_item(spawn->inventory[0]);
+        free(spawn->inventory);
+        spawn->inventory = NULL;
+        --spawn->inventory_size;
+        
+        if(!spawn->npc) {
+            spawn->selected_item = 0;
+        }
+        return 1;
+    }
+    else
+    	return 0;
+
 }
 
 void toggle_tile (Tile *self, Map *map) {

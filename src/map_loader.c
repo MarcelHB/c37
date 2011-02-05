@@ -1139,6 +1139,10 @@
     else if(strcmp(name, SPAWN_NAME_BLOODHOUND) == 0) {
         return SPAWN_TYPE_HOUND;
     }
+    /* Zombie */
+    else if(strcmp(name, SPAWN_NAME_ZOMBIE) == 0) {
+        return SPAWN_TYPE_ZOMBIE;
+    }
     return SPAWN_TYPE_INVALID;
  }
  
@@ -1156,6 +1160,14 @@
     /* tote Katze */
     else if(strcmp(name, ITEM_NAME_DEAD_CAT) == 0) {    
         return ITEM_TYPE_DEAD_CAT;
+    }
+    /*Shotgun*/
+    else if(strcmp(name, ITEM_NAME_SHOTGUN) == 0) {
+        return ITEM_TYPE_SHOTGUN;
+    }
+    /*Shotgun-Muni*/
+    else if(strcmp(name, ITEM_NAME_SHOTGUN_AMMO) == 0) {
+        return ITEM_TYPE_SHOTGUN_AMMO;
     }
     return ITEM_TYPE_INVALID;
  }
