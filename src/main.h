@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -22,4 +22,4 @@
  
  KeyAction get_action(SDLKey);
  
- #endifdif
+ #endif

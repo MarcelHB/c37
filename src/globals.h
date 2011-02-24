@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -34,4 +34,4 @@
  
  /* #define _C37_MEMORY_LOG */
  
- #endifdif
+ #endif

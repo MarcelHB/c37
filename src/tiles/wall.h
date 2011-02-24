@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -17,4 +17,4 @@
     char floor;
  } WallProperties;
  
- #endifdif
+ #endif

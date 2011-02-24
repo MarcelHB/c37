@@ -1,4 +1,4 @@
-#include "../src/globals.h"
+﻿#include "../src/globals.h"
 #include "../src/map.h"
 #include "../src/map_loader.h"
 #include "../src/action.h"
@@ -223,5 +223,4 @@ int main() {
 		return 0;
 	else
 		return 1;
-}
 }

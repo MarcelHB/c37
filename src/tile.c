@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -151,5 +151,4 @@ tile_can_walk (Tile t) {
         default:
             return false;
     }
-}
 }

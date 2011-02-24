@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor: Marcel
  * Datum: 13.01.2011
@@ -19,4 +19,4 @@
  /* Helper */
  void exit_on_low_memory(void*);
  
- #endifdif
+ #endif

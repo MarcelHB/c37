@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -93,4 +93,3 @@
  bool tile_can_walk (Tile);
  
  #endif
-f

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -48,5 +48,4 @@
     free(item->properties);
     free(item->name);
     free(item);
- }
  }

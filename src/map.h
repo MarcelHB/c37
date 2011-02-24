@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -49,4 +49,3 @@ bool map_can_see (Map *, unsigned int, unsigned int, unsigned int, unsigned int)
  void push_msg(char *msg, Map *map);
 
 #endif
-f

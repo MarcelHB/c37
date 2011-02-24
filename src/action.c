@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * 
  * action.c
@@ -662,5 +662,4 @@ void toggle_tile (Tile *self, Map *map) {
             push_msg(hint_props->message, map);
         }
     }
-}
 }

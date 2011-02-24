@@ -1,4 +1,4 @@
-/**
+﻿/**
  * C-Projekt von Gruppe 37
  * 
  * sdl_output.c
@@ -249,5 +249,4 @@ void output_close(){
     TTF_CloseFont(font);
     SDL_FreeSurface(screen);
     SDL_FreeSurface(icon);
-}
 }
