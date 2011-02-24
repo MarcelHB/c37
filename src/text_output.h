@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -20,3 +20,4 @@
  void output_close();
  
  #endif
+f

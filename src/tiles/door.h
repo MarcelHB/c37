@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -26,4 +26,4 @@
     char* key_id;
  } DoorProperties;
  
- #endif
+ #endifdif

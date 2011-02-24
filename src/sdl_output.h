@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -21,3 +21,4 @@
  void game_over(int);
  
  #endif
+f

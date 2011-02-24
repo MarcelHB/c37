@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -75,3 +75,4 @@ typedef struct HoundProperties {
  void apply_spawn_defaults(Spawn*);
  
  #endif
+f

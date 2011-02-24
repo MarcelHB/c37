@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -45,3 +45,4 @@
     free(spawn->inventory);
     free(spawn);
  }
+}

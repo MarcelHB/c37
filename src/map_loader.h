@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -149,3 +149,4 @@
  #define ITEM_NAME_SHOTGUN_AMMO         "shtg_ammo"
  
  #endif
+f

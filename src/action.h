@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -36,3 +36,4 @@ void toggle_tile(Tile*, Map*);
 void spawn_run_ai (Spawn *, Map *);
 
 #endif
+f

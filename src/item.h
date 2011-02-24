@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C-Projekt von Gruppe 37
  * Autor:
  * Datum:
@@ -63,3 +63,4 @@
  void create_item_properties(Item*);
  
  #endif
+f
