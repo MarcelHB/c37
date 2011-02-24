@@ -342,7 +342,7 @@ void spawn_spawn_collision (Spawn *self, Spawn *other, Map *map) {
     case SPAWN_TYPE_ZOMBIE:
         switch(other->type){
         case SPAWN_TYPE_PLAYER:
-            damage_spawn(other, 10, map);
+            damage_spawn(other, 5, map);
             push_msg("Baem! (-10HP)", map);
             break;
         default:
